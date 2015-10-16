@@ -1,0 +1,15 @@
+#ignore .mat files, anywhere in the tree
+
+TempDat/*.mat
+Text/*.aux
+Text/*.log
+Text/*.synctex.tz
+Plots/
+Plots/*.*
+Codes/Func/test*.m
+Slides/*.*
+YinanSlides/*.*
+Data/*.*
+Data/
+Codes/Data_Analysis/.ipynb_checkpoints/
+Codes/Preprocessing_Analysis
