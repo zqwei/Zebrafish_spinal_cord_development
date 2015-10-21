@@ -10,6 +10,7 @@
 %
 % eigenvalue based result:
 % kgM           --- # of factors using Kaiser-Guttman criterion
+% PA
 % 
 % estimation error results:
 % SRMR          --- signficance of residuals
@@ -29,8 +30,6 @@ function numFactors = numFactorsWithNoCrossValidationSimplied(X, maxM)
 
     % Potential warning comes from factoran when Psi has close to zeros variance
     warning('off','all'); 
-
-    if nargin < 3; isScreePlot = false; end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
     %%%% eigenvalue based result:
@@ -45,9 +44,17 @@ function numFactors = numFactorsWithNoCrossValidationSimplied(X, maxM)
     % maxM from K-G criterion
     kgM         = sum(eigval > 1.0); 
     numFactors.kgM = kgM;
+    
+    perVar      = 0.95;
+    kind        = 2; % FA analysis
+    randtype    = 2; % permutation of data
+    percent     = perVar * 100;
+    ndatsets    = 100;
+    paM         = parallelAnalysis(X, kind, randtype, percent, ndatsets);
+    numFactors.paM = paM;
         
     % summary of number of FA from eigenvalue analysis
-    eigMaxM     = kgM;    
+    eigMaxM     = max(kgM, paM);    
     if maxM < eigMaxM
 %         disp(['max number of factor is reset to ' num2str(eigMaxM) ', using eigvalue criterion.'])
         maxM = eigMaxM;
@@ -84,9 +91,9 @@ function numFactors = numFactorsWithNoCrossValidationSimplied(X, maxM)
     end
         
     SRMRThres               = 0.05;
-    RMSEAThres              = 0.08;
     CFIThres                = 0.90;
 
     numFactors.SRMRM        = find(SRMR < SRMRThres, 1, 'first');
+    if isempty(numFactors.SRMRM); numFactors.SRMRM = 0; end
     numFactors.CFIM         = find(CFI > CFIThres, 1, 'first');
-    
+    if isempty(numFactors.CFIM); numFactors.CFIM = 0; end
