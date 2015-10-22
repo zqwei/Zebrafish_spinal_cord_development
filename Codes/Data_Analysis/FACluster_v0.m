@@ -33,15 +33,15 @@ function FACluster_v0(nFile)
     SRMRM = [numFactors.SRMRM];
     CFIM = [numFactors.CFIM];
     
-    plot(timePoints(1:5:numPlot)/4/3600, kgM(1:5:numPlot), 'o', ...
-        timePoints(1:5:numPlot)/4/3600, paM(1:5:numPlot), 'o', ...
-        timePoints(1:5:numPlot)/4/3600, SRMRM(1:5:numPlot), 'o', ...
-        timePoints(1:5:numPlot)/4/3600, CFIM(1:5:numPlot), 'o')
-    xlim([0 timePoints(end)/4/3600])
-    xlabel('Time (hour)')
-    ylabel('# Dim')
-    legend('KG', 'PA', 'SRMR', 'CFI');
-    
-    setPrint(8, 6, [plotDir, 'numFactorAllNeurons_', fileName], 'pdf');
+%     plot(timePoints(1:5:numPlot)/4/3600, kgM(1:5:numPlot), 'o', ...
+%         timePoints(1:5:numPlot)/4/3600, paM(1:5:numPlot), 'o', ...
+%         timePoints(1:5:numPlot)/4/3600, SRMRM(1:5:numPlot), 'o', ...
+%         timePoints(1:5:numPlot)/4/3600, CFIM(1:5:numPlot), 'o')
+%     xlim([0 timePoints(end)/4/3600])
+%     xlabel('Time (hour)')
+%     ylabel('# Dim')
+%     legend('KG', 'PA', 'SRMR', 'CFI');
+%     
+%     setPrint(8, 6, [plotDir, 'numFactorAllNeurons_', fileName], 'pdf');
         
 end

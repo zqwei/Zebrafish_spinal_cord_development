@@ -51,11 +51,11 @@ function FACluster_v0_1(nFile)
     
     save([tempDatDir, fileName, '_numFactorNoLONOActiveNeuronsSimplified.mat'], 'sigNeuronsMat'); 
     
-    figure;
-    plot(timePoints/4/3600, sum(sigNeuronsMat, 1), 'o')
-    xlabel('Time (hour)')
-    ylabel('# of active neurons')
-    xlim([0 timePoints(end)/4/3600])
-    setPrint(8, 6, [plotDir, 'numActiveNeurons_', fileName], 'pdf');
+%     figure;
+%     plot(timePoints/4/3600, sum(sigNeuronsMat, 1), 'o')
+%     xlabel('Time (hour)')
+%     ylabel('# of active neurons')
+%     xlim([0 timePoints(end)/4/3600])
+%     setPrint(8, 6, [plotDir, 'numActiveNeurons_', fileName], 'pdf');
     
 end

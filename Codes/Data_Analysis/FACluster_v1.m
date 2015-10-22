@@ -21,7 +21,7 @@ function FACluster_v1(nFile)
     numFold           = 10;  
     
     numPlot           = length(timePoints);
-    EVLONO            = nan(maxNumFactor, numPlot, numFold);
+    EVLONO            = nan(numPlot, maxNumFactor, numFold);
     
     numSample         = 1200;
     numTest           = ceil(numSample/numFold);
@@ -43,7 +43,7 @@ function FACluster_v1(nFile)
                         nFoldDFFTrain                = slicedDFF(randSeqTest(numTest+1:numSample), :);
                         [lambda,psi]                 = factoran(nFoldDFFTrain, nFactor, 'scores','regression', 'rotate', 'none');
                         EVLONO(nPlot, nFactor, nFold) = LONOFA(nFoldDFFTest, lambda, psi);
-                        display([nPlot, nFactor, nFold])
+%                        display([nPlot, nFactor, nFold])
                     end
                 end
             end

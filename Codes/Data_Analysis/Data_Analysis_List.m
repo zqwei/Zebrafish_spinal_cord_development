@@ -25,7 +25,10 @@ for nFile = 1:numFile
 %     FACluster_v0_1(nFile) % # selected active neurons
 %     FACluster_v0_2(nFile) % # factors with selected active neurons
 %     disp('Analysis #3 -- factor analysis -- number of factors -- LONO'); 
-    FACluster_v1(nFile)
+%     FACluster_v1(nFile)
+%     FACluster_v1_1(nFile)
+%     FACluster_v1_2(nFile)
+    FACluster_v1_3(nFile)
     
 %     disp('==================================');
 %     disp('Analysis #4 -- factor analysis -- factor contunity check');
