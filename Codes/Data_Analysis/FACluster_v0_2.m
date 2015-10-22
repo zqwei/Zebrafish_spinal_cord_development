@@ -41,17 +41,17 @@ function FACluster_v0_2(nFile)
     SRMRM = [numFactors.SRMRM]; %#ok<NASGU>
     CFIM = [numFactors.CFIM]; %#ok<NASGU>
     
-%     plot(timePoints(1:5:numPlot)/4/3600, kgM(1:5:numPlot), 's', ...
-%         timePoints(1:5:numPlot)/4/3600, paM(1:5:numPlot), 'o', ...
-%         timePoints(1:5:numPlot)/4/3600, SRMRM(1:5:numPlot), 'x', ...
-%         timePoints(1:5:numPlot)/4/3600, CFIM(1:5:numPlot), '+')
-%     set(gca, 'Xtick', 1:6)
-%     xlim([0 timePoints(end)/4/3600])
-%     xlabel('Time (hour)')
-%     ylabel('# Dim')
-%     legend('KG', 'PA', 'SRMR', 'CFI');
-%     
-%     setPrint(8, 6, [plotDir, 'numFactorActiveNeurons_', fileName], 'pdf');
+    plot(timePoints(1:5:numPlot)/4/3600, kgM(1:5:numPlot), 's', ...
+        timePoints(1:5:numPlot)/4/3600, paM(1:5:numPlot), 'o', ...
+        timePoints(1:5:numPlot)/4/3600, SRMRM(1:5:numPlot), 'x', ...
+        timePoints(1:5:numPlot)/4/3600, CFIM(1:5:numPlot), '+')
+    set(gca, 'Xtick', 1:6)
+    xlim([0 timePoints(end)/4/3600])
+    xlabel('Time (hour)')
+    ylabel('# Dim')
+    legend('KG', 'PA', 'SRMR', 'CFI');
+    
+    setPrint(8, 6, [plotDir, 'numFactorActiveNeurons_', fileName], 'pdf');
     save([tempDatDir, fileName, '_numFactorNoLONOActiveNeuronsSimplified.mat'], 'kgM', 'paM', 'SRMRM', 'CFIM', '-append'); 
         
 end

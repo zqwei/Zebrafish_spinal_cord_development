@@ -19,7 +19,8 @@
 function Spectrogram_v1(nFile)            
     addpath('../Func');
     setDir;    
-    fileName          = fileNames{nFile}; %#ok<USENS>    
+    fileName          = fileNames{nFile}; %#ok<USENS>   
+    load([tempDatDir, fileName, '.mat'], 'sideSplitter')
     load([tempDatDir, fileName, '_spectrogram.mat'], 'spectrogramMatAll');
     
     timeWindow        = 1200;
@@ -49,11 +50,18 @@ function Spectrogram_v1(nFile)
         end
     end
     
+    figure;
+    hold on;
     [T, N] = meshgrid(1:numTime, 1:numNeuron);
     h = pcolor(T/60, N, peakPeriodMat);
     colormap(cbrewer('div', 'RdYlGn',32))
     caxis([5 25])
     set(h, 'EdgeColor', 'none')
+    set(gca, 'xtick', 1:6)
+    plot([0 numTime/60], [sideSplitter sideSplitter], '--k')
+    hold off
+    xlim([0 numTime/60])
+    ylim([0 numNeuron])
     axis xy
     xlabel('Time (hour)')
     ylabel('Neuron index')

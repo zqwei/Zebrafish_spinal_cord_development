@@ -66,7 +66,7 @@ function Spectrogram_v0(nFile)
     end
     
     
-    save([tempDatDir, fileName, '_spectrogram.mat'], 'spectrogramMatAll', 'f');
+    save([tempDatDir, fileName, '_spectrogram.mat'], 'spectrogramMatAll', 'f', '-append');
     setPrint(m*8, m*6, [plotDir, 'MTMSpectrogram_', fileName], 'pdf');
 
 end

@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 3.  Covariance analysis: Factor analysis -- number of island using LONO 
-% methods with selected neurons -- num dim from LONO
+% methods with selected neurons -- add side information as side index
 % 
 %
 % 
@@ -10,14 +10,13 @@
 % 
 
 
-function FACluster_v1_3(nFile)            
+function FACluster_v2(nFile)            
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
-    load([tempDatDir, fileName, '.mat']); 
+    load([tempDatDir, fileName, '.mat'], 'dff'); 
+    load([tempDatDir, fileName, '_numFactorNoLONOActiveNeuronsSimplified.mat'], 'LONOM')
     
-    figure;
-    plot(side)
     
-
+    
 end
