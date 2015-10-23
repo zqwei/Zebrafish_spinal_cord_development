@@ -10,14 +10,14 @@
 % 
 
 
-function FACluster_v1(nFile)            
+function FACluster_v1_0(nFile)            
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
     load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints');
     load([tempDatDir, fileName, '_numFactorNoLONOActiveNeuronsSimplified.mat'], 'sigNeuronsMat'); 
     
-    maxNumFactor      = 10;
+    maxNumFactor      = 12;
     numFold           = 10;  
     
     numPlot           = length(timePoints);
@@ -43,16 +43,11 @@ function FACluster_v1(nFile)
                         nFoldDFFTrain                = slicedDFF(randSeqTest(numTest+1:numSample), :);
                         [lambda,psi]                 = factoran(nFoldDFFTrain, nFactor, 'scores','regression', 'rotate', 'none');
                         EVLONO(nPlot, nFactor, nFold) = LONOFA(nFoldDFFTest, lambda, psi);
-%                        display([nPlot, nFactor, nFold])
                     end
                 end
             end
         end
     end    
     save([tempDatDir, fileName, '_numFactorNoLONOActiveNeuronsSimplified.mat'], 'EVLONO', '-append');  
-    
-    figure;
-    
-    imagesc(squeeze(mean(EVLONO, 3)))
     
 end

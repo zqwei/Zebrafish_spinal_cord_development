@@ -15,7 +15,7 @@
 % 
 
 
-function Spectrogram_v0(nFile)
+function Spectrogram_v0_0(nFile)
             
     addpath('../Func');
     setDir;    

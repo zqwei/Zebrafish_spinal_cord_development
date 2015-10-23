@@ -76,7 +76,7 @@ function FACluster_v1_2(nFile)
     title('CFI')
     box off
 
-    setPrint(8*3, 6*2, [plotDir, 'numFactorActiveNeurons_', fileName], 'pdf');
+    setPrint(8*3, 6*2, [plotDir, 'numFactorLONOActiveNeurons_', fileName], 'pdf');
     save([tempDatDir, fileName, '_numFactorNoLONOActiveNeuronsSimplified.mat'], 'LONOM', '-append'); 
 
 

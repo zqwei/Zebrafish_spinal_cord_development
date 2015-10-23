@@ -13,22 +13,23 @@ for nFile = 1:numFile
 
 %     disp('==================================');
 %     disp('Analysis #2 -- spectrogram');   
-%     Spectrogram_v0(nFile) % Multitaper analysis
-%     Spectrogram_v1(nFile) % Peak power cycle...
+%     Spectrogram_v0_0(nFile) % Multitaper analysis
+%     Spectrogram_v1_0(nFile) % Peak power cycle...
 %     disp('Analysis #2 -- spectrogram -- test of white noise');   
 %     Spectrogram_v1_1(nFile)
 
 %     disp('==================================');
 %     disp('Analysis #3 -- factor analysis -- number of factors');   
 %     disp('Analysis #3 -- factor analysis -- number of factors -- non-LONO'); 
-    FACluster_v0(nFile) % # factors with all neurons
-    FACluster_v0_1(nFile) % # selected active neurons
-    FACluster_v0_2(nFile) % # factors with selected active neurons
+%     FACluster_v0_0(nFile) % # factors with all neurons
+%     FACluster_v0_1(nFile) % # selected active neurons
+%     FACluster_v0_2(nFile) % # factors with selected active neurons
 %     disp('Analysis #3 -- factor analysis -- number of factors -- LONO'); 
-%     FACluster_v1(nFile) % computing EV for n fold
+%     FACluster_v1_0(nFile) % computing EV for n fold
 %     FACluster_v1_1(nFile) % plot LONO - time-dim
 %     FACluster_v1_2(nFile) % plot LONOM optimal number
-%     FACluster_v2(nFile) % computing factors based on Varimax and side information
+%     FACluster_v2_0(nFile) % computing factors based on Varimax and side information
+    FACluster_v2_1(nFile) % plot
     
     
 %     disp('==================================');
@@ -105,6 +106,6 @@ for nFile = 1:numFile
 %     Data_Analysis_List2_9_5(nFile);
 %     Data_Analysis_List2_9_6(nFile);
 %     
-    close all;
+%     close all;
 end
 

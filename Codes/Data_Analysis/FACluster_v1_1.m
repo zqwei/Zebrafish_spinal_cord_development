@@ -30,6 +30,7 @@ function FACluster_v1_1(nFile)
     set(gca, 'xtick', 1:6)
     colorbar
     box off
+    setPrint(8, 6, [plotDir, 'FALONO_Time_Dim_', fileName], 'pdf')
     
     
     figure;    
@@ -44,5 +45,6 @@ function FACluster_v1_1(nFile)
     set(gca, 'xtick', 1:6)
     colorbar
     box off
+    setPrint(8, 6, [plotDir, 'FALONO_Time_Dim_Contour_', fileName], 'pdf')
     
 end

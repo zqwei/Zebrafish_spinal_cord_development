@@ -33,7 +33,6 @@ function FACluster_v0_2(nFile)
                 numFactors(nPlot) = numFactorsWithNoCrossValidationSimplied(slicedDFF, currMaxFactor); 
             end
         end
-        disp(nPlot)
     end
     
     kgM = [numFactors.kgM]; %#ok<NASGU>
@@ -41,6 +40,7 @@ function FACluster_v0_2(nFile)
     SRMRM = [numFactors.SRMRM]; %#ok<NASGU>
     CFIM = [numFactors.CFIM]; %#ok<NASGU>
     
+    figure;
     plot(timePoints(1:5:numPlot)/4/3600, kgM(1:5:numPlot), 's', ...
         timePoints(1:5:numPlot)/4/3600, paM(1:5:numPlot), 'o', ...
         timePoints(1:5:numPlot)/4/3600, SRMRM(1:5:numPlot), 'x', ...
