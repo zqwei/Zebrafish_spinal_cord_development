@@ -21,15 +21,19 @@ for nFile = 1:numFile
 %     disp('==================================');
 %     disp('Analysis #3 -- factor analysis -- number of factors');   
 %     disp('Analysis #3 -- factor analysis -- number of factors -- non-LONO'); 
-%     FACluster_v0_0(nFile) % # factors with all neurons
-%     FACluster_v0_1(nFile) % # selected active neurons
-%     FACluster_v0_2(nFile) % # factors with selected active neurons
+    FACluster_v0_0(nFile) % # factors with all neurons
+    FACluster_v0_1(nFile) % # selected active neurons
+    FACluster_v0_2(nFile) % # factors with selected active neurons
 %     disp('Analysis #3 -- factor analysis -- number of factors -- LONO'); 
-%     FACluster_v1_0(nFile) % computing EV for n fold
-%     FACluster_v1_1(nFile) % plot LONO - time-dim
-%     FACluster_v1_2(nFile) % plot LONOM optimal number
-%     FACluster_v2_0(nFile) % computing factors based on Varimax and side information
-    FACluster_v2_1(nFile) % plot
+    FACluster_v1_0(nFile) % computing EV for n fold
+    FACluster_v1_1(nFile) % plot LONO - time-dim
+    FACluster_v1_2(nFile) % plot LONOM optimal number
+    FACluster_v2_0(nFile) % computing factors based on Varimax and side information
+    FACluster_v2_1(nFile) % plot    
+    FACluster_v2_2(nFile) % missing neurons
+    FACluster_v2_3(nFile) % missing neuron correction
+    FACluster_v2_2(nFile) % still missing neurons
+%     
     
     
 %     disp('==================================');
@@ -106,6 +110,6 @@ for nFile = 1:numFile
 %     Data_Analysis_List2_9_5(nFile);
 %     Data_Analysis_List2_9_6(nFile);
 %     
-%     close all;
+    close all;
 end
 

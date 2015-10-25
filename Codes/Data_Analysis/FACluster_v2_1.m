@@ -20,14 +20,16 @@ function FACluster_v2_1(nFile)
     
     numPlot           = length(LMat); %#ok<USENS>
     CorrectedLMat     = LMat;
-    maxFactor         = max(LONOM);
+%     maxFactor         = max(LONOM);
+    factorLoadThres   = 0.3;
     
     for nPlot         = 1:numPlot    
         if LONOM(nPlot)>0
-            mPlot         = mPlot + 1;
+%             mPlot         = mPlot + 1;
             LMatnTime     = LMat{nPlot};
             nFactor       = size(LMatnTime, 2);
-            LMatnTime(LMatnTime<min(nanmax(LMatnTime,[], 2))) = 0;
+%             LMatnTime(LMatnTime<min(nanmax(LMatnTime,[], 2))) = 0;
+            LMatnTime(LMatnTime<factorLoadThres) = 0;
 
             numNeuronFactor = sum(LMatnTime>0, 1);
             sideFactor      = repmat(side, [1, nFactor]);

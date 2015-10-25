@@ -53,7 +53,7 @@ function Neuron_selection_v0(nFile)
     baseline      = baseline(slicedIndex, timeStep:timeEnd+timeStep);
     rawf          = rawf(slicedIndex, timeStep:timeEnd+timeStep);
     dff           = dff(slicedIndex, timeStep:timeEnd+timeStep);
-    tracks        = tracks(slicedIndex, timeStep:timeEnd+timeStep);
+    tracks        = tracks(slicedIndex, timeStep:timeEnd+timeStep, :);
     side          = side(slicedIndex); %#ok<NODEF>
     
         
@@ -129,7 +129,7 @@ function Neuron_selection_v0(nFile)
     baseline      = baseline(leafOrder, :); %#ok<NASGU>
     rawf          = rawf(leafOrder, :); %#ok<NASGU>
     dff           = dff(leafOrder, :); %#ok<NASGU>
-    tracks        = tracks(leafOrder, :); %#ok<NASGU>
+    tracks        = tracks(leafOrder, :, :); %#ok<NASGU>
     side          = side(leafOrder, :);  %#ok<NASGU>
     
 

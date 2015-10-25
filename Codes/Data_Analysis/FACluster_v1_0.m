@@ -34,6 +34,7 @@ function FACluster_v1_0(nFile)
         slicedDFF    = slicedDFF(:, sigNeuronsMat(:, nPlot)); %#ok<NODEF>     
         if ~isempty(slicedDFF)
             numActive     = size(slicedDFF, 2);
+%             currNumFactor = min([floor(numActive/2), maxNumFactor]);
             currNumFactor = min([numActive-1, floor(numActive + 0.5 -sqrt(2*numActive + 0.25)), maxNumFactor]);
             if currNumFactor >= 1
                 for nFactor         = 1:currNumFactor

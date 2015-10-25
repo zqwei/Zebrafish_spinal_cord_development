@@ -25,7 +25,6 @@ function FACluster_v0_0(nFile)
         slicedDFF    = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
         slicedDFF    = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
         numFactors(nPlot) = numFactorsWithNoCrossValidationSimplied(slicedDFF, maxNumFactor); 
-        disp(nPlot)
     end
     
     kgM = [numFactors.kgM];
