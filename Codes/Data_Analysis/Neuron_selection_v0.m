@@ -23,14 +23,13 @@ function Neuron_selection_v0(nFile)
     
     fileDirName   = fileDirNames{nFile}; %#ok<USENS>
     fileName      = fileNames{nFile}; %#ok<USENS>
-    
-    lenWindow     = 511;
-    numOrder      = 9;
 
     dirImageData  = [fileDirName '/'];
-
-    load ([dirImageData 'profile.mat']) % profile_all, timepoints, nCells, tracks_smoothed, side
-
+    load ([dirImageData 'profile.mat'])
+    
+    numOrder      = 9;
+    lenWindow     = 511;
+        
     baseline      = sgolayfilt(profile_all, numOrder, lenWindow, [], 2); % nDim = 2: neuron
     rawf          = profile_all;
     dff           = bsxfun(@rdivide,(profile_all - baseline), mean(baseline, 2));
@@ -42,10 +41,12 @@ function Neuron_selection_v0(nFile)
     for nNeuron      = 1:nCells
         dat          = dff(nNeuron, :);
         [ksTestAllTime(nNeuron),  ksTestAllTimePvalue(nNeuron)]= ...
-            kstest2(-dat(dat<0), dat(dat>0), 'alpha', 0.01, 'tail', 'smaller');
+            kstest2(-dat(dat<0), dat(dat>0), 'alpha', 0.01); %, 'tail', 'smaller'
     end
-    
+          
     slicedIndex   = ksTestAllTime;
+    
+    
     timeStep      = 1200;
     numT          = size(dff, 2);
     timeEnd       = (floor(numT/timeStep) - 2)*timeStep;    
@@ -132,14 +133,25 @@ function Neuron_selection_v0(nFile)
     tracks        = tracks(leafOrder, :, :); %#ok<NASGU>
     side          = side(leafOrder, :);  %#ok<NASGU>
     
-
-    save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex','baseline', 'rawf', 'side', 'timePoints', 'sideSplitter');
+    activeNeuronMat = false(size(dff, 1), length(timePoints));
+    
+    for nNeuron    = 1:size(dff, 1)
+        for nTime  = 1:length(timePoints)
+            slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
+            slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
+        end
+    end
+    
+    
+    save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat');
     if exist('mnx', 'var')
         mnx       = mnx(slicedIndex); %#ok<NODEF>
         mnx       = mnx(leafOrder); %#ok<NASGU>
         save([tempDatDir, fileName, '.mat'], 'mnx', '-append')
     end
     
-    save([tempDatDir, fileName, 'ksTestAllTimePvalue.mat'], 'ksTestAllTimePvalue', 'slicedIndex');
+    close all
+%     
     
 end

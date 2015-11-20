@@ -15,6 +15,8 @@ function setPrint(width, height, fname, printType)
             print('-dpdf',[fname '.pdf'])
         case 'TIF'
             print('-dtiff','-r600',[fname '.tif'])
+        case 'EPS'
+            print('-depsc',[fname '.eps'])
 %         case 'FIG'
 %             print('-dtiff','-r600',[fname '.tif'])
     end

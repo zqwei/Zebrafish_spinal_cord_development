@@ -1,21 +1,37 @@
 #ignore .mat files, anywhere in the tree
 
+Codes/Func/test*.m
+Codes/Data_Analysis/.ipynb_checkpoints/
+Codes/Old_code_v0_LDS
+Codes/Old_code_v0_SD_code
+Codes/Old_code_v1_FA
+Codes/Old_code_v2_Cluster_View
+Codes/Old_code_v3_FA
+Codes/Viewers
+
+# 
 TempDat/*.mat
+Plots/
+Plots/*.*
+
+# original data
+Data/*.*
+Data/
+
+# old files
+TempDatOld_v1
+TempDatOld_v2_DFF_Win40_Per20
+PlotsOld_v1
+
+# Slides
+Slides
+Slides/*.*
+YinanSlides
+
+# Text temporal data
 Text/*.aux
 Text/*.log
 Text/*.synctex.tz
-Plots/
-Plots/*.*
-Codes/Func/test*.m
-Slides/*.*
-YinanSlides/*.*
-Data/*.*
-Data/
-Codes/Data_Analysis/.ipynb_checkpoints/
-Codes/Preprocessing
-Codes/Spectrogram
-Codes/Data_Analysis_View
-Codes/Old_code_v0_LDS
-Codes/Old_code_v1_FA
-Codes/SD_code
-Codes/Viewers
+
+
+

@@ -25,12 +25,12 @@ addpath('../../../../Empirical_Data_Analysis_Code/LDSI/Release_LDSI_v3/');
 
 plotDir             = '../../Plots/';
 
-if ~exist(plotDir, 'dir')
-    mkdir(plotDir)
-end
+%if ~exist(plotDir, 'dir')
+%    mkdir(plotDir)
+%end
 
 tempDatDir          = '../../TempDat/';
 
-if ~exist(tempDatDir, 'dir')
-    mkdir(tempDatDir)
-end
+%if ~exist(tempDatDir, 'dir')
+%    mkdir(tempDatDir)
+%end

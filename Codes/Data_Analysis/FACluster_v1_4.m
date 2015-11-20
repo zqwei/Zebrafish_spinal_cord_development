@@ -10,7 +10,7 @@
 % 
 
 
-function FACluster_v1_1(nFile)            
+function FACluster_v1_4(nFile)            
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    

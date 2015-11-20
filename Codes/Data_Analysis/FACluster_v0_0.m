@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 3.  Covariance analysis: Factor analysis -- number of island using non
-% LONO methods with all neurons
+% 3.  Covariance analysis: Factor analysis -- number of island using LONO 
+% methods with selected neurons
 % 
 %
 % 
@@ -14,33 +14,40 @@ function FACluster_v0_0(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
-    load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints');
-    maxNumFactor      = 20;
+    load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints','activeNeuronMat');
+    
+    maxNumFactor      = 12;
+    numFold           = 10;  
+    
     numPlot           = length(timePoints);
+    EVLONO            = nan(numPlot, maxNumFactor, numFold);
     
-    numFactors        = repmat(struct('kgM', 0, 'paM', 0, 'SRMRM', 0, 'CFIM', 0), numPlot, 1);
+    numSample         = 1200;
+    numTest           = ceil(numSample/numFold);
+
     
-    for nPlot        = 1:5:numPlot
+    for nPlot        = 1:numPlot
         slicedDFF    = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+1200); %#ok<NODEF>
         slicedDFF    = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
         slicedDFF    = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
-        numFactors(nPlot) = numFactorsWithNoCrossValidationSimplied(slicedDFF, maxNumFactor); 
-    end
+        slicedDFF    = slicedDFF(:, activeNeuronMat(:, nPlot)); %#ok<NODEF>     
+        if ~isempty(slicedDFF)
+            numActive     = size(slicedDFF, 2);
+            currNumFactor = min([numActive-1, floor(numActive + 0.5 -sqrt(2*numActive + 0.25)), maxNumFactor]);
+            if currNumFactor >= 1
+                for nFactor         = 1:currNumFactor
+                    for nFold       = 1:numFold
+                        randSeqTest                  = randperm(numSample);
+                        nFoldDFFTest                 = slicedDFF(randSeqTest(1:numTest), :);
+                        nFoldDFFTrain                = slicedDFF(randSeqTest(numTest+1:numSample), :);
+                        [lambda,psi]                 = factoran(nFoldDFFTrain, nFactor, 'scores','regression', 'rotate', 'none');
+                        EVLONO(nPlot, nFactor, nFold) = LONOFA(nFoldDFFTest, lambda, psi);
+                    end
+                end
+            end
+        end
+        disp(nPlot)
+    end    
+    save([tempDatDir, 'FALONO_', fileName, '.mat'], 'EVLONO');  
     
-    kgM = [numFactors.kgM];
-    paM = [numFactors.paM];
-    SRMRM = [numFactors.SRMRM];
-    CFIM = [numFactors.CFIM];
-    
-    plot(timePoints(1:5:numPlot)/4/3600, kgM(1:5:numPlot), 'o', ...
-        timePoints(1:5:numPlot)/4/3600, paM(1:5:numPlot), 'o', ...
-        timePoints(1:5:numPlot)/4/3600, SRMRM(1:5:numPlot), 'o', ...
-        timePoints(1:5:numPlot)/4/3600, CFIM(1:5:numPlot), 'o')
-    xlim([0 timePoints(end)/4/3600])
-    xlabel('Time (hour)')
-    ylabel('# Dim')
-    legend('KG', 'PA', 'SRMR', 'CFI');
-    
-    setPrint(8, 6, [plotDir, 'numFactorAllNeurons_', fileName], 'pdf');
-        
 end
