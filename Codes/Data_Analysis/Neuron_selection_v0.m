@@ -35,13 +35,17 @@ function Neuron_selection_v0(nFile)
     dff           = bsxfun(@rdivide,(profile_all - baseline), mean(baseline, 2));
     tracks        = tracks_smoothed;
     
+    nCells        = size(dff, 1);
+    
     ksTestAllTime    = false(nCells, 1);
     ksTestAllTimePvalue = zeros(nCells, 1);
     
     for nNeuron      = 1:nCells
         dat          = dff(nNeuron, :);
-        [ksTestAllTime(nNeuron),  ksTestAllTimePvalue(nNeuron)]= ...
-            kstest2(-dat(dat<0), dat(dat>0), 'alpha', 0.01); %, 'tail', 'smaller'
+        if sum(isnan(dat)) == 0
+            [ksTestAllTime(nNeuron),  ksTestAllTimePvalue(nNeuron)]= ...
+                kstest2(-dat(dat<0), dat(dat>0), 'alpha', 0.01); %, 'tail', 'smaller'
+        end
     end
           
     slicedIndex   = ksTestAllTime;
