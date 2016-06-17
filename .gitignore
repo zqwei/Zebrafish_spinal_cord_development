@@ -10,9 +10,9 @@ Codes/Old_code_v3_FA
 Codes/Viewers
 
 # 
-TempDat/*.mat
-Plots/
-Plots/*.*
+TempDat*
+
+Plots
 
 # original data
 Data/*.*
