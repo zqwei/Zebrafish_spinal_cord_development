@@ -14,11 +14,17 @@ function FAEV_v0_2(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
+    load([tempDatDir, fileName, '.mat'], 'mnx', 'activeNeuronMat'); 
     load([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'RSquare', 'halfEVTime', 'validFitIndex')
     
     figure;
     hold on
-    plot(halfActTime(RSquare>0.6 & validFitIndex), halfEVTime(RSquare>0.6 & validFitIndex), 'ok')
+    if ~exist('mnx', 'var')
+        plot(halfActTime(RSquare>0.6 & validFitIndex), halfEVTime(RSquare>0.6 & validFitIndex), 'ok')
+    else
+        plot(halfActTime(RSquare>0.6 & validFitIndex & mnx==1), halfEVTime(RSquare>0.6 & validFitIndex & mnx==1), 'ok')
+        plot(halfActTime(RSquare>0.6 & validFitIndex & mnx==0), halfEVTime(RSquare>0.6 & validFitIndex & mnx==0), 'sr')
+    end
     h = refline(1);
     h.LineStyle = '--';
     h.Color = [0.5 0.5 0.5];
