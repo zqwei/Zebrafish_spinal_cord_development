@@ -1,7 +1,7 @@
 % % function Data_Analysis_List_all
-numFile = 6;
+numFile = 9;
 
-for nFile = 6:numFile        
+for nFile = 9:numFile        
     disp(['Generate the orginal data file for dataset #' num2str(nFile)]);   
     disp('==================================');
     disp('Analysis #1 -- clustering analysis');   

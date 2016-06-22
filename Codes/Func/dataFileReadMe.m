@@ -17,3 +17,6 @@ fileDirNames{3} = '../../Data/20150410';
 fileDirNames{4} = '../../Data/20150417';
 fileDirNames{5} = '../../Data/20160312';
 fileDirNames{6} = '../../Data/20160328';
+fileDirNames{7} = '../../Data/20140818_curated';
+fileDirNames{8} = '../../Data/20141006_curated';
+fileDirNames{9} = '../../Data/20150410_curated';
