@@ -70,7 +70,7 @@ function FAEV_v0_5(nFile)
     xlabel('Half active time (hr)')
     ylabel('Size of joint cluster')
     
-    setPrint(8, 6, [plotDir, 'HalfActiveTimesFactorSize_', fileName]);
+    setPrint(8, 6, [plotDir, 'HalfActiveTimesFactorSize_', fileName], 'pdf');
     
     
     figure;
@@ -88,7 +88,7 @@ function FAEV_v0_5(nFile)
     xlabel('Half EV time (hr)')
     ylabel('Size of joint cluster')
     
-    setPrint(8, 6, [plotDir, 'HalfEVTimesFactorSize_', fileName]);
+    setPrint(8, 6, [plotDir, 'HalfEVTimesFactorSize_', fileName], 'pdf');
     
     
     close all
