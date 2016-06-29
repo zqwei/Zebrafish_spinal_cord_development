@@ -41,6 +41,14 @@ function FACluster_v1_6(nFile)
     end
 
     figure;
+    plot(clusterList(:, 1)/60, clusterList(:, 3), 'ok', 'markerfacecolor','k')
+    box off
+    xlabel('Time (hr)')
+    ylabel('Radius (um)')
+    xlim([0 numTime/60])
+    setPrint(8, 6, [plotDir, 'FCRadiusTimeScatter_', fileName], 'pdf')
+    
+    figure;
     [means, stds, grps] = grpstats(clusterList(:, 3),clusterList(:, 1), {'mean', 'std', 'gname'});
     errorbar(str2double(grps)/60, means, stds, 'ok')
     box off
