@@ -41,7 +41,7 @@ function FACluster_v1_6(nFile)
     end
 
     figure;
-    plot(clusterList(:, 1)/60, clusterList(:, 3), 'ok', 'markerfacecolor','k')
+    plot(clusterList(:, 1)/60, clusterList(:, 3), 'ok')
     box off
     xlabel('Time (hr)')
     ylabel('Radius (um)')
