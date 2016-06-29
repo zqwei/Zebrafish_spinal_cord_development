@@ -32,7 +32,7 @@ function FACluster_v1_0(nFile)
     mColor            = [mColor; cbrewer('qual', 'Dark2',  128, 'cubic')];
     figure;
     
-    video             = VideoWriter([plotDir, 'FactorEvolutionV3_', fileName, '.mp4']);%,'MPEG-4'
+    video             = VideoWriter([plotDir, 'FactorEvolutionV3_', fileName, '.mp4'],'MPEG-4');%
     open(video)
     
     preLMat           = nan(numNeuron, 1);
@@ -128,6 +128,7 @@ function FACluster_v1_0(nFile)
         ylim([ylimMin-5 ylimMax+5])
         axis off
         hold off;
+        set(gcf,'color','w');
         pause(0.1);
         frame        = getframe;
         writeVideo(video, frame);
