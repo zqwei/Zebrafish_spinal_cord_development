@@ -1,7 +1,7 @@
 % % function Data_Analysis_List_all
-numFile = 9;
+numFile = 13;
 
-for nFile = 9:numFile        
+for nFile = 10:numFile        
     disp(['Generate the orginal data file for dataset #' num2str(nFile)]);   
     disp('==================================');
     disp('Analysis #1 -- clustering analysis');   
@@ -33,6 +33,7 @@ for nFile = 9:numFile
     FACluster_v1_3(nFile) % plot delay time -- other
     % FACluster_v1_4(nFile) % plot FA size against time (duplicated with 1_1)
     FACluster_v1_5(nFile) % plot randomness of contra FA-FA delay time
+    FACluster_v1_8(nFile) % plot FA-FA delay time without std and mean
     FACluster_v1_6(nFile) % plot size and radius of FA as time
     
     disp('==================================');

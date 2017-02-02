@@ -84,13 +84,13 @@ function FAEV_v0_1(nFile)
         
         hold on;
         plot(find(timeIndex)/60, EVMat(nNeuron, timeIndex), 'o', 'color', mColor);
-        plot((1:numTime)/60, activeNeuronMat(nNeuron, :), '.k')
+%         plot((1:numTime)/60, activeNeuronMat(nNeuron, :), '.k')
         if ~isnan(halfEVTime(nNeuron)) && sum(activeNeuronMat(nNeuron, ~removeTimeIndex))>numTime*0.1
             validFitIndex(nNeuron) = true;
             plot(find(timeIndex)/60, ypred, '-', 'linewid', 2.0, 'Color', mColor);
             plot(find(timeIndex)/60, ypredlowerCI, '-', 'linewid', 0.5, 'Color', mColor); 
             plot(find(timeIndex)/60, ypredupperCI, '-', 'linewid', 0.5, 'Color', mColor); 
-            plot(find(~removeTimeIndex)/60, mdl.Fitted.Probability, '-k')
+            % plot(find(~removeTimeIndex)/60, mdl.Fitted.Probability, '-k')
             
             title(['#' num2str(neuronName(nNeuron)) ' R^2=' num2str(RSquare(nNeuron))])
             if ~isempty(mnx)

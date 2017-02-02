@@ -20,3 +20,7 @@ fileDirNames{6} = '../../Data/20160328';
 fileDirNames{7} = '../../Data/20140818_curated';
 fileDirNames{8} = '../../Data/20141006_curated';
 fileDirNames{9} = '../../Data/20150410_curated';
+fileDirNames{10} = '../../Data/20161004';
+fileDirNames{11} = '../../Data/20161028';
+fileDirNames{12} = '../../Data/20170111';
+fileDirNames{13} = '../../Data/20170112';

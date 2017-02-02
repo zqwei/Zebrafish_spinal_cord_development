@@ -7,7 +7,7 @@ addpath('../Func/')
 setDir;
 
 fileName = fileNames{nFile};
-
+load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat','mnx'); 
 load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'LMat', 'PsiMat', 'CorrectedLMat');
 
 lambda = CorrectedLMat{nTime};

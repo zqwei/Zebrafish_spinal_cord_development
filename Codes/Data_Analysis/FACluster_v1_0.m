@@ -42,6 +42,7 @@ function FACluster_v1_0(nFile)
         LMat(isnan(LMat)) = 0;  
         LMat(:, sum(LMat, 1)==0) = [];
         cla reset
+%         figure;
         hold on
         xtracks   = squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 1), 2)); 
         ytracks   = squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 2), 2));            
@@ -123,12 +124,15 @@ function FACluster_v1_0(nFile)
                 end
             end       
         end
+               
         text((xlimMin+xlimMax)/2, ylimMax-10, [num2str(nTime) ' min'],'fontsize', 24)
         xlim([xlimMin-5 xlimMax+5])
         ylim([ylimMin-5 ylimMax+5])
         axis off
         hold off;
         set(gcf,'color','w');
+%         setPrint(16, 12, [plotDir, 'Video_', fileName, '/' num2str(nTime, '%03d')], 'pdf');
+%         close all
         pause(0.1);
         frame        = getframe;
         writeVideo(video, frame);
