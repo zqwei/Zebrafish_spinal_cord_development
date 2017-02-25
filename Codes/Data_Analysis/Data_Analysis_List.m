@@ -1,7 +1,7 @@
 % % function Data_Analysis_List_all
-numFile = 13;
+numFile = 10;
 
-for nFile = 10:numFile        
+for nFile = 1:numFile        
     disp(['Generate the orginal data file for dataset #' num2str(nFile)]);   
     disp('==================================');
     disp('Analysis #1 -- clustering analysis');   
@@ -55,15 +55,15 @@ for nFile = 10:numFile
     % FACluster_v3_0(nFile)
     % FACluster_v3_1(nFile)
 
-    disp('==================================');
-    disp('Analysis #6 -- MNX');
-    MNX_v0_0(nFile) % plot num neurons of time as a function of cell type
-    MNX_v0_1(nFile) % plot half EV time as a function of cell type and location
-    MNX_v0_2(nFile) % plot half EV time distribution
-
-    disp('==================================');
-    disp('Analysis #7 -- Phase');
-    % PhaseCluster_v0_0(nFile)
+%     disp('==================================');
+%     disp('Analysis #6 -- MNX');
+%     MNX_v0_0(nFile) % plot num neurons of time as a function of cell type
+%     MNX_v0_1(nFile) % plot half EV time as a function of cell type and location
+%     MNX_v0_2(nFile) % plot half EV time distribution
+% 
+%     disp('==================================');
+%     disp('Analysis #7 -- Phase');
+%     % PhaseCluster_v0_0(nFile)
 
     close all;
 end

@@ -38,13 +38,14 @@ function Neuron_selection_v0(nFile)
     nCells        = size(dff, 1);
     
     ksTestAllTime    = false(nCells, 1);
-    ksTestAllTimePvalue = zeros(nCells, 1);
+%     ksTestAllTimePvalue = zeros(nCells, 1);
     
     for nNeuron      = 1:nCells
         dat          = dff(nNeuron, :);
         if sum(isnan(dat)) == 0
-            [ksTestAllTime(nNeuron),  ksTestAllTimePvalue(nNeuron)]= ...
-                kstest2(-dat(dat<0), dat(dat>0), 'alpha', 0.01); %, 'tail', 'smaller'
+%             [ksTestAllTime(nNeuron),  ksTestAllTimePvalue(nNeuron)]= ...
+%                 kstest2(-dat(dat<0), dat(dat>0), 'alpha', 0.01); %, 'tail', 'smaller'
+            ksTestAllTime(nNeuron) = true;
         end
     end
           
@@ -143,7 +144,8 @@ function Neuron_selection_v0(nFile)
         for nTime  = 1:length(timePoints)
             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
+%             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
         end
     end
     
