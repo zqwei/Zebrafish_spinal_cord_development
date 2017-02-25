@@ -24,17 +24,17 @@ for nFile = 1:numFile
     FACluster_v0_4(nFile) % correct FA, removing the projection without low EV
     FACluster_v0_5(nFile) % generate FA evolution video
     FACluster_v0_6(nFile) % generate FA evolution video (pdf for per frame)
-    FACluster_v0_7(nFile) % generate networkMat (delay and correlation mat) for 0_8 and 1_2, 1_3 plots 
-    % FACluster_v0_8(nFile, nTime) % plot CorrSpace (time snap for 1_2, 1_3 plots) 
-    FACluster_v0_9(nFile) % plot FA center and size as a function of time
+%     FACluster_v0_7(nFile) % generate networkMat (delay and correlation mat) for 0_8 and 1_2, 1_3 plots 
+%     % FACluster_v0_8(nFile, nTime) % plot CorrSpace (time snap for 1_2, 1_3 plots) 
+%     FACluster_v0_9(nFile) % plot FA center and size as a function of time
     FACluster_v1_0(nFile) % generate FA evolution video with convex-hull boundary
-    FACluster_v1_1(nFile) % plot FA size against time
-    FACluster_v1_2(nFile) % plot delay time -- FA intra Neuron
-    FACluster_v1_3(nFile) % plot delay time -- other
-    % FACluster_v1_4(nFile) % plot FA size against time (duplicated with 1_1)
-    FACluster_v1_5(nFile) % plot randomness of contra FA-FA delay time
-    FACluster_v1_8(nFile) % plot FA-FA delay time without std and mean
-    FACluster_v1_6(nFile) % plot size and radius of FA as time
+%     FACluster_v1_1(nFile) % plot FA size against time
+%     FACluster_v1_2(nFile) % plot delay time -- FA intra Neuron
+%     FACluster_v1_3(nFile) % plot delay time -- other
+%     % FACluster_v1_4(nFile) % plot FA size against time (duplicated with 1_1)
+%     FACluster_v1_5(nFile) % plot randomness of contra FA-FA delay time
+%     FACluster_v1_8(nFile) % plot FA-FA delay time without std and mean
+%     FACluster_v1_6(nFile) % plot size and radius of FA as time
     
     disp('==================================');
     disp('--- Analysis # -- factor analysis -- factor contunity check');
