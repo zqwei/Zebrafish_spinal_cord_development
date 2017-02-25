@@ -32,7 +32,8 @@ function FACluster_v0_5(nFile)
     mColor            = [mColor; cbrewer('qual', 'Dark2',  128, 'cubic')];
     figure;
     
-    video             = VideoWriter([plotDir, 'FactorEvolutionV3_', fileName, '.mp4'],'MPEG-4');
+    % video             = VideoWriter([plotDir, 'FactorEvolutionV3_', fileName, '.mp4'],'MPEG-4');
+    video             = VideoWriter([plotDir, 'FactorEvolutionV3_', fileName, '.avi'],'Uncompressed AVI');
     open(video)
         
     for nTime         = 1:numTime
