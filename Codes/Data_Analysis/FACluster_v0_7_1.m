@@ -15,7 +15,7 @@ function FACluster_v0_7_1(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
-    load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'dff'); 
+    load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'dff', 'mnx'); 
     load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat', 'PsiMat'); 
     numTime           = length(CorrectedLMat); %#ok<USENS>
     numNeuron         = length(side);
@@ -50,6 +50,9 @@ function FACluster_v0_7_1(nFile)
         nFactor.neuronCCMat  = nan(length(nFactor.neuronIndex), 2); % cross correlation mat % first col: corr; second col: time
         nFactor.side         = nan;
         nFactor.nUnit        = length(nFactor.neuronIndex);
+        if ~isempty(mnx)
+            nFactor.mnxFrac  = mean(mnx(nFactor.neuronIndex));
+        end
 
         factorSet            = nFactor;   
 
@@ -67,6 +70,9 @@ function FACluster_v0_7_1(nFile)
             nFactor.neuronCCMat  = nan(length(nFactor.neuronIndex), 2); % cross correlation mat % first col: corr; second col: time  
             nFactor.side         = side(nNeuron);
             nFactor.nUnit        = length(nFactor.neuronIndex);
+            if ~isempty(mnx)
+                nFactor.mnxFrac  = mean(mnx(nFactor.neuronIndex));
+            end
             if sum(side(sum(LMat(:, idVec)~=0, 2)>0) == idSide)<=1
                 factorSet        = [factorSet, nFactor]; %#ok<*AGROW>
                 singleNeuronSet  = [singleNeuronSet, nNeuron];
@@ -130,6 +136,9 @@ function FACluster_v0_7_1(nFile)
                 nFactor.neuronCCMat  = neuronCCMat;
                 nFactor.side         = mode(side(nFactor.neuronIndex));
                 nFactor.nUnit        = length(nFactor.neuronIndex);
+                if ~isempty(mnx)
+                    nFactor.mnxFrac  = mean(mnx(nFactor.neuronIndex));
+                end
                 factorSet        = [factorSet, nFactor];        
             else
                 for nSide  = 1:2
@@ -165,6 +174,9 @@ function FACluster_v0_7_1(nFile)
                     nFactor.neuronCCMat  = neuronCCMat;
                     nFactor.side         = mode(side(nFactor.neuronIndex));
                     nFactor.nUnit        = length(nFactor.neuronIndex);
+                    if ~isempty(mnx)
+                        nFactor.mnxFrac  = mean(mnx(nFactor.neuronIndex));
+                    end
                     factorSet        = [factorSet, nFactor];        
                 end
             end    
@@ -198,9 +210,9 @@ function FACluster_v0_7_1(nFile)
                             if corrSig<0.01
                                 factorsMat.delayMat(pFactor, qFactor)    = locs/fs;
                                 factorsMat.corrMat(pFactor, qFactor)     = pks;
-                                factorsMat.IpsiIndex(pFactor, qFactor)   = factorSet(qFactor+1).side == factorSet(pFactor+1).side;
                             end
                         end
+                        factorsMat.IpsiIndex(pFactor, qFactor)   = factorSet(qFactor+1).side == factorSet(pFactor+1).side;
                     end
                 end
             end

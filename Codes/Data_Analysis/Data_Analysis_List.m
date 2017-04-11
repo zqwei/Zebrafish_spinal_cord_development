@@ -1,7 +1,7 @@
 % % function Data_Analysis_List_all
 numFile = 10;
 
-for nFile = 1:numFile        
+for nFile = 3:numFile        
 %     disp(['Generate the orginal data file for dataset #' num2str(nFile)]);   
 %     disp('==================================');
 %     disp('Analysis #1 -- clustering analysis');   
@@ -60,9 +60,11 @@ for nFile = 1:numFile
 %     MNX_v0_0(nFile) % plot num neurons of time as a function of cell type
 %     MNX_v0_1(nFile) % plot half EV time as a function of cell type and location
 %     MNX_v0_2(nFile) % plot half EV time distribution
-    FACluster_v0_7_1(nFile) % generate networkMat (delay and correlation mat) for 0_8 and 1_2, 1_3 plots 
-    MNX_v0_3(nFile)
-    MNX_v0_4(nFile)
+%     FACluster_v0_7_1(nFile) % generate networkMat (delay and correlation mat) for 0_8 and 1_2, 1_3 plots 
+%     MNX_v0_3(nFile)
+%     MNX_v0_4(nFile)
+    MNX_v0_5(nFile)
+    MNX_v0_6(nFile)
 %     disp('==================================');
 %     disp('Analysis #7 -- Phase');
 %     PhaseCluster_v0_0(nFile)
