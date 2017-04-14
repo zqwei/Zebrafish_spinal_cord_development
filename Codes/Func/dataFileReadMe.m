@@ -24,9 +24,13 @@ fileDirNames{7} = '../../Data/20161004';
 fileDirNames{8} = '../../Data/20161028';
 fileDirNames{9} = '../../Data/20170111';
 fileDirNames{10} = '../../Data/20170112';
+<<<<<<< HEAD
 fileDirNames{11} = '../../Data/20170126';
 fileDirNames{12} = '../../Data/20170202';
 
 fileDirNames{13} = '../../Data/20170201';
 fileDirNames{14} = '../../Data/20170216';
 fileDirNames{15} = '../../Data/20170315';
+=======
+fileDirNames{11} = '../../Data/20170315';
+>>>>>>> addc0158e53c0400acef74864d94081db894e89f
