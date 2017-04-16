@@ -16,6 +16,10 @@ function MNX_v0_1(nFile)
     load([tempDatDir, fileName, '.mat'], 'mnx', 'side','tracks'); 
     load([tempDatDir, 'EV_' fileName, '.mat'], 'halfEVTime', 'RSquare', 'halfActTime', 'validFitIndex')
     
+    if isempty(mnx) || sum(~mnx) == 0
+        return;
+    end
+    
     RSquareThres      = 0.7;
     meantracks        = squeeze(mean(tracks, 2));
     xTrack            = meantracks(RSquare>RSquareThres, 1);

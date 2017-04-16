@@ -16,6 +16,10 @@ function MNX_v0_2(nFile)
     load([tempDatDir, fileName, '.mat'], 'mnx', 'side','tracks'); 
     load([tempDatDir, 'EV_' fileName, '.mat'], 'halfEVTime', 'RSquare', 'halfActTime', 'validFitIndex')
     
+    if isempty(mnx) || sum(~mnx) == 0
+        return;
+    end
+    
     RSquareThres      = 0.6;
     
     maxTime           = ceil(max(halfEVTime(RSquare > RSquareThres & validFitIndex)));

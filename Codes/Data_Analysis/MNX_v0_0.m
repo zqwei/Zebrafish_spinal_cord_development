@@ -16,6 +16,11 @@ function MNX_v0_0(nFile)
     load([tempDatDir, fileName, '.mat'], 'mnx', 'activeNeuronMat'); 
     load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat') 
     
+    if isempty(mnx) || sum(~mnx) == 0
+        return;
+    end
+    
+    
     numTime           = size(activeNeuronMat, 2); %#ok<NODEF>
     mnxActiveNeuron   = activeNeuronMat(mnx==0, :);
     sigNeuronsMat     = activeNeuronMat;
