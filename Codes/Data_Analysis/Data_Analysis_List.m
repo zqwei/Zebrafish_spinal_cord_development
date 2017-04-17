@@ -11,6 +11,7 @@ for nFile = 1:numFile
 %     disp('Remove the time points with abrupt change of colinearity');
 %     Neuron_selection_v0(nFile);
 %     Neuron_selection_v1(nFile); % Correlation matrix using AP information    
+    Neuron_selection_v2(nFile); % add New x, y, z coordinates to analysis
 % 
 %     disp('==================================');
 %     disp('Analysis #2 -- factor analysis -- number of factors');   
@@ -64,6 +65,7 @@ for nFile = 1:numFile
     MNX_v0_4(nFile)
     MNX_v0_5(nFile)
     MNX_v0_6(nFile)
+    MNX_v0_7(nFile)
 %     disp('==================================');
 %     disp('Analysis #7 -- Phase');
 %     PhaseCluster_v0_0(nFile)

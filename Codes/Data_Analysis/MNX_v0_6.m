@@ -13,11 +13,10 @@ function MNX_v0_6(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
-    mnx               = [];
     load([tempDatDir, fileName, '.mat'], 'mnx', 'tracks', 'side', 'leafOrder', 'slicedIndex', 'activeNeuronMat'); 
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat')
     
-    if isempty(mnx) || sum(~mnx) == 0
+    if ~exist('mnx', 'var')
         return;
     end    
         
