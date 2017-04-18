@@ -21,11 +21,16 @@ function MNX_v0_7(nFile)
         return;
     end
     
+       
+    
     colorSet      = [0.8 0.8 0.8; 0.2 0.2 1.0; 0.2 1.0 0.2;];
         
     numTime       = size(networkMat, 1); %#ok<*NODEF>
+    numFactorTime = nan(numTime, 1);
     
     figure; hold on;
+    
+    yyaxis left
     
     for nTime     = 1:numTime
         networkTime    = networkMat{nTime, 1}; %#ok<*USENS>
@@ -33,6 +38,7 @@ function MNX_v0_7(nFile)
         numUnitsFactor = [networkTime.nUnit];
         FactorIndex    = numUnitsFactor > 1;
         FactorIndex(1) = false;
+        numFactorTime(nTime) = sum(FactorIndex);
         FactorMNX      = [networkTime.mnxFrac];
         if sum(FactorIndex) == 0
             continue;
@@ -65,11 +71,31 @@ function MNX_v0_7(nFile)
     end
     
 %     plot([0 numTime/60], [27.5, 27.5], '--k')
+
     hold off
     xlabel('Time (hour)')
     ylabel('Contra FA-FA delay (s)')
     xlim([0 numTime/60])
     ylim([0 26])
+    box off
+
+    yyaxis right
+    % fit of numFactor curve
+    fitResult    = fit((1:numTime)'/60, numFactorTime-2, 'gauss1');
+    b            = fitResult.b1;
+    a            = fitResult.a1;
+    c            = fitResult.c1;
+    cr           = c;
+    fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], (1:numTime)'/60, numFactorTime);    
+    opt1Dim      = doubleSizedGauss(fitResult,(1:numTime)'/60);    
+    plot((1:numTime)'/60, opt1Dim,'k-', 'linewid', 2)
+    
+    
+    hold off
+    xlabel('Time (hour)')
+    ylabel('Num Factors')
+    xlim([0 numTime/60])
+    ylim([0 ceil(max(opt1Dim))])
     box off
     
     setPrint(8*2, 6*2, [plotDir, 'ContraFADelay_' fileName]);
@@ -86,4 +112,16 @@ function y = isOverlapped(xLoc, factor1, factor2)
     
     y      = (min1 > max2) | (min2 > max1);
     y      = ~y;
+end
+
+function y = doubleSizedGauss(p, x)
+    p      =  num2cell(p);
+    
+    [a, b, c, cr] = deal(p{:});
+    d = 0;
+    dr = 2;
+    
+    y = x;
+    y(x<=b) = a*exp(-((x(x<=b)-b)/c).^2) + d;
+    y(x>b)  = (a+d-dr)*exp(-((x(x>b)-b)/cr).^2) + dr;
 end
