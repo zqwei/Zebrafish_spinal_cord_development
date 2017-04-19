@@ -30,7 +30,7 @@ function MNX_v0_7(nFile)
     
     figure; hold on;
     
-    yyaxis left
+%     yyaxis left
     
     for nTime     = 1:numTime
         networkTime    = networkMat{nTime, 1}; %#ok<*USENS>
@@ -44,10 +44,10 @@ function MNX_v0_7(nFile)
             continue;
         end
         
-        numUnitsFactor = numUnitsFactor(FactorIndex);
-        numUnitsFactorSum = numUnitsFactor + numUnitsFactor';
-        numUnitsFactorSum(eye(length(numUnitsFactor))==1) = 0;
-        numUnitsFactorSumMax = max(numUnitsFactorSum(:));
+%         numUnitsFactor = numUnitsFactor(FactorIndex);
+%         numUnitsFactorSum = numUnitsFactor + numUnitsFactor';
+%         numUnitsFactorSum(eye(length(numUnitsFactor))==1) = 0;
+%         numUnitsFactorSumMax = max(numUnitsFactorSum(:));
         
         
         for nFactor     = find(FactorIndex)
@@ -58,24 +58,25 @@ function MNX_v0_7(nFile)
                     delayCorr = abs(networkCorr.corrMat(nFactor-1, mFactor-1));
                     if isnan(delayCorr); delayCorr = 0; end
                     isContra  = networkCorr.IpsiIndex(nFactor-1, mFactor-1) == 0;
-%                     isOverLap = isOverlapped(new_x, networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
+                    isOverLap = isOverlapped(new_x, networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
                     if isContra
                         markerColor = colorSet((FactorMNX(nFactor) < 1) + (FactorMNX(mFactor) < 1) + 1, :);
                         markerEdgeColor = markerColor;
                         colorRatio  = 1.0;
-%                         if ~isOverLap
-%                             markerEdgeColor = [1.0 0.2 0.2]; 
-%                         end
+                        if ~isOverLap
+                            markerEdgeColor = [1.0 0.2 0.2]; 
+                        end
                         if ~isnan(delayTime)
 %                             plot(nTime/60, 28+rand(), 'o', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor);
 %                         else
-                            markerSize = sizeFASum(networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
-                            if markerSize == numUnitsFactorSumMax
-                                markerSize = 10;
-                            else
-                                markerSize = 5;
-                            end
+%                             markerSize = sizeFASum(networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
+%                             if markerSize == numUnitsFactorSumMax
+%                                 markerSize = 5;
+%                             else
+%                                 markerSize = 5;
+%                             end
 %                             markerSize = delayCorr*36;
+                            markerSize = 5;
                             plot(nTime/60, delayTime, 'o', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor, 'MarkerSize', markerSize);
                         end
                     end
@@ -87,14 +88,14 @@ function MNX_v0_7(nFile)
     
 %     plot([0 numTime/60], [27.5, 27.5], '--k')
 
-    hold off
+%     hold off
     xlabel('Time (hour)')
     ylabel('Contra FA-FA delay (s)')
     xlim([0 numTime/60])
     ylim([0 26])
     box off
 
-    yyaxis right
+%     yyaxis right
     % fit of numFactor curve
     fitResult    = fit((1:numTime)'/60, numFactorTime-2, 'gauss1');
     b            = fitResult.b1;
@@ -103,14 +104,14 @@ function MNX_v0_7(nFile)
     cr           = c;
     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], (1:numTime)'/60, numFactorTime);    
     opt1Dim      = doubleSizedGauss(fitResult,(1:numTime)'/60);    
-    plot((1:numTime)'/60, opt1Dim,'k-', 'linewid', 2)
+    plot((1:numTime)'/60, opt1Dim./max(opt1Dim)*24,'k-', 'linewid', 2)
     
     
-    hold off
-    xlabel('Time (hour)')
-    ylabel('Num Factors')
-    xlim([0 numTime/60])
-    ylim([0 ceil(max(opt1Dim))])
+%     hold off
+%     xlabel('Time (hour)')
+%     ylabel('Num Factors')
+%     xlim([0 numTime/60])
+%     ylim([0 ceil(max(opt1Dim))])
     box off
     
     setPrint(8*2, 6*2, [plotDir, 'ContraFADelay_' fileName]);

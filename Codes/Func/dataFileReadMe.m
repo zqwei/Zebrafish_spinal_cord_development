@@ -27,6 +27,10 @@ fileDirNames{13} = '../../Data/20170126';
 fileDirNames{14} = '../../Data/20170201';
 fileDirNames{15} = '../../Data/20170202';
 fileDirNames{16} = '../../Data/20170216';
+
+% data with MO_slc6a9 injection
 fileDirNames{17} = '../../Data/20170315';
+fileDirNames{18} = '../../Data/20170323';
+fileDirNames{19} = '../../Data/20170412';
 
 

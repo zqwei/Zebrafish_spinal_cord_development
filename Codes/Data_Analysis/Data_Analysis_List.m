@@ -1,7 +1,7 @@
 % % function Data_Analysis_List_all
 numFile = 17;
 
-for nFile = 1:numFile              
+for nFile = 15 %1:numFile              
 % % %     disp(['Generate the orginal data file for dataset #' num2str(nFile)]);   
 % % %     disp('==================================');
 % % %     disp('Analysis #1 -- clustering analysis');   
@@ -23,7 +23,7 @@ for nFile = 1:numFile
 % % %     FACluster_v0_2_1(nFile) % plot LONOM optimal number with Confidence Interval
 % % %     FACluster_v0_3(nFile) % compute loading matrix for optimal number FA
 % % %     FACluster_v0_4(nFile) % correct FA, removing the projection without low EV
-% %     FACluster_v0_5_1(nFile) % generate FA evolution video -- Yinan version
+% % %     FACluster_v0_5_1(nFile) % generate FA evolution video -- Yinan version
 % %     FACluster_v0_7(nFile) % generate networkMat (delay and correlation mat) for 0_8 and 1_2, 1_3 plots 
 % %     FACluster_v0_7_1(nFile) % generate networkMat -- the same as FACluster_v0_7 but for different use of data format
 % %     FACluster_v0_9(nFile) % plot FA center and size as a function of time
@@ -58,6 +58,6 @@ for nFile = 1:numFile
 % % %     disp('Analysis #7 -- Phase');
 % % %     PhaseCluster_v0_0(nFile)
 
-    close all;
+% % %     close all;
 end
 
