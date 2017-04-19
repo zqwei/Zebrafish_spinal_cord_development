@@ -27,8 +27,10 @@ function MNX_v0_2(nFile)
     
     figure;
     hold on
-    [f, xi] = ksdensity(halfEVTime(mnx==0 & RSquare > RSquareThres & validFitIndex), 0:0.1:maxTime);
-    plot(xi, f)
+    if sum(mnx==0 & RSquare > RSquareThres & validFitIndex)>0
+        [f, xi] = ksdensity(halfEVTime(mnx==0 & RSquare > RSquareThres & validFitIndex), 0:0.1:maxTime);
+        plot(xi, f)
+    end
     [f, xi] = ksdensity(halfEVTime(mnx==1 & RSquare > RSquareThres & validFitIndex), 0:0.1:maxTime);
     plot(xi, f)
     legend({'MNX-', 'MNX+'})
@@ -43,8 +45,10 @@ function MNX_v0_2(nFile)
     figure;
     maxTime           = ceil(max(halfActTime(RSquare > RSquareThres & validFitIndex)));
     hold on
-    [f, xi] = ksdensity(halfActTime(mnx==0 & RSquare > RSquareThres & validFitIndex), 0:0.1:maxTime);
-    plot(xi, f)
+    if sum(mnx==0 & RSquare > RSquareThres & validFitIndex)>0
+        [f, xi] = ksdensity(halfActTime(mnx==0 & RSquare > RSquareThres & validFitIndex), 0:0.1:maxTime);
+        plot(xi, f)
+    end
     [f, xi] = ksdensity(halfActTime(mnx==1 & RSquare > RSquareThres & validFitIndex), 0:0.1:maxTime);
     plot(xi, f)
     legend({'MNX-', 'MNX+'})
@@ -60,8 +64,10 @@ function MNX_v0_2(nFile)
     maxTime           = ceil(max(halfDifferenceTime(RSquare > RSquareThres & validFitIndex)));
     minTime           = floor(min(halfDifferenceTime(RSquare > RSquareThres & validFitIndex)));
     hold on
-    [f, xi] = ksdensity(halfDifferenceTime(mnx==0 & RSquare > RSquareThres & validFitIndex), minTime:0.1:maxTime);
-    plot(xi, f)
+    if sum(mnx==0 & RSquare > RSquareThres & validFitIndex)>0
+        [f, xi] = ksdensity(halfDifferenceTime(mnx==0 & RSquare > RSquareThres & validFitIndex), minTime:0.1:maxTime);
+        plot(xi, f)
+    end
     [f, xi] = ksdensity(halfDifferenceTime(mnx==1 & RSquare > RSquareThres & validFitIndex), minTime:0.1:maxTime);
     plot(xi, f)
     legend({'MNX-', 'MNX+'})

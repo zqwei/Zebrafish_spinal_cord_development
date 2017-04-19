@@ -33,6 +33,9 @@ function MNX_v0_8(nFile)
     % video specs
     mColor = cbrewer('qual', 'Dark2',  8, 'cubic');
     mColor = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
+    mColor = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
+    mColor = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
+    mColor = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
     delayColor = cbrewer('seq', 'YlOrRd',  64, 'cubic');
     delayColor = flipud(delayColor);
     preLMat           = nan(numNeuron, 1);

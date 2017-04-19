@@ -61,7 +61,9 @@ function MNX_v0_6(nFile)
     
     yyaxis right
     plot((1:numTime)/60, smooth(fracMNXPos/max(fracMNXPos), 11, 'rlowess'), '-b', 'linewid', 2)
-    plot((1:numTime)/60, smooth(fracMNXNeg/max(fracMNXNeg), 11, 'rlowess'), '-r', 'linewid', 2)
+    if max(fracMNXNeg)>0
+        plot((1:numTime)/60, smooth(fracMNXNeg/max(fracMNXNeg), 11, 'rlowess'), '-r', 'linewid', 2)
+    end
     ylim([0 1])
     ylabel('Normalized fraction neuron')
     
