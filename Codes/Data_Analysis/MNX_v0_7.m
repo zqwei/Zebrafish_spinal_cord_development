@@ -71,7 +71,7 @@ function MNX_v0_7(nFile)
 %                         else
                             markerSize = sizeFASum(networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
                             if markerSize == numUnitsFactorSumMax
-                                markerSize = 15;
+                                markerSize = 10;
                             else
                                 markerSize = 5;
                             end
