@@ -26,7 +26,7 @@ for nFile = 1:numFile
     FACluster_v0_5_1(nFile) % generate FA evolution video -- Yinan version
     FACluster_v0_7(nFile) % generate networkMat (delay and correlation mat) for 0_8 and 1_2, 1_3 plots 
     FACluster_v0_9(nFile) % plot FA center and size as a function of time
-    FACluster_v1_0(nFile) % generate FA evolution video with convex-hull boundary
+%     FACluster_v1_0(nFile) % generate FA evolution video with convex-hull boundary
     FACluster_v1_1(nFile) % plot FA size against time
     FACluster_v1_2(nFile) % plot delay time -- FA intra Neuron
     FACluster_v1_3(nFile) % plot delay time -- other
@@ -52,7 +52,8 @@ for nFile = 1:numFile
     MNX_v0_4(nFile)
     MNX_v0_5(nFile)
     MNX_v0_6(nFile)
-    MNX_v0_7(nFile)
+    MNX_v0_7(nFile) % location 
+    MNX_v0_8(nFile) % contra phase evolutions video
 %     disp('==================================');
 %     disp('Analysis #7 -- Phase');
 %     PhaseCluster_v0_0(nFile)

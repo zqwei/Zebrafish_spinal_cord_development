@@ -36,7 +36,7 @@ function MNX_v0_8(nFile)
     delayColor = cbrewer('seq', 'YlOrRd',  64, 'cubic');
     delayColor = flipud(delayColor);
     preLMat           = nan(numNeuron, 1);
-    video          = VideoWriter([plotDir '\movie_' fileName '.avi'], 'Uncompressed AVI');
+    video          = VideoWriter([plotDir '\movie_phase_' fileName '.avi'], 'Uncompressed AVI');
     video.FrameRate = 10;
     open(video);
     frameW = 2000;

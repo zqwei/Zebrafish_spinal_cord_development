@@ -77,5 +77,5 @@ function FACluster_v1_2(nFile)
     ylim([0 1])
     box off
     
-    setPrint(8, 18, [plotDir, 'delay/FAIntraNeuron_', fileName], 'pdf');
+    setPrint(8, 18, [plotDir, 'delay_FAIntraNeuron_', fileName], 'pdf');
 end

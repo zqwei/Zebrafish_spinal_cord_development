@@ -18,6 +18,8 @@ function FACluster_v0_5_1(nFile)
     load([tempDatDir, fileName, '.mat'], 'dff', 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'new_x', 'new_y', 'new_z'); 
     load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat') 
     
+    if ~exist('new_x', 'var'); return; end
+    
     x                 = new_x;
     y                 = new_y;
     z                 = new_z;

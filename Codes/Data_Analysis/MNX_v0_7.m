@@ -44,24 +44,39 @@ function MNX_v0_7(nFile)
             continue;
         end
         
+        numUnitsFactor = numUnitsFactor(FactorIndex);
+        numUnitsFactorSum = numUnitsFactor + numUnitsFactor';
+        numUnitsFactorSum(eye(length(numUnitsFactor))==1) = 0;
+        numUnitsFactorSumMax = max(numUnitsFactorSum(:));
+        
+        
         for nFactor     = find(FactorIndex)
             for mFactor = find(FactorIndex)
                 if nFactor < mFactor
                     delayTime = networkCorr.delayMat(nFactor-1, mFactor-1);
                     delayTime = abs(delayTime);
+                    delayCorr = abs(networkCorr.corrMat(nFactor-1, mFactor-1));
+                    if isnan(delayCorr); delayCorr = 0; end
                     isContra  = networkCorr.IpsiIndex(nFactor-1, mFactor-1) == 0;
-                    isOverLap = isOverlapped(new_x, networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
+%                     isOverLap = isOverlapped(new_x, networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
                     if isContra
                         markerColor = colorSet((FactorMNX(nFactor) < 1) + (FactorMNX(mFactor) < 1) + 1, :);
                         markerEdgeColor = markerColor;
                         colorRatio  = 1.0;
-                        if ~isOverLap
-                            markerEdgeColor = [1.0 0.2 0.2]; 
-                        end
+%                         if ~isOverLap
+%                             markerEdgeColor = [1.0 0.2 0.2]; 
+%                         end
                         if ~isnan(delayTime)
 %                             plot(nTime/60, 28+rand(), 'o', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor);
 %                         else
-                            plot(nTime/60, delayTime, 'o', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor);
+                            markerSize = sizeFASum(networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
+                            if markerSize == numUnitsFactorSumMax
+                                markerSize = 15;
+                            else
+                                markerSize = 5;
+                            end
+%                             markerSize = delayCorr*36;
+                            plot(nTime/60, delayTime, 'o', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor, 'MarkerSize', markerSize);
                         end
                     end
                 end
@@ -101,6 +116,19 @@ function MNX_v0_7(nFile)
     setPrint(8*2, 6*2, [plotDir, 'ContraFADelay_' fileName]);
     
 end
+
+function y = sizeFAMax(factor1, factor2)
+    y = max(length(factor1), length(factor2));
+end
+
+function y = sizeFAMin(factor1, factor2)
+    y = min(length(factor1), length(factor2));
+end
+
+function y = sizeFASum(factor1, factor2)
+    y = sum([length(factor1), length(factor2)]);
+end
+
 
 function y = isOverlapped(xLoc, factor1, factor2)
     xLoc1  = xLoc(factor1);

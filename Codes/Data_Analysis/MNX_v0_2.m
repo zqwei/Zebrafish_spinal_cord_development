@@ -16,7 +16,7 @@ function MNX_v0_2(nFile)
     load([tempDatDir, fileName, '.mat'], 'mnx', 'side','tracks'); 
     load([tempDatDir, 'EV_' fileName, '.mat'], 'halfEVTime', 'RSquare', 'halfActTime', 'validFitIndex')
     
-    if isempty(mnx) || sum(~mnx) == 0
+    if ~exist('mnx', 'var')
         return;
     end
     

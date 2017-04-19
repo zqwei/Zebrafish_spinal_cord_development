@@ -128,6 +128,6 @@ function FACluster_v1_5(nFile)
 %         ylim([0 1])
 %         box off
 
-        setPrint(8, 6, [plotDir, 'delay/randomDelay_' saveFileNames{nDat}, fileName]);
+        setPrint(8, 6, [plotDir, 'delay_randomDelay_' saveFileNames{nDat}, fileName]);
     end
 end

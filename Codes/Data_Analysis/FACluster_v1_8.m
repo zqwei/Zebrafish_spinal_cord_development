@@ -134,7 +134,7 @@ function FACluster_v1_8(nFile)
         ylim([0 1])
         box off
 
-        setPrint(8, 6*3, [plotDir, 'delay/Org_' saveFileNames{nDat}, fileName],'pdf');
+        setPrint(8, 6*3, [plotDir, 'delay_Org_' saveFileNames{nDat}, fileName],'pdf');
         
         close all
     end

@@ -14,9 +14,11 @@
 function FACluster_v0_7_1(nFile)            
     addpath('../Func');
     setDir;    
-    fileName          = fileNames{nFile}; %#ok<USENS>    
+    fileName          = fileNames{nFile}; %#ok<USENS> 
+    mnx               = [];
     load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'dff', 'mnx'); 
     load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat', 'PsiMat'); 
+    
     numTime           = length(CorrectedLMat); %#ok<USENS>
     numNeuron         = length(side);
     networkMat        = cell(numTime, 2);
