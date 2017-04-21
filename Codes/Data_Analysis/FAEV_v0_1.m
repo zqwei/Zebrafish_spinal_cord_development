@@ -51,10 +51,11 @@ function FAEV_v0_1(nFile)
             removeIndex     = find(actCurrNeuron==0);
             removeIndex(removeIndex<firstActiveTime) = [];
             removeTimeIndex = false(1, numTime);
-            removeTimeIndex(removeIndex) = true;
+            removeTimeIndex(removeIndex) = true; % remove all zeros after first activation time
             timeIndex = timeIndex & ~ removeTimeIndex;
         else
             removeTimeIndex = false(1, numTime);
+            timeIndex       = timeIndex & ~ removeTimeIndex;
         end
  
         mdl = fitglm(find(~removeTimeIndex)/60, activeNeuronMat(nNeuron, ~removeTimeIndex), 'linear', 'Distribution', 'binomial');
@@ -70,12 +71,21 @@ function FAEV_v0_1(nFile)
             paddingLength            = 20;
             zerosPadding             = zeros(1, paddingLength+1);
             init_params              = [0, quantile(EVMat(nNeuron, timeIndex), 0.95), halfActTime(nNeuron), 1];
+            
+            if halfActTime(nNeuron) > numTime
+                init_params(3)       = numTime;
+                init_params(4)       = 0.001;
+            end
+            
             [fitParams, fitResult]   = sigm_fit([(-paddingLength:0)/60, find(timeIndex)/60], [zerosPadding, EVMat(nNeuron, timeIndex)], [0, nan, nan, nan], init_params, false);
             ypred                    = fitResult.ypred(paddingLength+2: end);
             ypredlowerCI             = fitResult.ypredlowerCI(paddingLength+2:end);
             ypredupperCI             = fitResult.ypredupperCI(paddingLength+2:end);
             RSquare(nNeuron)         = 1 - mean((EVMat(nNeuron, timeIndex)' - ypred).^2)./var(EVMat(nNeuron, timeIndex)'); %#ok<UDIM>
             halfEVTime(nNeuron)      = fitParams(3);
+            if halfEVTime(nNeuron) < -300
+                halfEVTime(nNeuron)  = nan;
+            end
 %             [~, fitResult]           = sigm_fit(find(timeIndex)/60, EVMat(nNeuron, timeIndex)');
 %             RSquare(nNeuron)         = 1 - mean((EVMat(nNeuron, timeIndex)' - fitResult.ypred).^2)./var(EVMat(nNeuron, timeIndex)');
         end
