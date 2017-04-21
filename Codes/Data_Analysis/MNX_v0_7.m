@@ -21,6 +21,8 @@ function MNX_v0_7(nFile)
         return;
     end
     
+    yyPlot        = true;
+    if ~exist('yyaxis', 'file'); yyPlot = false; end
        
     
     colorSet      = [0.8 0.8 0.8; 0.2 0.2 1.0; 0.2 1.0 0.2;];
@@ -30,7 +32,7 @@ function MNX_v0_7(nFile)
     
     figure; hold on;
     
-%     yyaxis left
+    if yyPlot; yyaxis left; end
     
     for nTime     = 1:numTime
         networkTime    = networkMat{nTime, 1}; %#ok<*USENS>
@@ -95,7 +97,6 @@ function MNX_v0_7(nFile)
     ylim([0 26])
     box off
 
-%     yyaxis right
     % fit of numFactor curve
     fitResult    = fit((1:numTime)'/60, numFactorTime-2, 'gauss1');
     b            = fitResult.b1;
@@ -103,18 +104,22 @@ function MNX_v0_7(nFile)
     c            = fitResult.c1;
     cr           = c;
     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], (1:numTime)'/60, numFactorTime);    
-    opt1Dim      = doubleSizedGauss(fitResult,(1:numTime)'/60);    
-    plot((1:numTime)'/60, opt1Dim./max(opt1Dim)*24,'k-', 'linewid', 2)
+    opt1Dim      = doubleSizedGauss(fitResult,(1:numTime)'/60);
     
-    
-%     hold off
-%     xlabel('Time (hour)')
-%     ylabel('Num Factors')
-%     xlim([0 numTime/60])
-%     ylim([0 ceil(max(opt1Dim))])
+    if yyPlot
+        yyaxis right
+        plot((1:numTime)'/60, opt1Dim,'k-', 'linewid', 2)    
+        hold off
+        xlabel('Time (hour)')
+        ylabel('Num Factors')
+        xlim([0 numTime/60])
+        ylim([0 ceil(max(opt1Dim))])
+    else
+        plot((1:numTime)'/60, opt1Dim./max(opt1Dim)*24,'k-', 'linewid', 2)
+    end
     box off
     
-    setPrint(8*2, 6*2, [plotDir, 'ContraFADelay_' fileName]);
+    setPrint(8*2, 6*2, [plotDir, 'ContraFADelay_' fileName], 'pdf');
     
 end
 

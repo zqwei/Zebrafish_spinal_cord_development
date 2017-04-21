@@ -57,17 +57,19 @@ function FAEV_v0_1(nFile)
             removeTimeIndex = false(1, numTime);
             timeIndex       = timeIndex & ~ removeTimeIndex;
         end
- 
-        mdl = fitglm(find(~removeTimeIndex)/60, activeNeuronMat(nNeuron, ~removeTimeIndex), 'linear', 'Distribution', 'binomial');
-        beta = mdl.Coefficients.Estimate;
-        halfActTime(nNeuron) = -beta(1)/beta(2);
-        if (mean(activeNeuronMat(nNeuron, 1:ceil(numTime*.5))) > 0.80 ||  mean(activeNeuronMat(nNeuron, :)) > 0.80) ...
-                && (halfActTime(nNeuron)<0 || halfActTime(nNeuron)>numTime/60)
-            halfActTime(nNeuron) = 0;
-        end       
         
+        if ~isempty(firstActiveTime)
+            mdl = fitglm(find(~removeTimeIndex)/60, activeNeuronMat(nNeuron, ~removeTimeIndex), 'linear', 'Distribution', 'binomial');
+            beta = mdl.Coefficients.Estimate;
+            halfActTime(nNeuron) = -beta(1)/beta(2);
+            if (mean(activeNeuronMat(nNeuron, 1:ceil(numTime*.5))) > 0.80 ||  mean(activeNeuronMat(nNeuron, :)) > 0.80) ...
+                    && (halfActTime(nNeuron)<0 || halfActTime(nNeuron)>numTime/60)
+                halfActTime(nNeuron) = 0;
+            end
+            if (halfActTime(nNeuron)<0 || halfActTime(nNeuron)>numTime/60); halfActTime(nNeuron) = nan; end
+        end
                 
-        if sum(timeIndex) > 10
+        if sum(timeIndex) > 10 && halfActTime(nNeuron)>=0
             paddingLength            = 20;
             zerosPadding             = zeros(1, paddingLength+1);
             init_params              = [0, quantile(EVMat(nNeuron, timeIndex), 0.95), halfActTime(nNeuron), 1];
@@ -83,7 +85,7 @@ function FAEV_v0_1(nFile)
             ypredupperCI             = fitResult.ypredupperCI(paddingLength+2:end);
             RSquare(nNeuron)         = 1 - mean((EVMat(nNeuron, timeIndex)' - ypred).^2)./var(EVMat(nNeuron, timeIndex)'); %#ok<UDIM>
             halfEVTime(nNeuron)      = fitParams(3);
-            if halfEVTime(nNeuron) < -300
+            if halfEVTime(nNeuron) < 0 || halfEVTime(nNeuron) > numTime/60
                 halfEVTime(nNeuron)  = nan;
             end
 %             [~, fitResult]           = sigm_fit(find(timeIndex)/60, EVMat(nNeuron, timeIndex)');
