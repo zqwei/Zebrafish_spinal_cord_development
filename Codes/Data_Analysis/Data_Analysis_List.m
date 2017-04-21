@@ -29,14 +29,14 @@ for nFile = 1:numFile
 % % %     FAEV_v0_2(nFile) % compare half EV time vs activation time
 % % %     FAEV_v0_3(nFile) % EV time with location
 % % 
-% %     MNX_v0_0(nFile) % plot num neurons of time as a function of cell type
-% %     MNX_v0_1(nFile) % plot half EV time as a function of cell type and location
-% %     MNX_v0_2(nFile) % plot half EV time distribution
-% %     MNX_v0_3(nFile)
-% %     MNX_v0_4(nFile)
-% %     MNX_v0_6(nFile)
+    MNX_v0_0(nFile) % plot num neurons of time as a function of cell type
+    MNX_v0_1(nFile) % plot half EV time as a function of cell type and location
+    MNX_v0_2(nFile) % plot half EV time distribution
+    MNX_v0_3(nFile)
+    MNX_v0_4(nFile)
+    MNX_v0_6(nFile)
     MNX_v0_7(nFile) % location 
-% %     MNX_v0_8(nFile) % contra phase evolutions video
+    MNX_v0_8(nFile) % contra phase evolutions video
 
 %     PhaseCluster_v0_0(nFile)
 
