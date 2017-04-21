@@ -13,7 +13,6 @@ function MNX_v0_7(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
-    mnx               = [];
     load([tempDatDir, fileName, '.mat'], 'mnx', 'new_x'); 
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat')
     
@@ -51,7 +50,7 @@ function MNX_v0_7(nFile)
 %         numUnitsFactorSum(eye(length(numUnitsFactor))==1) = 0;
 %         numUnitsFactorSumMax = max(numUnitsFactorSum(:));
         
-        
+        nRandom = 0;
         for nFactor     = find(FactorIndex)
             for mFactor = find(FactorIndex)
                 if nFactor < mFactor
@@ -68,7 +67,7 @@ function MNX_v0_7(nFile)
                         if ~isOverLap
                             markerEdgeColor = [1.0 0.2 0.2]; 
                         end
-                        if ~isnan(delayTime)
+                        if ~isnan(delayTime) && delayTime<10
 %                             plot(nTime/60, 28+rand(), 'o', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor);
 %                         else
 %                             markerSize = sizeFASum(networkTime(nFactor).neuronIndex, networkTime(mFactor).neuronIndex);
@@ -77,9 +76,14 @@ function MNX_v0_7(nFile)
 %                             else
 %                                 markerSize = 5;
 %                             end
+                            markerSize = (delayCorr > 0.3)*10 + 5;
 %                             markerSize = delayCorr*36;
-                            markerSize = 5;
+%                             markerSize = 5;
                             plot(nTime/60, delayTime, 'o', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor, 'MarkerSize', markerSize);
+                        else
+                            markerSize = (delayCorr > 0.3)*10 + 5;
+                            nRandom = nRandom + 1;
+                            plot(nTime/60, nRandom + 11, 's', 'markerFaceColor', markerColor, 'markerEdgeColor', markerEdgeColor, 'MarkerSize', markerSize);
                         end
                     end
                 end
@@ -94,7 +98,7 @@ function MNX_v0_7(nFile)
     xlabel('Time (hour)')
     ylabel('Contra FA-FA delay (s)')
     xlim([0 numTime/60])
-    ylim([0 26])
+%     ylim([0 26])
     box off
 
     % fit of numFactor curve
@@ -154,6 +158,7 @@ function y = doubleSizedGauss(p, x)
     [a, b, c, cr] = deal(p{:});
     d = 0;
     dr = 2;
+%     dr = 0;
     
     y = x;
     y(x<=b) = a*exp(-((x(x<=b)-b)/c).^2) + d;

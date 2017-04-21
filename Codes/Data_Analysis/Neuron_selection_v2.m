@@ -18,7 +18,7 @@ function Neuron_selection_v2(nFile)
     fileDirName   = fileDirNames{nFile}; %#ok<USENS>
     fileName      = fileNames{nFile}; %#ok<USENS>
     dirImageData  = [fileDirName '/'];
-    load ([dirImageData 'profile.mat'], 'x', 'y', 'z')
+    load ([dirImageData 'profile.mat'], 'x', 'y', 'z', 'side')
     
     if ~exist('x', 'var')
         return;
@@ -38,6 +38,15 @@ function Neuron_selection_v2(nFile)
     new_y         = new_y(leafOrder);
     new_z         = new_z(leafOrder);
     
-    save([tempDatDir, fileName, '.mat'], 'new_x', 'new_y', 'new_z', '-append')
+    new_side      = side(slicedIndex); %#ok<NODEF>
+    new_side      = new_side(leafOrder);
+    
+    side          = new_side;
+    
+    unMatchSideY  = (new_y < 0 & new_side == 1) | (new_y > 0 & new_side == 2);
+    
+    disp([nFile, min(sum(unMatchSideY), length(side)-sum(unMatchSideY))])
+    
+    save([tempDatDir, fileName, '.mat'], 'new_x', 'new_y', 'new_z', 'side', '-append')
     
 end
