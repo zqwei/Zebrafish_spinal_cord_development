@@ -43,10 +43,6 @@ function Neuron_selection_v2(nFile)
     
     side          = 2 - (new_y>0);
     
-%     unMatchSideY  = (new_y < 0 & new_side == 1) | (new_y > 0 & new_side == 2);
-    
-    disp([nFile, min(sum(unMatchSideY), length(side)-sum(unMatchSideY))])
-    
     save([tempDatDir, fileName, '.mat'], 'new_x', 'new_y', 'new_z', 'side', '-append')
     
 end
