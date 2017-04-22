@@ -37,6 +37,7 @@ for nFile = 1:numFile
     MNX_v0_6(nFile)
     MNX_v0_7(nFile) % location 
     MNX_v0_8(nFile) % contra phase evolutions video
+    MNX_v0_9(nFile) % generate FA evolution video -- Yinan version with mnx- tag
 
 %     PhaseCluster_v0_0(nFile)
 
