@@ -21,6 +21,7 @@ function Neuron_selection_v2(nFile)
     load ([dirImageData 'profile.mat'], 'x', 'y', 'z')
     
     if ~exist('x', 'var')
+        disp(nFile)
         return;
     end    
     

@@ -16,8 +16,10 @@ function FACluster_v0_7_1(nFile)
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS> 
     mnx               = [];
-    load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'dff', 'mnx'); 
+    load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'dff', 'mnx', 'new_x', 'new_y', 'new_z'); 
     load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat', 'PsiMat'); 
+    
+    if ~exist('new_x', 'var'); return; end
     
     numTime           = length(CorrectedLMat); %#ok<USENS>
     numNeuron         = length(side);
@@ -33,9 +35,9 @@ function FACluster_v0_7_1(nFile)
         LMat(isnan(LMat))        = 0;  
         Ph                       = PsiMat{nTime}; %#ok<USENS>
         LMat(:, sum(LMat, 1)==0) = []; 
-        xtracks   = squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 1), 2));  %#ok<NODEF>
-        ytracks   = squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 2), 2));    
-        ztracks   = squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 3), 2)); 
+        xtracks   = new_x; % squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 1), 2));  %#ok<NODEF>
+        ytracks   = new_y; % squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 2), 2));    
+        ztracks   = new_z; % squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 3), 2)); 
         nAct      = activeNeuronMat(:, nTime); %#ok<NODEF>
         slicedDFF    = dff(:,timePoints(nTime)+1:timePoints(nTime)+1200); %#ok<NODEF>
         slicedDFF    = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
