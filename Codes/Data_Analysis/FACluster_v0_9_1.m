@@ -21,6 +21,7 @@ function FACluster_v0_9_1(nFile)
     xtracks           = mean(neuronXLoc);
     ytracks           = mean(neuronYLoc);
     ztracks           = mean(neuronZLoc);
+    z_max             = max(neuronZLoc(:));
     numTime           = length(xtracks);
     
     clusterList       = []; % location, time, size
@@ -35,7 +36,7 @@ function FACluster_v0_9_1(nFile)
             if length(neuronIndex)>1
                 cluster = [ factorSet(nFactor).x, ...
                             factorSet(nFactor).y, ... 
-                            factorSet(nFactor).z, ...
+                            factorSet(nFactor).z/z_max*1.8, ...
                             nTime,...
                             length(neuronIndex)];
                 clusterList = [clusterList; cluster];
@@ -44,6 +45,7 @@ function FACluster_v0_9_1(nFile)
     end
        
     figure;
+    subplot(3, 1, 1)
     scatter(clusterList(:, 1), clusterList(:, 2), clusterList(:, 5)*4, clusterList(:, 4), 'filled');
     alpha(0.8)
     colormap(parula)
@@ -54,8 +56,35 @@ function FACluster_v0_9_1(nFile)
     ylabel(h, 'Time (min)')
     xlabel('x-axis')
     ylabel('y-axis')
-    setPrint(8, 6, [plotDir, 'ClusterCenterXY_', fileName], 'pdf')    
-    close all
+    
+    subplot(3, 1, 2)
+    side_ind = clusterList(:, 2)>0;
+    scatter(clusterList(side_ind, 1), clusterList(side_ind, 3), clusterList(side_ind, 5)*4, clusterList(side_ind, 4), 'filled');
+    alpha(0.8)
+    colormap(parula)
+    xlim([0 10])
+    ylim([0 1])
+    gridxy([0:10], [], 'color', 'k', 'linestyle', '--')
+    h = colorbar;
+    ylabel(h, 'Time (min)')
+    xlabel('x-axis')
+    ylabel('left z-axis')
+
+    subplot(3, 1, 3)
+    side_ind = clusterList(:, 2)<0;
+    scatter(clusterList(side_ind, 1), clusterList(side_ind, 3), clusterList(side_ind, 5)*4, clusterList(side_ind, 4), 'filled');
+    alpha(0.8)
+    colormap(parula)
+    xlim([0 10])
+    ylim([0 1])
+    gridxy([0:10], [], 'color', 'k', 'linestyle', '--')
+    h = colorbar;
+    ylabel(h, 'Time (min)')
+    xlabel('x-axis')
+    ylabel('right z-axis')
+    
+    
+    setPrint(18, 18, [plotDir, 'ClusterCenter_', fileName], 'pdf')    
     
 % %     figure;
 % %     scatter(clusterList(:, 1), clusterList(:, 3), clusterList(:, 5)*4, clusterList(:, 4), 'filled');
