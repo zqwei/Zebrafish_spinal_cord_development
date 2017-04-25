@@ -1,7 +1,9 @@
 % % function Data_Analysis_List_all
-numFile = 19;
+% numFile = 19;
 
-for nFile = 1:numFile              
+fileToAnalysis = [3 4 5 7 10 11 12 13 15 16 17 18 19];
+
+for nFile = fileToAnalysis           
 % % %     Neuron_selection_v0(nFile);
 % % %     Neuron_selection_v1(nFile); % Correlation matrix using AP information    
 % % %     Neuron_selection_v2(nFile); % add New x, y, z coordinates to analysis
@@ -16,8 +18,11 @@ for nFile = 1:numFile
 % % %     FACluster_v0_5_1(nFile) % generate FA evolution video -- Yinan version
 % % %     FACluster_v0_7(nFile) % generate networkMat (delay and correlation mat) for 0_8 and 1_2, 1_3 plots 
 % % %     FACluster_v0_7_1(nFile) % generate networkMat -- the same as FACluster_v0_7 but for different use of data format
-    FACluster_v0_9_1(nFile) % plot FA center and size as a function of time : new coordinates
+% % %     FACluster_v0_9_1(nFile) % plot FA center and size as a function of time : new coordinates
 % % %     FACluster_v1_1(nFile) % plot FA size against time
+% % %     FACluster_v1_1_1(nFile) % plot max FA size for each side against time
+% % %     FACluster_v1_1_2(nFile) % plot FA size with mnx factored time
+    FACluster_v1_1_3(nFile) % plot FA size with mnx factored time
 % % %     FACluster_v1_2(nFile) % plot delay time -- FA intra Neuron
 % % %     FACluster_v1_3(nFile) % plot delay time -- other
 % % %     FACluster_v1_5(nFile) % plot randomness of contra FA-FA delay time
