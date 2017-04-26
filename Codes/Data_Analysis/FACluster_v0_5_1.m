@@ -32,8 +32,12 @@ function FACluster_v0_5_1(nFile)
     mColor = cbrewer('qual', 'Dark2',  8, 'cubic');
     mColor            = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
     preLMat           = nan(numNeuron, 1);
-
-    video          = VideoWriter([plotDir '\movie_' fileName '.avi'], 'Uncompressed AVI');
+    
+    if ispc
+        video          = VideoWriter([plotDir '\movie_' fileName '.avi'], 'Uncompressed AVI');
+    elseif ismac
+        video          = VideoWriter([plotDir '\movie_' fileName '.mp4'], 'MPEG-4');
+    end
     video.FrameRate = 10;
     open(video);
 
