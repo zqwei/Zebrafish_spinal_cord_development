@@ -58,7 +58,9 @@ function FACluster_v1_1_3(nFile)
     % for nfile = 19; removeStart  = 150; fix_fit_max = 0.95;
     removeStart  = 180;
     init_params              = [0, max(fracNeuron), find(fracNeuron>0.5, 1, 'first')/60, 1];
-    [fitParams, fitResult]   = sigm_fit((1:removeStart)/60, fracNeuron(1:removeStart), [0, 1.0, nan, nan], init_params, false);
+    [fitParams, fitResult]   = sigm_fit((1:removeStart)/60, fracNeuron(1:removeStart), [0, 0.95, nan, nan], init_params, false);
+    upK                      = fitResult.paramCI(end, 1);
+    lowK                     = fitResult.paramCI(end, 2);
     ypred                    = fitResult.ypred;
     ypredlowerCI             = fitResult.ypredlowerCI;
     ypredupperCI             = fitResult.ypredupperCI;
@@ -74,7 +76,8 @@ function FACluster_v1_1_3(nFile)
     xlim([0 numTime/60])
     
     box off
-    disp([num2str(nFile) ':' fileName ': ' num2str(1/fitParams(4)*(log10(9)+log10(9)))])
+%     disp([num2str(nFile) ':' fileName ': ' num2str(1/fitParams(4)*(log10(9)+log10(9)))])
+    disp([num2str(nFile) ':' fileName ': ' num2str(1/lowK*(log10(9)+log10(9))) ';' num2str(1/upK*(log10(9)+log10(9)))])
     
     setPrint(8, 6, [plotDir, 'FASizeSigmoidFit_', fileName], 'pdf');
         
