@@ -69,9 +69,10 @@ function NeuralActivityFactorTime_v0_2(nFile)
     scatter(new_x, new_y, [], neuronTime, 'filled')
     xlim([0 ceil(max(new_x))])
     ylim([-2 2])
-    gridxy([0:ceil(max(new_x))], [0], 'color', 'k', 'linestyle', '--')
+    gridxy(1:ceil(max(new_x)), 0, 'color', 'k', 'linestyle', '--')
     box off
-    title(fileName)
+%     title(fileName)
+    setPrint(8, 6, [plotNetDir 'SingleNeuronFactorTime_' fileName])
 
     [neuronTime, neuronTimeInd] = sort(neuronTime, 'ascend');
     neuronFactor = neuronFactor(neuronTimeInd);
@@ -99,7 +100,7 @@ function NeuralActivityFactorTime_v0_2(nFile)
     box off
     xlabel('Time')
     ylabel('dff')
-    title(fileName)
-%     
-%     setPrint(20, 40, [plotNetDir 'SingleNeuronDynamics_' fileName], 'tiff')
+%     title(fileName)
+    
+    setPrint(20, 40, [plotNetDir 'SingleNeuronDynamics_' fileName], 'tiff')
 end
