@@ -23,7 +23,7 @@ function setPrint(width, height, fname, printType)
         case {'TIF', 'TIFF'}
             print('-dtiff','-r300',[fname '.tif'])
         case {'SVG'}
-            print('-dsvg',[fname '.svg'])            
+            print('-dsvg',[fname '.svg']) 
     end
     
     

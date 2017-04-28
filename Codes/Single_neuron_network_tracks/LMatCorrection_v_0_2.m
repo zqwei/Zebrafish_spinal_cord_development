@@ -1,8 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LMatCorrection_v_0_1
 % 
-% based on EV corrected L-Matrix:
-% 1. drop non-active neurons in factors
+% based on LMatCorrection_v_0_1 corrected L-Matrix:
+% 1. code to drop overlapped factors
 % 2. drop part of the factor with any side = 1
 % 3. set valid threshould of LMat at 0.3
 %
@@ -15,7 +15,7 @@
 %
 
 
-function LMatCorrection_v_0_1(nFile)            
+function LMatCorrection_v_0_2(nFile)            
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile};   %#ok<*USENS>
@@ -106,7 +106,6 @@ function LMatCorrection_v_0_1(nFile)
         % end of drop overlapped factor code
         
         LMat(LMatNeuron == 0)    = 0;
-        LMat(:, sum(LMatNeuron, 1) <2) = 0; % drop factors with single neurons
         LMat(:, sum(LMat, 1)==0) = []; % drop factors with zero weight 
         CorrectedLMat{nTime}     = LMat;
     end
