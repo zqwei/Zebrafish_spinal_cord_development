@@ -3,7 +3,7 @@
 % LMatLifeTime_v_0_1
 % 
 % based on LMatCorrection_v_0_1 corrected L-Matrix and lifetime factor
-% computation froom LMatLifeTime_v_0_1
+% computation from LMatLifeTime_v_0_1
 %
 % -------------------------------------------------------------------------
 % 
