@@ -22,7 +22,7 @@ function NeuralActivityFactorTime_v0_2(nFile)
     numTime           = size(new_activeNeuronMat, 2);
     numNeuron         = size(new_activeNeuronMat, 1);
     neuronFactorIndex = false(size(new_activeNeuronMat));
-    timeWin           = 30;
+    timeWin           = 40;
     linew             = 0.5;
     colorSet          = cbrewer('qual', 'Dark2',  numTime, 'cubic');
 
@@ -43,7 +43,15 @@ function NeuralActivityFactorTime_v0_2(nFile)
     
     
     neuronTime = nan(numNeuron, 1);
+    neuronActTime = nan(numNeuron, 1);
     
+    for nNeuron = 1:numNeuron
+        if sum(neuronTimeValue(nNeuron, :)) > 0
+            neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
+            neuronActTime(nNeuron) = mean(new_activeNeuronMat(nNeuron, max(1, (neuronTime(nNeuron)-timeWin):neuronTime(nNeuron))));
+        end
+    end
+
     for nNeuron = 1:numNeuron
         if sum(neuronTimeValue(nNeuron, :)) > 0
             neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
@@ -66,7 +74,7 @@ function NeuralActivityFactorTime_v0_2(nFile)
     
     figure;
     hold on;
-    scatter(new_x, new_y, [], neuronTime, 'filled')
+    scatter(new_x, new_y, neuronActTime*100, neuronTime, 'filled')
     xlim([0 ceil(max(new_x))])
     ylim([-2 2])
     gridxy(1:ceil(max(new_x)), 0, 'color', 'k', 'linestyle', '--')
@@ -76,6 +84,7 @@ function NeuralActivityFactorTime_v0_2(nFile)
 
     [neuronTime, neuronTimeInd] = sort(neuronTime, 'ascend');
     neuronFactor = neuronFactor(neuronTimeInd);
+    neuronActTime = neuronActTime(neuronTimeInd)>0.6;
 
     figure;    
     hold on
@@ -90,7 +99,7 @@ function NeuralActivityFactorTime_v0_2(nFile)
             timeMarks = timeRange - timePoints(nNeuronTime);
             dffValue  = zscore(dff(nNeuronInd, timeRange))+ nNeuron*4;
             plot(timeMarks, dffValue, 'Color', colorSet(nNeuronTime,:), 'linewidth', linew)
-            text(timePoints(timeWin)+1, nNeuron*4, [num2str(nNeuronTime) ';' num2str(neuronFactor(nNeuron))])
+            text(timePoints(timeWin)+1, nNeuron*4, [num2str(nNeuronTime) '; ' num2str(neuronFactor(nNeuron)) '; ' num2str(neuronActTime(nNeuron))])
         end
     end
     

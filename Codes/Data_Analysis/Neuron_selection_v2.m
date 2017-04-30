@@ -41,8 +41,11 @@ function Neuron_selection_v2(nFile)
     
 %     new_side      = side(slicedIndex); %#ok<NODEF>
 %     new_side      = new_side(leafOrder);
-    
-    side          = 2 - (new_y>0);
+    if nFile ~= 11
+        side          = 2 - (new_y>0);
+    else
+        side          = 2 - (new_y>0.4);
+    end
     
     save([tempDatDir, fileName, '.mat'], 'new_x', 'new_y', 'new_z', 'side', '-append')
     
