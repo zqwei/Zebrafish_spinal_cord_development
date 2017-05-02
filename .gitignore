@@ -11,6 +11,8 @@ Codes/Viewers
 NetworkDynamicsTempDat
 NetworkDynamicsPlots
 
+DepreciatedAnalysis
+
 Data_Analysis_List.m
 
 # 
@@ -36,6 +38,8 @@ YinanSlides
 Text/*.aux
 Text/*.log
 Text/*.synctex.tz
+
+*.m~
 
 
 

@@ -12,22 +12,23 @@
 %
 %
 
-function NeuralActivityFactorTime_v0_4(nFile)
+function NeuralActivityFactorTime_v0_6(nFile)
     addpath('../Func');
     setDir;    
     fileName      = fileNames{nFile};   %#ok<*USENS>
-    load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints')
+    load([tempDatNetDir, fileName, '_spectrogram.mat'], 'peakPeriodMat');
     load([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_2.mat'], 'preLMat', 'preLMatIndex', 'preLMatTime') 
-    numTime       = length(timePoints);
-    numNeuron     = size(preLMat, 1);
+    numTime       = size(peakPeriodMat, 2);
     numFactor     = max(preLMatIndex);
     preLMatNeuron = sum(preLMat);
     timeWin       = 40;
     mColor        = cbrewer('qual', 'Dark2',  numFactor, 'cubic');
-    nStep         = 10;
-    existLMat     = false(numNeuron, 1);
-
+    nStep         = 20;
+    
+    peakPeriodMat(isnan(peakPeriodMat)) = 0;
+    
     figure;
+    hold on
     totNeuron     = 0;
     for nFactor   = 1:numFactor
         timeInd   = preLMatTime(:, preLMatNeuron<4 & preLMatIndex == nFactor);
@@ -35,25 +36,17 @@ function NeuralActivityFactorTime_v0_4(nFile)
         endTime   = min(max(timeInd), zeroTime+timeWin);
         LMat      = preLMat(:, preLMatNeuron<4 & preLMatIndex == nFactor & preLMatTime<=endTime);
         LMatInd   = sum(LMat, 2)>0;
-        LMatInd(existLMat & LMatInd) = false;
-        existLMat = existLMat | LMatInd;
         zeroTime  = min(timeInd);
         endTime   = min(max(timeInd), zeroTime+timeWin);
         minTime   = max(zeroTime - timeWin, 1);
-        timeRange = timePoints(minTime)+1:timePoints(endTime);
-        timeMarks = timeRange - timePoints(zeroTime);
-        if sum(LMatInd) >0 
-            dffValue  = bsxfun(@plus, zscore(dff(LMatInd, timeRange), [], 2), (1:sum(LMatInd))'*nStep + totNeuron*nStep);
-            dffMedian = median(dffValue, 2);
-            totNeuron = totNeuron + sum(LMatInd);
-            hold on
-            plot(timeMarks, dffValue, 'Color', mColor(nFactor,:), 'linewidth', 0.5);
-            xlim([-timePoints(timeWin) timePoints(timeWin)+10])
-            gridxy([], dffMedian+1.5, 'color', 'k', 'linestyle', '--')
-            axis off
-        end
-    end    
+        peakFrqValue  = bsxfun(@plus, peakPeriodMat(LMatInd, minTime:endTime), (1:sum(LMatInd))'*nStep + totNeuron*nStep);
+        totNeuron = totNeuron + sum(LMatInd);
+        hold on
+        plot((minTime:endTime)-zeroTime, peakFrqValue, 'Color', mColor(nFactor,:), 'linewidth', 0.5);
+        axis off
+    end
+    gridxy(0, [], 'color', 'w', 'linestyle', '--')
+    xlim([-timeWin timeWin+1])
     ylim([-1 (totNeuron+1)*nStep+1])
-    gridxy(0, [], 'color', 'k', 'linestyle', '--')
-    setPrint(20, 4*numFactor, [plotNetDir 'SingleNeuronDynamicsLocalCommunity_' fileName], 'pdf')
+%     setPrint(8, 6*length(LMatInd), [plotNetDir 'SingleNeuronDynamicsLocalCommunity_' fileName '_Factor_' num2str(nFactor, '%02d')], 'pdf')
 end
