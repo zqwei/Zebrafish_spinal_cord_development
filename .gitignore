@@ -12,8 +12,8 @@ Codes/Single_neuron_network_tracks
 NetworkDynamicsPlots
 NetworkDynamicsTempDat
 
-Data_Analysis_List.m
-Data_Analysis_List_Yinan.m
+Codes/Data_Analysis/Data_Analysis_List.m
+Codes/Data_Analysis/Data_Analysis_List_Yinan.m
 # 
 TempDat*
 
