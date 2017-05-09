@@ -51,12 +51,19 @@ function NeuralActivityFactorTime_v0_2(nFile)
             neuronActTime(nNeuron) = mean(new_activeNeuronMat(nNeuron, max(1, (neuronTime(nNeuron)-timeWin):neuronTime(nNeuron))));
         end
     end
+    
+    figure;
+    [fout, xout] = ksdensity(neuronActTime(~isnan(neuronActTime)), 0:0.02:1);
+    plot(xout, fout, 'linewid', 2)
+    xlim([0 1])
+    box off
+    setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTime_' fileName])
 
-    for nNeuron = 1:numNeuron
-        if sum(neuronTimeValue(nNeuron, :)) > 0
-            neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
-        end
-    end
+% %     for nNeuron = 1:numNeuron
+% %         if sum(neuronTimeValue(nNeuron, :)) > 0
+% %             neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
+% %         end
+% %     end
     
     neuronFactor = nan(numNeuron, 1);
     for nNeuron = 1:numNeuron
@@ -104,7 +111,7 @@ function NeuralActivityFactorTime_v0_2(nFile)
     end
     
     ylim([-1 sum(~isnan(neuronTime))*4+1])
-    gridxy([0],[], 'color', 'k', 'linestyle', '--')
+    gridxy(0,[], 'color', 'k', 'linestyle', '--')
     xlim([-timePoints(timeWin) timePoints(timeWin)+10])
     box off
     xlabel('Time')
