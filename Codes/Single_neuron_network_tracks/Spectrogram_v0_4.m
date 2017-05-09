@@ -35,23 +35,28 @@ function Spectrogram_v0_4(nFile)
         end
     end
 
-    for nNeuron   = 1:numNeuron
-        %%%%% Plot        
-        subplot(m, m, nNeuron)
-        hold on;
-        plot(specNeuronMat(nNeuron, :));
-        plot(new_activeNeuronMat(nNeuron, :)*max(specNeuronMat(nNeuron, :)))
-        gridxy([], prctile(specNeuronMat(nNeuron, new_activeNeuronMat(nNeuron, :)==0), 85))
-        ylabel('Ave. Power')
-        xlabel('Time (hour)')
-    end
-    
-    setPrint(m*8, m*6, [plotNetDir, 'MTMSpectrogram_', fileName], 'pdf');
+% %     figure;
+% %     for nNeuron   = 1:numNeuron
+% %         %%%%% Plot        
+% %         subplot(m, m, nNeuron)
+% %         hold on;
+% %         plot(specNeuronMat(nNeuron, :));
+% %         plot(new_activeNeuronMat(nNeuron, :)*max(specNeuronMat(nNeuron, :)))
+% %         gridxy([], prctile(specNeuronMat(nNeuron, new_activeNeuronMat(nNeuron, :)==0), 85))
+% %         ylabel('Ave. Power')
+% %         xlabel('Time (hour)')
+% %     end
+% %     
+% %     setPrint(m*8, m*6, [plotNetDir, 'MTMSpectrogram_', fileName], 'pdf');
     
     oscNeuronMat = nan(size(new_activeNeuronMat));
     
-    for nNeuron  = 1:numNeuron
-        oscNeuronMat(nNeuron, :) = specNeuronMat(nNeuron, :) > prctile(specNeuronMat(nNeuron, new_activeNeuronMat(nNeuron, :)==0), 85);
+    for nNeuron   = 1:numNeuron
+        thres     = prctile(specNeuronMat(nNeuron, new_activeNeuronMat(nNeuron, :)==0), 85);
+        if isempty(thres) || thres < 0 || isnan(thres)
+            thres = 0;
+        end
+        oscNeuronMat(nNeuron, :) = specNeuronMat(nNeuron, :) > thres;
     end
     
     save([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_1.mat'], 'oscNeuronMat', '-append') 
