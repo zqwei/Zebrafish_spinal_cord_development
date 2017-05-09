@@ -4,7 +4,7 @@
 % Spectrogram_v0_3
 % Spectrogram_v0_4
 %
-% Similar to NeuralActivityFactorTime_v0_2 but using oscNeuronMat
+% Similar to NeuralActivityFactorTime_v0_2 but using new_activeNeuronMat
 %
 % -------------------------------------------------------------------------
 % 
@@ -18,11 +18,11 @@ function NeuralActivityFactorTime_v0_5(nFile)
     setDir;    
     fileName   = fileNames{nFile};   %#ok<*USENS>
     load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints', 'new_x', 'new_y', 'new_z')
-    load([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_1.mat'], 'oscNeuronMat') 
+    load([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_1.mat'], 'new_activeNeuronMat', 'oscNeuronMat') 
     load([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_2.mat'], 'preLMat', 'preLMatIndex', 'preLMatTime') 
-    numTime           = size(oscNeuronMat, 2);
-    numNeuron         = size(oscNeuronMat, 1);
-    neuronFactorIndex = false(size(oscNeuronMat));
+    numTime           = size(new_activeNeuronMat, 2);
+    numNeuron         = size(new_activeNeuronMat, 1);
+    neuronFactorIndex = false(size(new_activeNeuronMat));
     timeWin           = 40;
     linew             = 0.5;
     colorSet          = cbrewer('qual', 'Dark2',  numTime, 'cubic');
@@ -34,37 +34,46 @@ function NeuralActivityFactorTime_v0_5(nFile)
         end
     end
     
-    neuronTimeValue = double(neuronFactorIndex & oscNeuronMat);
+    neuronTimeValue = double(neuronFactorIndex & new_activeNeuronMat);
     for nNeuron     = 1:numNeuron
         smooth_neuronTimeValue      = smooth([zeros(1, 11), neuronTimeValue(nNeuron, :)], 21);
         neuronTimeValue(nNeuron, :) = smooth_neuronTimeValue(1:end-11) > 0.3;
     end
     
-    neuronTimeValue = neuronFactorIndex & oscNeuronMat & neuronTimeValue;
+    neuronTimeValue = neuronFactorIndex & new_activeNeuronMat & neuronTimeValue;
     
     
     neuronTime = nan(numNeuron, 1);
     neuronActTime = nan(numNeuron, 1);
+    neuronOscTime = nan(numNeuron, 1);
     
     for nNeuron = 1:numNeuron
         if sum(neuronTimeValue(nNeuron, :)) > 0
             neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
-            neuronActTime(nNeuron) = mean(oscNeuronMat(nNeuron, max(1, (neuronTime(nNeuron)-timeWin):neuronTime(nNeuron))));
+            time_Start = max(1, neuronTime(nNeuron)-timeWin);
+            neuronActTime(nNeuron) = mean(new_activeNeuronMat(nNeuron, time_Start:neuronTime(nNeuron)));
+            neuronOscTime(nNeuron) = mean(oscNeuronMat(nNeuron, time_Start:neuronTime(nNeuron)));
+%             if neuronOscTime(nNeuron)<=0
+%                 neuronOscTime(nNeuron) = nan;
+%             end
         end
     end
     
+    % activation level distribution
     figure;
     [fout, xout] = ksdensity(neuronActTime(~isnan(neuronActTime)), 0:0.02:1);
     plot(xout, fout, 'linewid', 2)
     xlim([0 1])
     box off
     setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTime_' fileName])
-
-% %     for nNeuron = 1:numNeuron
-% %         if sum(neuronTimeValue(nNeuron, :)) > 0
-% %             neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
-% %         end
-% %     end
+    
+    % oscillation level distribution
+    figure;
+    [fout, xout] = ksdensity(neuronOscTime(~isnan(neuronOscTime)), 0:0.02:1);
+    plot(xout, fout, 'linewid', 2)
+    xlim([0 1])
+    box off
+    setPrint(8, 6, [plotNetDir 'SingleNeuronOscLevelFactorTime_' fileName])
     
     neuronFactor = nan(numNeuron, 1);
     for nNeuron = 1:numNeuron
@@ -80,19 +89,80 @@ function NeuralActivityFactorTime_v0_5(nFile)
         end
     end
     
+    % scatter plot activation level
     figure;
     hold on;
-    scatter(new_x, new_y, neuronActTime*100, neuronTime, 'filled')
+    scatter(new_x, new_y, neuronActTime*100+0.1, neuronTime, 'filled')
     xlim([0 ceil(max(new_x))])
     ylim([-2 2])
     gridxy(1:ceil(max(new_x)), 0, 'color', 'k', 'linestyle', '--')
     box off
-%     title(fileName)
-    setPrint(8, 6, [plotNetDir 'SingleNeuronFactorTime_' fileName])
+    setPrint(8, 6, [plotNetDir 'SingleNeuronFactorTime_' fileName])    
+    
+    % scatter plot oscillation level
+    figure;
+    hold on;
+    scatter(new_x, new_y, neuronOscTime*100+0.1, neuronTime, 'filled')
+    xlim([0 ceil(max(new_x))])
+    ylim([-2 2])
+    gridxy(1:ceil(max(new_x)), 0, 'color', 'k', 'linestyle', '--')
+    box off
+    setPrint(8, 6, [plotNetDir 'SingleNeuronFactorTimeOsc_' fileName])
+    
+% % %     figure;
+% % %     plot(neuronActTime, neuronOscTime, 'o')
 
+    save([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_1.mat'], 'neuronTime', 'neuronActTime', 'neuronOscTime', '-append')
+    
+    
+    % plot of neuron in local communities
+    numFactor     = max(preLMatIndex);
+    preLMatNeuron = sum(preLMat);
+    nStep         = 10;
+    existLMat     = false(numNeuron, 1);
+    mColor        = cbrewer('qual', 'Dark2',  numFactor, 'cubic');
+
+    figure;
+    totNeuron     = 0;
+    for nFactor   = 1:numFactor
+        timeInd   = preLMatTime(:, preLMatNeuron<4 & preLMatIndex == nFactor);
+        zeroTime  = min(timeInd);
+        endTime   = min(max(timeInd), zeroTime+timeWin);
+        LMat      = preLMat(:, preLMatNeuron<4 & preLMatIndex == nFactor & preLMatTime<=endTime);
+        LMatInd   = sum(LMat, 2)>0;
+        LMatInd(existLMat & LMatInd) = false;
+        existLMat = existLMat | LMatInd;
+        zeroTime  = min(timeInd);
+        endTime   = min(max(timeInd), zeroTime+timeWin);
+        minTime   = max(zeroTime - timeWin, 1);
+        timeRange = timePoints(minTime)+1:timePoints(endTime);
+        timeMarks = timeRange - timePoints(zeroTime);
+        if sum(LMatInd) >0 
+            dffValue  = bsxfun(@plus, zscore(dff(LMatInd, timeRange), [], 2), (1:sum(LMatInd))'*nStep + totNeuron*nStep);
+            dffMedian = median(dffValue, 2);
+            hold on
+            plot(timeMarks, dffValue, 'Color', mColor(nFactor,:), 'linewidth', 0.5);
+            LMatInd = find(LMatInd);
+            for mNeuron = 1:length(LMatInd)
+                nNeuron = LMatInd(mNeuron);
+                text(timePoints(timeWin)+1, mNeuron*nStep + totNeuron*nStep, [num2str(nNeuron) ';' num2str(neuronOscTime(nNeuron)>0.9) '; ' num2str(neuronActTime(nNeuron),'%.2f')])
+            end
+            xlim([-timePoints(timeWin) timePoints(timeWin)+10])
+            gridxy([], dffMedian+1.5, 'color', 'k', 'linestyle', '--')
+            axis off
+            totNeuron = totNeuron + length(LMatInd);
+        end
+    end    
+    ylim([-1 (totNeuron+1)*nStep+1])
+    gridxy(0, [], 'color', 'k', 'linestyle', '--')
+    setPrint(20, 4*numFactor, [plotNetDir 'SingleNeuronDynamicsLocalCommunity_' fileName], 'pdf')
+    
+    
+    % plot all sorted neuron
     [neuronTime, neuronTimeInd] = sort(neuronTime, 'ascend');
     neuronFactor = neuronFactor(neuronTimeInd);
     neuronActTime = neuronActTime(neuronTimeInd)>0.6;
+    neuronOscTime = neuronOscTime(neuronTimeInd)>0.6;
 
     figure;    
     hold on
@@ -107,7 +177,7 @@ function NeuralActivityFactorTime_v0_5(nFile)
             timeMarks = timeRange - timePoints(nNeuronTime);
             dffValue  = zscore(dff(nNeuronInd, timeRange))+ nNeuron*4;
             plot(timeMarks, dffValue, 'Color', colorSet(nNeuronTime,:), 'linewidth', linew)
-            text(timePoints(timeWin)+1, nNeuron*4, [num2str(nNeuronTime) '; ' num2str(neuronFactor(nNeuron)) '; ' num2str(neuronActTime(nNeuron))])
+            text(timePoints(timeWin)+1, nNeuron*4, [num2str(nNeuronTime) '; ' num2str(neuronFactor(nNeuron)) '; ' num2str(neuronOscTime(nNeuron)) '; ' num2str(neuronActTime(nNeuron))])
         end
     end
     
