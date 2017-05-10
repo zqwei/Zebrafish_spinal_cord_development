@@ -32,7 +32,6 @@ fileDirNames{16} = '../../Data/20170216';
 fileDirNames{17} = '../../Data/20170315';
 fileDirNames{18} = '../../Data/20170323';
 fileDirNames{19} = '../../Data/20170412';
-fileDirNames{20} = '../../Data/20170315_ext';
-fileDirNames{21} = '../../Data/20170503';
+fileDirNames{20} = '../../Data/20170503';
 
 
