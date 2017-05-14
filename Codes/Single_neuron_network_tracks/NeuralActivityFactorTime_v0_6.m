@@ -71,3 +71,6 @@ ylabel('Number local communities')
 xlim([-0.5 2.5])
 set(gca, 'TickDir', 'Out')
 setPrint(8, 6, [plotNetDir 'SingleNeuronDynamicsLocalCommunity_summary'], 'pdf')
+
+
+
