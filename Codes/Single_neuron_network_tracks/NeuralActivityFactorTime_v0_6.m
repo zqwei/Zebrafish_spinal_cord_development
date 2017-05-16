@@ -16,6 +16,7 @@
 addpath('../Func');
 setDir;   
 fileToAnalysis = [3 7 10 16]; % 
+markerStyle = {'', '', 'o', '', '', '', 's', '', '', '^', '', '', '', '', '', '>'};
 mColor         = cbrewer('qual', 'Dark2',  32, 'cubic');
 figure;
 hold on
