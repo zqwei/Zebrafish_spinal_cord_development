@@ -20,6 +20,12 @@ addpath('../Func');
 setDir;    
 
 fileToAnalysis = [3 7 10 16]; % 
+
+for nFile = fileToAnalysis
+    ClusterActivityMergingTime_v0_1(nFile)
+    ClusterActivityMergingTime_v0_2(nFile)
+end
+
 markerStyle = {'', '', 'o', '', '', '', 's', '', '', '^', '', '', '', '', '', '>'};
 mColor         = cbrewer('qual', 'Dark2',  32, 'cubic');
 

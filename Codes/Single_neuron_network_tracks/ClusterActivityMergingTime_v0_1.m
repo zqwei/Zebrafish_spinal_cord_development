@@ -23,7 +23,7 @@ function ClusterActivityMergingTime_v0_1(nFile)
     numTime           = size(new_activeNeuronMat, 2);
     numNeuron         = size(new_activeNeuronMat, 1);
     neuronFactorIndex = false(size(new_activeNeuronMat));
-    timeWin           = 40;
+    timeWin           = 10;
 
     numFactor     = max(preLMatIndex);
     corr_mat      = nan(numFactor, 4);
