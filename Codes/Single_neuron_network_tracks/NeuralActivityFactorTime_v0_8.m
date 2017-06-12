@@ -78,7 +78,7 @@ for nFile = [3 7 10 11 16]
     
     LocalNeuronInd = sum(LMats, 2) > 0;
     
-    save([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_3.mat'], 'LocalNeuronInd', 'neuronFactorInd', 'neuronFactorTime', 'LMats')
+    save([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_3.mat'], 'LocalNeuronInd', 'neuronFactorInd', 'neuronFactorTime', 'LMats', 'neuronActLevel')
     
 %     LocalNeuronIndSet = [LocalNeuronIndSet; LocalNeuronInd];
 %     neuronActLevelSet = [neuronActLevelSet; neuronActLevel];
