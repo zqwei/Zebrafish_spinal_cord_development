@@ -20,9 +20,8 @@
 addpath('../Func');
 setDir;  
 
-LocalNeuronIndSet = [];
-neuronActLevelSet = [];
-
+% LocalNeuronIndSet = [];
+% neuronActLevelSet = [];
 
 for nFile = [3 7 10 11 16]
     fileName   = fileNames{nFile};   %#ok<*USENS>
@@ -74,12 +73,15 @@ for nFile = [3 7 10 11 16]
         nTime = find(preLMatIndex == nLMat, 1, 'first');
         LMats(:, nLMat) = preLMat(:, nTime);
         neuronFactorInd(preLMat(:, nTime)) = nLMat;
+        neuronFactorTime(preLMat(:, nTime))= preLMatTime(nTime);
     end
     
     LocalNeuronInd = sum(LMats, 2) > 0;
     
-    LocalNeuronIndSet = [LocalNeuronIndSet; LocalNeuronInd];
-    neuronActLevelSet = [neuronActLevelSet; neuronActLevel];
+    save([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_3.mat'], 'LocalNeuronInd', 'neuronFactorInd', 'neuronFactorTime', 'LMats')
+    
+%     LocalNeuronIndSet = [LocalNeuronIndSet; LocalNeuronInd];
+%     neuronActLevelSet = [neuronActLevelSet; neuronActLevel];
     
 %     figure;
 %     hold on
@@ -112,14 +114,16 @@ for nFile = [3 7 10 11 16]
 
 end
 
-figure;
-hold on
-for nType = 1:2
-    [fout, xout] = ksdensity(neuronActLevelSet(LocalNeuronIndSet == nType-1), 0:0.02:1.02, 'Bandwidth', 0.01);
-    stairs(xout, fout/sum(fout), 'linewid', 2)
-    xlim([0 1.01])
-end
-box off
-xlabel('Active level')
-ylabel('Frac.')
-setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellType_' fileName])
+
+% across animal summary
+% figure;
+% hold on
+% for nType = 1:2
+%     [fout, xout] = ksdensity(neuronActLevelSet(LocalNeuronIndSet == nType-1), 0:0.02:1.02, 'Bandwidth', 0.01);
+%     stairs(xout, fout/sum(fout), 'linewid', 2)
+%     xlim([0 1.01])
+% end
+% box off
+% xlabel('Active level')
+% ylabel('Frac.')
+% setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellType_' fileName])
