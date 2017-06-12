@@ -35,12 +35,8 @@ function Spectrogram_v0_3(nFile)
     f_ind = f < 0.5 & f > 1/30; % long period as 30 ms
     spectrogramMatAll = spectrogramMatAll(:, f_ind, :);
     f     = f(f_ind);
-    
-    
     save([tempDatNetDir, fileName, '_spectrogram.mat'], 'spectrogramMatAll', 'f');
-    
-    
-    
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% check with plots
 %     load([tempDatNetDir, fileName, '_spectrogram.mat'], 'spectrogramMatAll', 'f');
