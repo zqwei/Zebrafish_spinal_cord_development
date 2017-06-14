@@ -1,16 +1,42 @@
 # README #
 
-###Current Stage###
+## Redirect the git from bitbucket to github
+In command-line terminal:
+```bash
+git remote rename origin bitbucket
+git remote add origin https://github.com/zqwei/Zebrafish_spinal_cord_development.git
+git remote remove bitbucket
+git pull
+```
+
+## Current Stage
+Please always put the current request of analysis to [Issue List](https://github.com/zqwei/Zebrafish_spinal_cord_development/issues).
 1. Remove and plot *possible* duplicated units in the dataset
 2. Covariance analysis: clustering
-	* ZW: YW, Please check whether these results make sense to you
 3. Covariance analysis: factor analysis
 
-###Dataset list###
-* Data_Dre_E1_BTXinjHuCH2BGCaMP6f_TL_20140818_045650_corrected_signal (2014-10-01)
-* (-) Data_Dre_E1_HuCH2BGCaMP6f_0_20141006_041947_corrected (2014-11-01)
-* Data_Dre_E1_HuCH2BGCaMP6f_0_20141006_041947_corrected (2015-01-14)
-* Data_Dre_E1_HuCGCaMP6f-mnx1TagRFP_0-1_20150410_032910.corrected (2015-07-20)
+## Dataset list
+1. 20140818 (no Atlas)
+* 20141006 (no Atlas)
+* 20150410
+* 20150417
+* 20160312
+* 20160328
+* 20161004
+* 20161026
+* 20161027
+* 20161028
+* 20170111 (Lineage)
+* 20170112
+* 20170126
+* 20170201
+* 20170202
+* 20170216
+* 20170315
+* 20170323
+* 20170412 (MO)
+* 20170503 (MO)
+* 20170517 (MO)
 
 ### What is this repository for? ###
 * This repository is for data analysis code, figures, and manuscript of **Yinan**'s dataset.
@@ -18,12 +44,12 @@
 
 ### Analysis list ###
 * Covariance analysis: clustering
-	* ZW: Re-index neurons based clustering
-	* ZW: Covariance without ungroup neurons (ungroup neurons are those with low correlation to the others)
-	* ZW: Development of ungroup neurons
+	* Re-index neurons based clustering
+	* Covariance without ungroup neurons (ungroup neurons are those with low correlation to the others)
+	* Development of ungroup neurons
 * Covariance analysis: factor analysis
-	* SD: The variance of neurons explained by the FA change over time (number of factors is fixed)
-	* SD: The likelihood of the data at different time points as a function of the model created at a particular time point (number of factors is fixed)
+	* The variance of neurons explained by the FA change over time (number of factors is fixed)
+	* The likelihood of the data at different time points as a function of the model created at a particular time point (number of factors is fixed)
 * Time-series analysis: linear dynamical system
 * Structure analysis: model prediction of functional connectivity vs anatomical structures
 * Comparison between different datasets
@@ -39,7 +65,3 @@
 * Codes/Old_code -- older version of codes, which are depreciated
 * Codes/SD_code -- codes previously contributed from Shaul Druckmann
 * Data -- directories of datasets
-
-### Contribution/comments guidelines ###
-* Text                             -- Leave the comments in *Latex* file beginning with initials like ZW, YW, SD, PK
-* Code                           -- Keep a comment in the commit in detail before pushing to git
