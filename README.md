@@ -39,8 +39,7 @@ Please always put the current request of analysis to [Issue List](https://github
 1. 20170517 (MO)
 
 ### What is this repository for? ###
-* This repository is for data analysis code, figures, and manuscript of **Yinan**'s dataset.
-* version: 1.0
+This repository is for data analysis code, figures, and manuscript of zebrafish developping spinal cord imaging data.
 
 ### Analysis list ###
 * Covariance analysis: clustering
