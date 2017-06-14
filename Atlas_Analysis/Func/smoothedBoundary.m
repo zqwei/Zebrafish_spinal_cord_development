@@ -14,7 +14,7 @@ function CHPoints = smoothedBoundary(x, y, radius)
     pindex        = boundary(pointList(:,1), pointList(:,2), shrinkRatio);
     px            = pointList(pindex, 1);
     py            = pointList(pindex, 2);
-    pxyz          = polygon([px(1:end-1), py(1:end-1)], radius, 30);
+    pxyz          = polygon([px(1:end-1), py(1:end-1)], 0, 30);
     CHPoints      = pxyz(:, 1:2);
 end
 

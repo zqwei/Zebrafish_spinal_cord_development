@@ -30,6 +30,8 @@ DirNames{2} = '../Data/20141006';
 DirNames{17} = '../Data/20170315';
 DirNames{18} = '../Data/20170323';
 DirNames{19} = '../Data/20170412';
+DirNames{20} = '../Data/20170503';
+DirNames{21} = '../Data/20170517';
 
 %% Plot Folders
 PlotDir = '../Plot';
