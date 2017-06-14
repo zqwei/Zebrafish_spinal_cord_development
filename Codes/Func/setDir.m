@@ -15,11 +15,8 @@ plotDir             = '../../Plots/';
 plotNetDir          = '../../NetworkDynamicsPlots/';
 
 tempDatDir          = '../../TempDat/';
-<<<<<<< HEAD
 tempDatNetDir       = '../../NetworkDynamicsTempDat/';
-=======
 
 %if ~exist(tempDatDir, 'dir')
 %    mkdir(tempDatDir)
-%end
->>>>>>> master
+%end
