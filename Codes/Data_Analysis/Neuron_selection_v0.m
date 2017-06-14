@@ -27,25 +27,27 @@ function Neuron_selection_v0(nFile)
     dirImageData  = [fileDirName '/'];
     load ([dirImageData 'profile.mat'])
     
-    numOrder      = 9;
-    lenWindow     = 511;
+%     numOrder      = 9;
+%     lenWindow     = 511;
         
 %     baseline      = sgolayfilt(profile_all, numOrder, lenWindow, [], 2); % nDim = 2: neuron
-    w = 40; % baselineWindowSize
-    p = 20; % baselinePrc
-    background = 90;
-    baseline = nan(nCells, numel(timepoints));
-    for i = 1:numel(timepoints)
-       timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
-    baseline(:, i) = prctile(profile_all(:, timeWindow), p, 2);
+    nCells        = size(profile_all, 1);
+    timepoints    = size(profile_all, 2);
+    w             = 40; % baselineWindowSize
+    p             = 20; % baselinePrc
+    background    = 90;
+    baseline      = nan(nCells, numel(timepoints));
+    for i         = 1:numel(timepoints)
+        timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
+        baseline(:, i)= prctile(profile_all(:, timeWindow), p, 2);
     end
     
     rawf          = profile_all;
-    % dff           = bsxfun(@rdivide,(profile_all - baseline), mean(baseline, 2));
+%     dff           = bsxfun(@rdivide,(profile_all - baseline), mean(baseline, 2));
     dff           = (rawf - baseline)./(repmat(nanmean(baseline, 2), 1, numel(timepoints))-background);
     tracks        = tracks_smoothed;
     
-    nCells        = size(dff, 1);
+%     nCells        = size(dff, 1);
     
     ksTestAllTime    = false(nCells, 1);
 %     ksTestAllTimePvalue = zeros(nCells, 1);
