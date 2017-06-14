@@ -8,16 +8,9 @@ Codes/Old_code_v1_FA
 Codes/Old_code_v2_Cluster_View
 Codes/Old_code_v3_FA
 Codes/Viewers
-<<<<<<< HEAD
 NetworkDynamicsTempDat
 NetworkDynamicsPlots
-
 DepreciatedAnalysis
-=======
-Codes/Single_neuron_network_tracks
-NetworkDynamicsPlots
-NetworkDynamicsTempDat
->>>>>>> master
 
 Data_Analysis_List.m
 Data_Analysis_List_Yinan.m
