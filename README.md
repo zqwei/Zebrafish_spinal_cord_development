@@ -17,26 +17,26 @@ Please always put the current request of analysis to [Issue List](https://github
 
 ## Dataset list
 1. 20140818 (no Atlas)
-* 20141006 (no Atlas)
-* 20150410
-* 20150417
-* 20160312
-* 20160328
-* 20161004
-* 20161026
-* 20161027
-* 20161028
-* 20170111 (Lineage)
-* 20170112
-* 20170126
-* 20170201
-* 20170202
-* 20170216
-* 20170315
-* 20170323
-* 20170412 (MO)
-* 20170503 (MO)
-* 20170517 (MO)
+1. 20141006 (no Atlas)
+1. 20150410 (**Example data in figures**)
+1. 20150417
+1. 20160312
+1. 20160328
+1. 20161004
+1. 20161026
+1. 20161027
+1. 20161028
+1. 20170111 (Lineage)
+1. 20170112
+1. 20170126
+1. 20170201
+1. 20170202
+1. 20170216
+1. 20170315
+1. 20170323
+1. 20170412 (MO)
+1. 20170503 (MO)
+1. 20170517 (MO)
 
 ### What is this repository for? ###
 * This repository is for data analysis code, figures, and manuscript of **Yinan**'s dataset.
