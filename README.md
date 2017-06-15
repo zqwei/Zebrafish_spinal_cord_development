@@ -42,16 +42,7 @@ Please always put the current request of analysis to [Issue List](https://github
 This repository is for data analysis code, figures, and manuscript of zebrafish developping spinal cord imaging data.
 
 ### Analysis list ###
-* Covariance analysis: clustering
-	* Re-index neurons based clustering
-	* Covariance without ungroup neurons (ungroup neurons are those with low correlation to the others)
-	* Development of ungroup neurons
-* Covariance analysis: factor analysis
-	* The variance of neurons explained by the FA change over time (number of factors is fixed)
-	* The likelihood of the data at different time points as a function of the model created at a particular time point (number of factors is fixed)
-* Time-series analysis: linear dynamical system
-* Structure analysis: model prediction of functional connectivity vs anatomical structures
-* Comparison between different datasets
+%% Need to write
 
 ### Structure of directories ###
 * .gitignore  -- file to be ignored in git update
