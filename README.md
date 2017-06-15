@@ -48,10 +48,8 @@ This repository is for data analysis code, figures, and manuscript of zebrafish 
 * .gitignore  -- file to be ignored in git update
 * TempDat [ignored] -- a temporary storage place for data without duplicated units.
 * Plots [ignored] -- figures
-* Text -- manuscripts, slides etc.
 * Codes -- analysis codes
 * Codes/Func -- shared functions across analysis
 * Codes/Data_Analysis  -- each file stands for a code for a specific goal of analysis
-* Codes/Old_code -- older version of codes, which are depreciated
-* Codes/SD_code -- codes previously contributed from Shaul Druckmann
-* Data -- directories of datasets
+* Data -- directories of datasets (raw data can be downloaded from https://www.dropbox.com/sh/g7wahoj4o3f0j04/AAAqjndWq2mjHgcEmqpvoumBa?dl=0)
+* Atlas_Analysis -- Code to project neuronal location in recording to the common zebrafish atlas space
