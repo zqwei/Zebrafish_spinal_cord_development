@@ -16,6 +16,7 @@ function MNX_v0_8(nFile)
     setDir;    
     fileName          = fileNames{nFile};  %#ok<*USENS>
     load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'mnx'); 
+    if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat')
     if ~exist('mnx', 'var') || ~exist('new_x', 'var')
         return;

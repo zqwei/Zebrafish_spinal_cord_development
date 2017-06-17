@@ -16,6 +16,7 @@ function MNX_v0_4(nFile)
     mnx               = [];
     load([tempDatDir, fileName, '.mat'], 'mnx', 'tracks', 'side', 'leafOrder', 'slicedIndex', 'activeNeuronMat'); 
     load([tempDatDir, 'EV_' fileName, '.mat'], 'EVMat')
+    if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat')
     
     if isempty(mnx) || sum(~mnx) == 0
