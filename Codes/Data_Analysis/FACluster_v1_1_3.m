@@ -15,6 +15,7 @@ function FACluster_v1_1_3(nFile)
     setDir;
     fileName          = fileNames{nFile}; %#ok<USENS>
     load([tempDatDir, fileName, '.mat'], 'activeNeuronMat', 'mnx');
+    if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat')
     numActNeuron      = sum(activeNeuronMat, 1);
     numTime           = length(numActNeuron);
