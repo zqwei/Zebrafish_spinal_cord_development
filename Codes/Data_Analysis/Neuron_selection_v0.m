@@ -35,14 +35,14 @@ function Neuron_selection_v0(nFile)
     dff           = bsxfun(@rdivide,(profile_all - baseline), mean(baseline, 2));
     nCells        = size(dff, 1);
     
-    % percentile window
-    w             = 40; % baselineWindowSize
-    p             = 20; % baselinePrc
-    for i         = 1:numel(timepoints)
-        timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
-        baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
-    end
-    dff           = dff - baseline;    
+% %     % percentile window
+% %     w             = 511; % baselineWindowSize
+% %     p             = 5; % baselinePrc
+% %     for i         = 1:numel(timepoints)
+% %         timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
+% %         baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
+% %     end
+% %     dff           = dff - baseline;    
 
     tracks        = tracks_smoothed;
     
@@ -74,19 +74,19 @@ function Neuron_selection_v0(nFile)
     timePoints    = 0:240:timeEnd-timeStep;     %#ok<NASGU>
     
     
-    logDetCorrAllDFF = zeros(length(timePoints),1);    
-    for nTime           = 1:length(timePoints)
-        slicedDFF       = dff(:, timePoints(nTime)+1:timePoints(nTime)+1200);
-        logDetCorrAllDFF(nTime) = log(det(corr(slicedDFF')));
-    end
-    figure;
-    plot(timePoints/4/60, logDetCorrAllDFF, '-', 'linewid', 2)
-    xlim([0 timePoints(end)/4/60]);
-    xlabel('Time (min)')
-    ylabel('log|Corr|')
-    title('Colinearity index')
-    box off
-    setPrint(8, 6, [plotDir 'LogDetCorrIndex_' fileName], 'pdf')
+% %     logDetCorrAllDFF = zeros(length(timePoints),1);    
+% %     for nTime           = 1:length(timePoints)
+% %         slicedDFF       = dff(:, timePoints(nTime)+1:timePoints(nTime)+1200);
+% %         logDetCorrAllDFF(nTime) = log(det(corr(slicedDFF')));
+% %     end
+% %     figure;
+% %     plot(timePoints/4/60, logDetCorrAllDFF, '-', 'linewid', 2)
+% %     xlim([0 timePoints(end)/4/60]);
+% %     xlabel('Time (min)')
+% %     ylabel('log|Corr|')
+% %     title('Colinearity index')
+% %     box off
+% %     setPrint(8, 6, [plotDir 'LogDetCorrIndex_' fileName], 'pdf')
     
     
     slicedDFF       = dff(:, end - timeStep*10:end);  
@@ -102,42 +102,42 @@ function Neuron_selection_v0(nFile)
     numNeuron     = sum(slicedIndex);
     m             = ceil(sqrt(length(timePoints)/10+1));
 
-    figure;
-    for nPlot           = 1:10:length(timePoints)
-        subplot(m, m, (nPlot-1)/10+1)
-        hold on
-        slicedDFF       = dff(:, timePoints(nPlot)+1:timePoints(nPlot)+1200);        
-        imagesc(corr(slicedDFF(leafOrder,:)'),[-1 1]);
-        plot([1 numNeuron], [sideSplitter sideSplitter], '--w')
-        plot([sideSplitter sideSplitter], [1 numNeuron], '--w')
-        xlim([1 numNeuron])
-        ylim([1 numNeuron])
-        xlabel('Neuronal index')
-        ylabel('Neuronal index')
-        title([num2str(nPlot) 'min']);
-        box off;
-        hold off
-    end
-    setPrint(m*8, m*6, [plotDir, 'CorrMat_', fileName], 'pdf');
-
-
-    figure;    
-    for nPlot           = 1:10:length(timePoints)
-        subplot(m, m, (nPlot-1)/10+1)
-        slicedDFF       = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+1200);  
-        distNeurons     = pdist(slicedDFF, 'correlation');
-        linkNeurons     = linkage(slicedDFF,'single','correlation');
-        leafOrderLocal  = optimalleaforder(linkNeurons, distNeurons);       
-        imagesc(corr(slicedDFF(leafOrderLocal,:)'),[-1 1]);
-        xlim([1 numNeuron])
-        ylim([1 numNeuron])
-        xlabel('Neuronal index')
-        ylabel('Neuronal index')
-        title([num2str(nPlot) 'min']);
-        box off;
-        axis xy
-    end
-    setPrint(m*8, m*6, [plotDir, 'CorrMatLocal_', fileName], 'pdf');
+% %     figure;
+% %     for nPlot           = 1:10:length(timePoints)
+% %         subplot(m, m, (nPlot-1)/10+1)
+% %         hold on
+% %         slicedDFF       = dff(:, timePoints(nPlot)+1:timePoints(nPlot)+1200);        
+% %         imagesc(corr(slicedDFF(leafOrder,:)'),[-1 1]);
+% %         plot([1 numNeuron], [sideSplitter sideSplitter], '--w')
+% %         plot([sideSplitter sideSplitter], [1 numNeuron], '--w')
+% %         xlim([1 numNeuron])
+% %         ylim([1 numNeuron])
+% %         xlabel('Neuronal index')
+% %         ylabel('Neuronal index')
+% %         title([num2str(nPlot) 'min']);
+% %         box off;
+% %         hold off
+% %     end
+% %     setPrint(m*8, m*6, [plotDir, 'CorrMat_', fileName], 'pdf');
+% % 
+% % 
+% %     figure;    
+% %     for nPlot           = 1:10:length(timePoints)
+% %         subplot(m, m, (nPlot-1)/10+1)
+% %         slicedDFF       = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+1200);  
+% %         distNeurons     = pdist(slicedDFF, 'correlation');
+% %         linkNeurons     = linkage(slicedDFF,'single','correlation');
+% %         leafOrderLocal  = optimalleaforder(linkNeurons, distNeurons);       
+% %         imagesc(corr(slicedDFF(leafOrderLocal,:)'),[-1 1]);
+% %         xlim([1 numNeuron])
+% %         ylim([1 numNeuron])
+% %         xlabel('Neuronal index')
+% %         ylabel('Neuronal index')
+% %         title([num2str(nPlot) 'min']);
+% %         box off;
+% %         axis xy
+% %     end
+% %     setPrint(m*8, m*6, [plotDir, 'CorrMatLocal_', fileName], 'pdf');
         
 
     baseline      = baseline(leafOrder, :); %#ok<NASGU>
@@ -165,7 +165,7 @@ function Neuron_selection_v0(nFile)
         save([tempDatDir, fileName, '.mat'], 'mnx', '-append')
     end
     
-    close all
+%     close all
 %     
     
 end
