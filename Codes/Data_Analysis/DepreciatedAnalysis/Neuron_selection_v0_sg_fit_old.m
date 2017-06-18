@@ -16,7 +16,7 @@
 % 
 
 
-function Neuron_selection_v0_old(nFile)
+function Neuron_selection_v0_sg_fit_old(nFile)
     % load data
     addpath('../Func');
     setDir;
