@@ -51,7 +51,7 @@ Please always put the current request of analysis to [Issue List](https://github
 This repository is for data analysis code, figures, and manuscript of zebrafish developping spinal cord imaging data.
 
 ### Analysis list ###
-%% Need to write
+See wiki page
 
 ### Structure of directories ###
 * .gitignore  -- file to be ignored in git update
