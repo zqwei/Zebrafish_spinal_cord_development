@@ -27,27 +27,27 @@ function Neuron_selection_v0(nFile)
     dirImageData  = [fileDirName '/'];
     load ([dirImageData 'profile.mat'])
     
-    % Savitzky-Golay filtering
+%     % Savitzky-Golay filtering
+    dff           = profile_all;
     numOrder      = 9;
     lenWindow     = 511;
-    baseline      = sgolayfilt(profile_all, numOrder, lenWindow, [], 2);
+    baseline      = sgolayfilt(dff, numOrder, lenWindow, [], 2);
     rawf          = profile_all;
-    dff           = bsxfun(@rdivide,(profile_all - baseline), mean(baseline, 2));
+    dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
     nCells        = size(dff, 1);
     
-% %     % percentile window
-% %     w             = 511; % baselineWindowSize
-% %     p             = 5; % baselinePrc
-% %     for i         = 1:numel(timepoints)
-% %         timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
-% %         baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
-% %     end
-% %     dff           = dff - baseline;    
-
+    % percentile window
+%     dff           = profile_all;
+    w             = 40; % baselineWindowSize
+    p             = 10; % baselinePrc
+    for i         = 1:numel(timepoints)
+        timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
+        baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
+    end    
+    dff           = dff - baseline;
+        
     tracks        = tracks_smoothed;
-    
-    
-    
+        
     ksTestAllTime    = false(nCells, 1);
     
     for nNeuron      = 1:nCells

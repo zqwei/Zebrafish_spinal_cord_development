@@ -14,7 +14,9 @@ NetworkDynamicsTempDat
 
 Data_Analysis_List.m
 Data_Analysis_List_Yinan.m
-# 
+Data_Analysis_List_server.m
+Data_Analysis_List_all.m
+#
 TempDat*
 
 Plots
@@ -37,6 +39,3 @@ YinanSlides
 Text/*.aux
 Text/*.log
 Text/*.synctex.tz
-
-
-
