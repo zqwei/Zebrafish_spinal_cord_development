@@ -29,22 +29,23 @@ function Neuron_selection_v0(nFile)
     
 %     % Savitzky-Golay filtering
     dff           = profile_all;
-    numOrder      = 9;
-    lenWindow     = 511;
-    baseline      = sgolayfilt(dff, numOrder, lenWindow, [], 2);
+%     numOrder      = 9;
+%     lenWindow     = 511;
+%     baseline      = sgolayfilt(dff, numOrder, lenWindow, [], 2);
     rawf          = profile_all;
-    dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
+%     dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
     nCells        = size(dff, 1);
     
     % percentile window
 %     dff           = profile_all;
     w             = 40; % baselineWindowSize
-    p             = 10; % baselinePrc
+    p             = 20; % baselinePrc
     for i         = 1:numel(timepoints)
         timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
         baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
     end    
-    dff           = dff - baseline;
+%     dff           = dff - baseline;
+    dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
         
     tracks        = tracks_smoothed;
         
@@ -153,7 +154,7 @@ function Neuron_selection_v0(nFile)
             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
 %             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
         end
     end
     
