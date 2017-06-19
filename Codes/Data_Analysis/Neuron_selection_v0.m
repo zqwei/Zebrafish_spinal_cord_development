@@ -37,14 +37,14 @@ function Neuron_selection_v0(nFile)
     nCells        = size(dff, 1);
     
     % percentile window
-%     dff           = profile_all;
-    w             = 40; % baselineWindowSize
-    p             = 10; % baselinePrc
-    for i         = 1:numel(timepoints)
-        timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
-        baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
-    end    
-    dff           = dff - baseline;
+% %     dff           = profile_all;
+%     w             = 40; % baselineWindowSize
+%     p             = 10; % baselinePrc
+%     for i         = 1:numel(timepoints)
+%         timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
+%         baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
+%     end    
+%     dff           = dff - baseline;
         
     tracks        = tracks_smoothed;
         
