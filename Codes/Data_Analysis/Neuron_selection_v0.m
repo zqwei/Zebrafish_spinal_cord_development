@@ -37,7 +37,8 @@ function Neuron_selection_v0(nFile)
 
     % percentile window
     dff           = profile_all;
-    w             = 20; % baselineWindowSize
+    rawf          = profile_all;
+    w             = 21; % baselineWindowSize
     p             = 20; % baselinePrc
     baseline      = dff;
     for nNeuron   = 1:nCells
