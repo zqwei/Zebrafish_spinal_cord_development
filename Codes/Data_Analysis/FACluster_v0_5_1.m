@@ -84,7 +84,17 @@ function FACluster_v0_5_1(nFile)
         % end of drop overlapped factor code
 
         % determine the factor index
-        if size(LMat,2) >= 2 % remove the single-unit factor in movie
+        % break double sided factors
+        LMatLeft                 = zeros(size(LMat));
+        LMatRight                = zeros(size(LMat));
+        LMatLeft(side == 1, :)   = LMat(side == 1, :);
+        LMatRight(side == 2, :)  = LMat(side == 2, :);
+        LMat                     = [LMatLeft, LMatRight];
+        
+        % remove the single-unit factor in movie
+        LMat(:, sum(LMat>0, 1)<=1) = []; % drop factors with zero weight   
+        
+        if size(LMat,2) >= 1
             if sum(~isnan(preLMat(:))) == 0
                 factorIndex  = 1:size(LMat, 2);
                 preLMat      = LMat;
