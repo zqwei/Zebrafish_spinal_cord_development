@@ -30,7 +30,7 @@ function Neuron_selection_v0(nFile)
     % percentile window
     dff           = profile_all;
     rawf          = profile_all;
-    w             = 21; % baselineWindowSize
+    w             = 61; % baselineWindowSize
     p             = 20; % baselinePrc
     background    = 90;
     baseline      = dff;
@@ -100,7 +100,7 @@ function Neuron_selection_v0(nFile)
     refActiveNeuronMat = activeMatUseSGFit(rawf, 9, 511, timePoints, 0.05);
     activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
     
-    for w                  = [41 61]
+    for w                  = [21 41]
         refActiveNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, 0.01);
         activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
     end
