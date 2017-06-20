@@ -28,23 +28,24 @@ function Neuron_selection_v0(nFile)
     load ([dirImageData 'profile.mat'])
 
     % Savitzky-Golay filtering
-    sg_dff        = profile_all;
+    dff           = profile_all;
     numOrder      = 9;
     lenWindow     = 511;
-    baseline      = sgolayfilt(sg_dff, numOrder, lenWindow, [], 2);
-    sg_dff        = bsxfun(@rdivide,(sg_dff - baseline), mean(baseline, 2));
-    nCells        = size(sg_dff, 1);
+    baseline      = sgolayfilt(dff, numOrder, lenWindow, [], 2);
+    rawf          = profile_all;
+    dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
+    nCells        = size(dff, 1);
 
     % percentile window
-    dff           = profile_all;
-    rawf          = profile_all;
-    w             = 21; % baselineWindowSize
+    % dff           = profile_all;
+    w             = 40; % baselineWindowSize
     p             = 20; % baselinePrc
-    baseline      = dff;
-    for nNeuron   = 1:nCells
-        baseline(nNeuron, :) = running_percentile(dff(nNeuron, :), w, p);
+    for i         = 1:numel(timepoints)
+        timeWindow = max(1, i-w+1):min(i+w,numel(timepoints));
+        baseline(:, i)= prctile(dff(:, timeWindow), p, 2);
     end
-    dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
+    dff           = dff - baseline;
+    % dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
 
     tracks        = tracks_smoothed;
 
@@ -67,7 +68,6 @@ function Neuron_selection_v0(nFile)
     baseline      = baseline(slicedIndex, timeStep:timeEnd+timeStep);
     rawf          = rawf(slicedIndex, timeStep:timeEnd+timeStep);
     dff           = dff(slicedIndex, timeStep:timeEnd+timeStep);
-    sg_dff        = sg_dff(slicedIndex, timeStep:timeEnd+timeStep);
     tracks        = tracks(slicedIndex, timeStep:timeEnd+timeStep, :);
     side          = side(slicedIndex); %#ok<NODEF>
 
@@ -144,27 +144,20 @@ function Neuron_selection_v0(nFile)
     baseline      = baseline(leafOrder, :); %#ok<NASGU>
     rawf          = rawf(leafOrder, :); %#ok<NASGU>
     dff           = dff(leafOrder, :); %#ok<NASGU>
-    sg_dff        = sg_dff(leafOrder, :); %#ok<NASGU>
     tracks        = tracks(leafOrder, :, :); %#ok<NASGU>
     side          = side(leafOrder, :);  %#ok<NASGU>
 
-    activeNeuronMat   = false(size(dff, 1), length(timePoints));
-    activeNeuronSGMat = false(size(dff, 1), length(timePoints));
+    activeNeuronMat = false(size(dff, 1), length(timePoints));
 
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
-            % Percentile activeNeuronMat
             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
-            % SG activeNeuronMat
-            slicedDFF           = sg_dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
-            slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            activeNeuronSGMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
+%             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
         end
     end
 
-    activeNeuronMat = activeNeuronMat & activeNeuronSGMat;
 
     save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat');
     if exist('mnx', 'var')
