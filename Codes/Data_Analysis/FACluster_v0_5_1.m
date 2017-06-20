@@ -84,7 +84,7 @@ function FACluster_v0_5_1(nFile)
         % end of drop overlapped factor code
 
         % determine the factor index
-        if size(LMat,2) >= 1
+        if size(LMat,2) >= 2 % remove the single-unit factor in movie
             if sum(~isnan(preLMat(:))) == 0
                 factorIndex  = 1:size(LMat, 2);
                 preLMat      = LMat;
