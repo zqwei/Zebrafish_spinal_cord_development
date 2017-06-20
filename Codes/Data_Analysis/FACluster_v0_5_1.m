@@ -170,7 +170,6 @@ function FACluster_v0_5_1(nFile)
         xlim([0, 5])
         ylim([0, size(LMat, 1)*4+4]);
         set(gca, 'YTickLabel', '');
-        %     text(zeros(numel(neworder), 1), (1:numel(neworder))*4, num2str(neworder));
         plot([0, 5], [sum(side==1) * 4, sum(side==1) * 4], 'k--');
         hold off
 
@@ -192,20 +191,8 @@ function FACluster_v0_5_1(nFile)
                     if sum(otherSideNeuron) > 0
                         CHPoints = smoothedBoundary(x(otherSideNeuron), y(otherSideNeuron), radius);
                         patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
-%                     else
-%                         plot(x(otherSideNeuron), y(otherSideNeuron), 'o', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :), 'linewidth', linew)
                     end
                 end                
-% %                 if length(unique(side(neuronFactor)))==1
-% %                     CHPoints = smoothedBoundary(x(neuronFactor), y(neuronFactor), radius);
-% %                     patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
-% %                 else
-% %                     if sum(side(neuronFactor)==1) == 1 || sum(side(neuronFactor)==2) == 1
-% %                         plot(x(neuronFactor), y(neuronFactor), 'o', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :), 'linewidth', linew)
-% %                     else
-% %                         plot(x(neuronFactor), y(neuronFactor), 's', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :), 'MarkerSize', 10, 'linewidth', linew)
-% %                     end
-% %                 end
             end
         end
         plot(x(~activeTag), y(~activeTag), 'ok', 'linewidth', linew, 'MarkerFaceColor', 'w');
@@ -214,7 +201,7 @@ function FACluster_v0_5_1(nFile)
         end
         xlim([0 ceil(max(x))+1]);
         ylim([-1 1]);
-        text(ceil(max(x))+0.5, 0.4, num2str(period))
+        text(ceil(max(x))+0.5, 0.4, num2str(period), 'FontSize', 24)
         hold off
 
         % side view - left
@@ -228,16 +215,6 @@ function FACluster_v0_5_1(nFile)
                     CHPoints = smoothedBoundary(x(neuronFactor & side==1), z(neuronFactor & side==1), radius);
                     patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
                 end
-% %                 if length(unique(side(neuronFactor)))==1 && unique(side(neuronFactor))==1
-% %                     CHPoints = smoothedBoundary(x(neuronFactor & side==1), z(neuronFactor & side==1), radius);
-% %                     patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
-% %                 else
-% %                     if sum(side(neuronFactor)==1) == 1 || sum(side(neuronFactor)==2) == 1
-% %                         plot(x(neuronFactor & side==1), z(neuronFactor & side==1), 'o', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :), 'linewidth', linew)
-% %                     else
-% %                         plot(x(neuronFactor & side==1), z(neuronFactor & side==1), 's', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :), 'MarkerSize', 10, 'linewidth', linew)
-% %                     end
-% %                 end
             end
         end
         plot(x(~activeTag & side==1), z(~activeTag & side==1), 'ok', 'linewidth', linew, 'MarkerFaceColor', 'w');
@@ -259,16 +236,6 @@ function FACluster_v0_5_1(nFile)
                     CHPoints = smoothedBoundary(x(neuronFactor & side==2), z(neuronFactor & side==2), radius);
                     patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
                 end
-% %                 if length(unique(side(neuronFactor)))==1 && unique(side(neuronFactor))==2
-% %                     CHPoints = smoothedBoundary(x(neuronFactor & side==2), z(neuronFactor & side==2), radius);
-% %                     patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
-% %                 else
-% %                     if sum(side(neuronFactor)==1) == 1 || sum(side(neuronFactor)==2) == 1
-% %                         plot(x(neuronFactor & side==2), z(neuronFactor & side==2), 'o', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :))
-% %                     else
-% %                         plot(x(neuronFactor & side==2), z(neuronFactor & side==2), 's', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :), 'MarkerSize', 10)
-% %                     end
-% %                 end
             end
         end
         plot(x(~activeTag & side==2), z(~activeTag & side==2), 'ok', 'linewidth', linew, 'MarkerFaceColor', 'w');
