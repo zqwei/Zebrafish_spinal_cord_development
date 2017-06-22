@@ -224,7 +224,9 @@ function FACluster_v0_7_1(nFile)
         end
     
         networkMat{nTime, 1}    = factorSet;
-        networkMat{nTime, 2}    = factorsMat;
+        if exist('factorsMat', 'var')
+            networkMat{nTime, 2}    = factorsMat;
+        end
     end
     
     save([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc'); 
