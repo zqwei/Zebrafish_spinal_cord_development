@@ -61,7 +61,9 @@ if sum(y==quantile(y,0.5))==0
 else
     temp=x(y==quantile(y,0.5));
 end
-automatic_initial_params(3)=temp(1);
+if ~isempty(temp)
+    automatic_initial_params(3)=temp(1);
+end
 
 if nargin==2 %simplest valid input
     fixed_params=NaN(1,4);
