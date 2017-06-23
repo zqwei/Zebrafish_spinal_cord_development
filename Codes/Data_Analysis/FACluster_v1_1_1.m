@@ -14,6 +14,7 @@ function FACluster_v1_1_1(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>    
+    if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat')
     numTime           = length(networkMat);
     numFactorSize     = nan(numTime, 2);

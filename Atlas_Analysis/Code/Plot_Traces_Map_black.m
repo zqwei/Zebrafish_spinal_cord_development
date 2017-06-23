@@ -2,28 +2,24 @@ function Plot_Traces_Map_black(nFile)
 % plot factors with convex hull but excluding voronoi of inactive neurons
 addpath('../Func');
 setDir;
-load([DirNames{nFile} '\data.mat']);
-load([DirNames{nFile} '\LONOLoading.mat']);
-% load([DirNames{nFile} '\ref_points.mat']);
-load([DirNames{nFile} '\ref_points_imaris.mat']);
+load([DirNames{nFile} '\data.mat'], 'new_x', 'new_y', 'new_z', 'dff', 'side', 'timePoints', 'activeNeuronMat');
+load([DirNames{nFile} '\LONOLoading.mat'], 'CorrectedLMat');
 
-original_id = 1:size(points, 1);
-original_id = original_id(slicedIndex);
-original_id = original_id(leafOrder)';
 
-points = points(slicedIndex, :);
-points = points(leafOrder, :);
-[x, y, z, ~, ~, ~] = convert2atlas3D(points, ra, rb);
+x = new_x;
+y = new_y;
+z = new_z;
+
+nNeurons = numel(x);
 
 [~, neworder] = sort(x);
-
 neworder = [neworder(side(neworder)==1); neworder(side(neworder)==2)];
 
 mColor = cbrewer('qual', 'Dark2',  8, 'cubic');
 mColor            = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
-preLMat           = nan(size(points, 1), 1);
+preLMat           = nan(nNeurons, 1);
 
-video          = VideoWriter([PlotDir '\Traces_Map_v5\movie_' dataset{nFile}, '_darkbg.avi'], 'Uncompressed AVI');
+video          = VideoWriter([PlotDir '\movie_' dataset{nFile}, '_darkbg.avi'], 'Uncompressed AVI');
 video.FrameRate = 10;
 open(video);
 
@@ -161,10 +157,10 @@ for period = 1:numel(timePoints)
         end
     end
     plot(x(~activeTag), y(~activeTag), 'ow', 'linewidth', linew, 'MarkerFaceColor', 'k');
-    for i = 1:size(ra, 1)
+    for i = 1:9
         plot([i, i], [-2, 2], '--w');
     end
-    xlim([0 size(ra, 1)]);
+    xlim([0 10]);
     ylim([-1 1]);
     hold off
     
@@ -194,10 +190,10 @@ for period = 1:numel(timePoints)
         end
     end
     plot(x(~activeTag & side==1), z(~activeTag & side==1), 'ow', 'linewidth', linew, 'MarkerFaceColor', 'k');
-    for i = 1:size(ra, 1)
+    for i = 1:9
         plot([i, i], [0, 2], '--w');
     end
-    xlim([0 size(ra, 1)]);
+    xlim([0 10]);
     ylim([0 2]);
     hold off
     
@@ -228,10 +224,10 @@ for period = 1:numel(timePoints)
         end
     end
     plot(x(~activeTag & side==2), z(~activeTag & side==2), 'ow', 'linewidth', linew, 'MarkerFaceColor', 'k');
-    for i = 1:size(ra, 1)
+    for i = 1:9
         plot([i, i], [0, 2], '--w');
     end
-    xlim([0 size(ra, 1)]);
+    xlim([0 10]);
     ylim([0 2]);
     hold off
     frame = getframe(fig, [0 0 , frameW, frameH]);

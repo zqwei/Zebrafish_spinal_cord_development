@@ -17,6 +17,7 @@ function FACluster_v0_9_1(nFile)
     fileName          = fileNames{nFile}; %#ok<USENS>    
     load([tempDatDir, fileName, '.mat'], 'activeNeuronMat'); 
 %     load([tempDatDir, 'EvoLoading_' fileName, '.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc'); 
+    if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc'); 
     xtracks           = mean(neuronXLoc);
     ytracks           = mean(neuronYLoc);
