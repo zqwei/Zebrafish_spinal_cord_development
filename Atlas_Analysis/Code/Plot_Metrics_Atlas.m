@@ -46,8 +46,8 @@ for period = 1:numel(timePoints)
     end
 end
 
-% for debugging
-plotFactorSize(fs);
+% % for debugging
+% plotFactorSize(fs);
 
 factorSize = nan(nNeurons, 1);
 for i = 1:nNeurons
