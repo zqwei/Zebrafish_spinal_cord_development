@@ -37,7 +37,12 @@ function Spectrogram_v0_5(nFile)
     % for each neuron we define a matrix
     spec_mat_neuron = nan(length(f), length(timePoints));
     
+    figure;
+    
+    m = ceil(sqrt(numNeuron));
+    
     for nNeuron   = 1:numNeuron
+        subplot(m, m, nNeuron)
         spectrogramMat = squeeze(spectrogramMatAll(nNeuron, :, :));
         
         for nTime = 1:length(timePoints)
