@@ -41,3 +41,5 @@ Text/*.log
 Text/*.synctex.tz
 
 *.m~
+
+*.pdf
