@@ -39,3 +39,7 @@ YinanSlides
 Text/*.aux
 Text/*.log
 Text/*.synctex.tz
+
+*.m~
+
+*.pdf
