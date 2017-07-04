@@ -36,6 +36,7 @@ function ClusterActivityMergingTime_v0_0(nFile)
                 postLMatIndex = preLMatIndex(:, preLMatTime == max(timeInd)+1);
                 postLMat  = preLMat(:, preLMatTime == max(timeInd)+1);
                 [max_value, similarity_index] = max(double(LMat') * double(postLMat));
+                if isempty(max_value); continue; end
                 globalLMat = preLMat(:, preLMatIndex == postLMatIndex(similarity_index) & preLMatTime == max(timeInd)); 
                 if max_value > 0
                     disp([nFile, nFactor, min(timeInd), max(timeInd), postLMatIndex(similarity_index), sum(LMat), sum(sum(globalLMat,2)>0)])
