@@ -103,6 +103,7 @@ function NeuralActivityFactorTime_v0_7(nFile)
     hold on
     scatter(similarity_mat(:,1), similarity_mat(:,2), [], neuronType, 'filled')
     max_scale = ceil(nanmax(similarity_mat(:))*10)/10+0.01;
+    if isnan(max_scale); max_scale = 1; end
     xlim([0 max_scale])
     ylim([0 max_scale])
     refline(1)
