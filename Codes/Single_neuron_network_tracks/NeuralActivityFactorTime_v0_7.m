@@ -126,7 +126,9 @@ function NeuralActivityFactorTime_v0_7(nFile)
     hold on
     for nType = 1:3
         if sum(~isnan(similarity_mat(neuronType == nType, 1))) ==0; continue; end
-        [fout, xout] = ksdensity(similarity_mat(neuronType == nType, 2), 0:0.01:max_scale, 'Bandwidth', 0.01);
+        dat = similarity_mat(neuronType == nType & ~isnan(similarity_mat(:, 2)), 2);
+        if isempty(dat); continue; end
+        [fout, xout] = ksdensity(dat, 0:0.01:max_scale, 'Bandwidth', 0.01);
         stairs(xout, fout/sum(fout), 'linewid', 2)
         xlim([0 max_scale])
     end
