@@ -40,7 +40,7 @@ function ClusterActivityMergingTime_v0_1(nFile)
                 [max_value, similarity_index] = max(double(LMat') * double(postLMat));
                 globalLMat            = preLMat(:, preLMatIndex == postLMatIndex(similarity_index) & preLMatTime == max(timeInd)); 
                 globalLMat            = sum(globalLMat, 2) > 0;
-                if max_value == 0; continue; end
+                if max_value == 0 || sum(globalLMat)==0 || sum(LMat)==0; continue; end
                 localPreDff           = dff(LMat, timePoints(min(timeInd)):timePoints(min(timeInd)+timeLength));
                 globaPreDff           = dff(globalLMat, timePoints(min(timeInd)):timePoints(min(timeInd)+timeLength));
                 localPostDff          = dff(LMat, timePoints(max(timeInd)):timePoints(max(timeInd)+timeLength));
