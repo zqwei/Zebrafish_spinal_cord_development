@@ -41,10 +41,10 @@ function ClusterActivityMergingTime_v0_1(nFile)
                 globalLMat            = preLMat(:, preLMatIndex == postLMatIndex(similarity_index) & preLMatTime == max(timeInd)); 
                 globalLMat            = sum(globalLMat, 2) > 0;
                 if max_value == 0 || sum(globalLMat)==0 || sum(LMat)==0; continue; end
-                localPreDff           = dff(LMat, timePoints(min(timeInd)):timePoints(min(timeInd)+timeLength));
-                globaPreDff           = dff(globalLMat, timePoints(min(timeInd)):timePoints(min(timeInd)+timeLength));
-                localPostDff          = dff(LMat, timePoints(max(timeInd)):timePoints(max(timeInd)+timeLength));
-                globaPostDff          = dff(globalLMat, timePoints(max(timeInd)):timePoints(max(timeInd)+timeLength));
+                localPreDff           = dff(LMat, timePoints(min(timeInd))+1:timePoints(min(timeInd)+timeLength));
+                globaPreDff           = dff(globalLMat, timePoints(min(timeInd))+1:timePoints(min(timeInd)+timeLength));
+                localPostDff          = dff(LMat, timePoints(max(timeInd))+1:timePoints(max(timeInd)+timeLength));
+                globaPostDff          = dff(globalLMat, timePoints(max(timeInd))+1:timePoints(max(timeInd)+timeLength));
                 corr_mat(nFactor, 1)  = sum(sum(abs(corr(localPreDff'))))/sum(LMat)/(sum(LMat)-1) - 1/(sum(LMat)-1);
                 corr_mat(nFactor, 2)  = sum(sum(abs(corr(localPostDff'))))/sum(LMat)/(sum(LMat)-1) - 1/(sum(LMat)-1);
                 corr_mat(nFactor, 3)  = sum(sum(abs(corr(globaPreDff'))))/sum(globalLMat)/(sum(globalLMat)-1) - 1/(sum(globalLMat)-1);
