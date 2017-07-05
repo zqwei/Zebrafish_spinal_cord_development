@@ -2,62 +2,47 @@ addpath('../Func');
 setDir;
 
 %% plotting pioneer factor onto polar plot 
-
-minR = 0;
-maxR = 1;
-ticks = 0.2:0.2:1;
-thres = exp(-1);
-nbins = 12;
-bins = [0 thres 1];
+nbins = 8;
 a_bins = linspace(0, 1, nbins+1);
-count = zeros(numel(a_bins)-1, numel(bins)-1);
-leg = 0:30:330;
+control_datasets = [3, 4, 7, 12, 10, 11, 13, 15, 16];
+MO_datasets = [17 18 19 20 21] ;
 
-% for control
+% option 1: use Ziqiang's definition of neuronType
+% bins = 0.5:3;
+% metric_cmd = ' me=neuronType; me(me==2)=1; me(me==3)=2;';
+bins = 0.5:4;
+metric_cmd = ' me=neuronType; ';
+
+
+% option 2: use factorSize definition
+% bins = [0 exp(-1) 1];
+% metric_cmd = ' me=exp(1-factorSize);';
+
+
+% for control datasets
 me_plot = [];
 x_plot = [];
-for nFile = [3, 4, 7, 12, 10, 11, 13, 15, 16]
-    load([TempDataDir '/tmp_' dataset{nFile} '.mat']);
-    me = exp(1-factorSize);
-
+for nFile = control_datasets
+    load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'x', 'factorSize');
+    load([DirNames{nFile} '/LONOLoading_v_0_1.mat'], 'neuronType');
+    eval(metric_cmd);
     me_plot = [me_plot; me(x>=1 & x<=floor(max(x)) & ~isnan(me))];
     x_plot = [x_plot; x(x>=1 & x<=floor(max(x)) & ~isnan(me))];
 end
-
-
-
-% spider plot
-for i = 1:numel(a_bins)-1
-    select = find(x_plot-floor(x_plot)>=a_bins(i) & x_plot-floor(x_plot)<a_bins(i+1));
-    if ~isempty(select)
-        count(i, :) = histcounts(me_plot(select), bins);
-    end
-end
-
-spider(count, '', repmat([0, max(count(:))], numel(a_bins)-1, 1), strtrim(cellstr(num2str(leg'))'));
-% spider(count(:, 1), '', repmat([0, max(count(:,1))], numel(a_bins)-1, 1), strtrim(cellstr(num2str(leg'))'));
-% spider(count(:, 2), '', repmat([0, max(count(:,2))], numel(a_bins)-1, 1), strtrim(cellstr(num2str(leg'))'));
-
+polar_histogram(me_plot, x_plot-floor(x_plot), bins, a_bins);
 
 % for MO
 me_plot = [];
 x_plot = [];
-for nFile =  [17 18 19 20 21] 
-    load([TempDataDir '/tmp_' dataset{nFile} '.mat']);
-    me = exp(1-factorSize);
+for nFile =  MO_datasets
+    load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'x', 'factorSize');
+    load([DirNames{nFile} '/LONOLoading_v_0_1.mat'], 'neuronType');
+    eval(metric_cmd);
     me_plot = [me_plot; me(x>=1 & x<=floor(max(x)) & ~isnan(me))];
     x_plot = [x_plot; x(x>=1 & x<=floor(max(x)) & ~isnan(me))];
 end
 
-% spider plot
-for i = 1:numel(a_bins)-1
-    select = find(x_plot-floor(x_plot)>=a_bins(i) & x_plot-floor(x_plot)<a_bins(i+1));
-    if ~isempty(select)
-        count(i, :) = histcounts(me_plot(select), bins);
-    end
-end
-leg = 0:30:330;
-spider(count, '', repmat([0, max(count(:))], numel(a_bins)-1, 1), strtrim(cellstr(num2str(leg'))'));
+polar_histogram(me_plot, x_plot-floor(x_plot), bins, a_bins);
 
 %% plotting individual circular statistics
 
@@ -80,27 +65,41 @@ spider(count, '', repmat([0, max(count(:))], numel(a_bins)-1, 1), strtrim(cellst
 
 
 
-% %% plotting islet with factorSize
-
+% plot distribution of cell types by neuronType
+islet_datasets = [10 13 15 16];
 islet_all = [];
 mnx_all = [];
-me = [];
-figure,
-clf('reset')
-for nFile = [10 13 15 16]
-    load([TempDataDir '/tmp_' dataset{nFile} '.mat']);
+me_all = [];
+for nFile = islet_datasets;
+    load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'factorSize', 'islet', 'mnx');
+    load([DirNames{nFile} '/LONOLoading_v_0_1.mat'], 'neuronType');
+    eval(metric_cmd);
     islet_all = [islet_all; islet];
     mnx_all = [mnx_all; mnx];
-    me = [me; factorSize;];
+    me_all = [me_all; me;];
 end
-y1 = me(islet_all==1 & mnx_all==1);
-y2 = me(islet_all==0 & mnx_all==1);
-y1(numel(y1)+1:numel(y2)) = NaN;
-y2(numel(y2)+1:numel(y1)) = NaN;
-distributionPlot([y1, y2], 'showMM', 0, 'globalNorm', 3, 'addSpread', 1);
-hold on
-set(gca, 'xTickLabel', {'islet+', 'islet-'})
-ylim([0 10])
-export_fig([PlotDir '/islet_dist_' dataset{nFile} '.tif'], '-nocrop');
-hold off
-close
+
+islet_all(isnan(me_all)) = [];
+mnx_all(isnan(me_all)) = [];
+me_all(isnan(me_all)) = [];
+
+count = zeros(numel(bins)-1, 3);
+for type = 1: numel(bins) - 1
+    select = me_all >= bins(type) & me_all<bins(type+1);
+    count(type, 1) = sum(me_all(select & mnx_all==1 & islet_all==1));
+    count(type, 2) = sum(me_all(select & mnx_all==1 & islet_all==0));
+    count(type, 3) = sum(me_all(select & mnx_all==0));
+end
+figure, 
+bar(count,'stacked');
+set(gca, 'XTickLabel', {'type 1', 'type 2', 'type3'});
+legend({'islet+', 'islet-', 'mnx-'});
+title('activation type and cell type');
+ylabel('count');
+
+figure, 
+bar(count./repmat(sum(count, 2), 1, 3), 'stacked');
+set(gca, 'XTickLabel', {'type 1', 'type 2', 'type3'});
+legend({'islet+', 'islet-', 'mnx-'});
+title('activation type and cell type');
+ylabel('normalized percentage');
