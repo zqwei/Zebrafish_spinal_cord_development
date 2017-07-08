@@ -69,7 +69,7 @@ for period = 1:numel(timePoints)
     hold on
     for i = 1:size(LMat, 1)
         if ~activeTag(i)
-            plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+find(neworder==i)*4, 'Color', [.2, .2, .2], 'linewidth', linew);
+            plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+(tot_length - find(neworder==i))*4, 'Color', [.2, .2, .2], 'linewidth', linew);
         end
     end
     for i = 1:size(LMat, 1)
