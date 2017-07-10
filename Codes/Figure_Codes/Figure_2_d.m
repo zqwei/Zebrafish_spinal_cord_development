@@ -77,20 +77,34 @@ function Figure_2_d_2(activeNeuronMat, networkMat)
     plot((1:numTime)/60, 1 - fracNeuron, 'or')
     
     % fit for fracActNeuron
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    % remove drop points
+    removeIndex              = find(fracActNeuron/max(fracActNeuron) < 0.6);
+    factorTime               = find(numFactor>= max(numFactor)-1, 1, 'last');
+    removeIndex(removeIndex<factorTime) = [];
+    if isempty(removeIndex)
+        removeStart          = numTime;
+    else
+        removeStart          = removeIndex(1);
+    end
+    % for nfile = 12: removeStart  = 180; fix_fit_max = 0.95;
+    % for nfile = 13; fix_fit_max = 0.95;
+    % for nfile = 17: removeStart  = 180; fix_fit_max = 0.95;
+    % for nfile = 18; removeStart  = 120;
+    % for nfile = 19; removeStart  = 150; fix_fit_max = 0.95;
+%     if nFile >=17; removeStart  = 180; end
+    init_params              = [0, max(fracActNeuron), find(fracActNeuron/max(fracActNeuron)>0.5, 1, 'first')/60, 1];
+    [fitParams, fitResult]   = sigm_fit((1:removeStart)/60, fracActNeuron(1:removeStart), [0, nan, nan, nan], init_params, false);
+    upK                      = fitResult.paramCI(end, 1);
+    lowK                     = fitResult.paramCI(end, 2);
+    ypred                    = fitResult.ypred;
+    ypredlowerCI             = fitResult.ypredlowerCI;
+    ypredupperCI             = fitResult.ypredupperCI;
+    plot((1:removeStart)/60, ypred, '-', 'linewid', 2.0, 'Color', 'k');
+    plot((1:removeStart)/60, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
+    plot((1:removeStart)/60, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
+    ylim([0 1])
+    xlim([0 numTime/60])    
+        
     % remove drop points
     removeIndex              = find(fracNeuron < 0.6);
     factorTime               = find(numFactor>= max(numFactor)-1, 1, 'last');
@@ -105,7 +119,7 @@ function Figure_2_d_2(activeNeuronMat, networkMat)
     % for nfile = 17: removeStart  = 180; fix_fit_max = 0.95;
     % for nfile = 18; removeStart  = 120;
     % for nfile = 19; removeStart  = 150; fix_fit_max = 0.95;
-    if nFile >=17; removeStart  = 180; end
+%     if nFile >=17; removeStart  = 180; end
     init_params              = [0, max(fracNeuron), find(fracNeuron>0.5, 1, 'first')/60, 1];
     [fitParams, fitResult]   = sigm_fit((1:removeStart)/60, fracNeuron(1:removeStart), [0, 0.95, nan, nan], init_params, false);
     upK                      = fitResult.paramCI(end, 1);
@@ -113,16 +127,13 @@ function Figure_2_d_2(activeNeuronMat, networkMat)
     ypred                    = fitResult.ypred;
     ypredlowerCI             = fitResult.ypredlowerCI;
     ypredupperCI             = fitResult.ypredupperCI;
-    mColor                   = 'b';
-    plot((1:removeStart)/60, ypred, '-', 'linewid', 2.0, 'Color', mColor);
-    plot((1:removeStart)/60, ypredlowerCI, '-', 'linewid', 0.5, 'Color', mColor);
-    plot((1:removeStart)/60, ypredupperCI, '-', 'linewid', 0.5, 'Color', mColor);
+    plot((1:removeStart)/60, 1 - ypred, '-', 'linewid', 2.0, 'Color', 'r');
+    plot((1:removeStart)/60, 1 - ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'r');
+    plot((1:removeStart)/60, 1- ypredupperCI, '-', 'linewid', 0.5, 'Color', 'r');
     ylim([0 1])
-    gridxy([fitParams(3)-1/fitParams(4)*log10(9) fitParams(3)+1/fitParams(4)*log10(9)], [], 'color', 'r', 'linestyle', '--')
-    hold off
-    xlabel('Time (hour)')
-    ylabel('frac. neuron factored')
     xlim([0 numTime/60])
+    
+    
 end
 
 %% 3a. radius of communities
