@@ -223,6 +223,7 @@ end
 
 function h = plotAlignPerc(x, y, percVal)
     yp     = prctile(y, percVal);
-    yInd   = find(y > yp, 1, 'first');
+    yInd   = find(y >= yp, 1, 'first');
+    if isempty(yInd); keyboard(); end
     h      = plot(x - x(yInd), y, '-');
 end
