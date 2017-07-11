@@ -38,24 +38,25 @@ function Figure_2_d(nFile)
         end
     end
     
-    totPlots = 5;
+    totPlots = 6;
         
     subplot(1, totPlots, 1)
     Figure_2_d_1(EVLONO)    
     
     subplot(1, totPlots, 2)
-    Figure_2_d_2(activeNeuronMat, networkMat)
+    Figure_2_d_2a(activeNeuronMat, networkMat)
     
     subplot(1, totPlots, 3)
-    Figure_2_d_3a(clusterList, numTime)
+    Figure_2_d_2b(activeNeuronMat, networkMat)
     
     subplot(1, totPlots, 4)
-    Figure_2_d_3b(clusterList, numTime)
+    Figure_2_d_3a(clusterList, numTime)
     
     subplot(1, totPlots, 5)
-    Figure_2_d_4(halfActTime, neuronXLoc(:, 1))
+    Figure_2_d_3b(clusterList, numTime)
     
-    setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName '.pdf'])
+    subplot(1, totPlots, 6)
+    Figure_2_d_4(halfActTime, neuronXLoc(:, 1))
 end
 
 %% 1. number of communities
@@ -73,8 +74,6 @@ function Figure_2_d_1(EVLONO)
     end
     timePoints        = (1:numTime)';
     hold on    
-    plot(timePoints/60, LONOM,'o', 'color', [0.7 0.7 0.7])    
-    % fit of numFactor curve
     fitResult    = fit(timePoints/60, LONOM-2, 'gauss1');
     b            = fitResult.b1;
     a            = fitResult.a1;
@@ -82,19 +81,17 @@ function Figure_2_d_1(EVLONO)
     cr           = c;
     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], timePoints/60, LONOM);    
     opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);    
-    plot(timePoints/60, opt1Dim,'k-', 'linewid', 2)
-    xlim([0 max(timePoints)/60])  
+    plotAlignPerc(timePoints/60, opt1Dim, 98)
     ylabel('Num factor')
-    xlabel('Time (hour)')
+    xlabel('Time from peak (hour)')
     box off
 end
 
 %% 2. 
 % a. Fraction of non-factored neurons 
 % b. percentage of total active neurons
-function Figure_2_d_2(activeNeuronMat, networkMat)    
+function Figure_2_d_2a(activeNeuronMat, networkMat)    
     numActNeuron      = sum(activeNeuronMat, 1);
-    fracActNeuron     = mean(activeNeuronMat, 1);    
     numTime           = length(numActNeuron);
     numFactor         = zeros(numTime, 1);
     factorNeuronMat   = false(size(activeNeuronMat));
@@ -112,36 +109,40 @@ function Figure_2_d_2(activeNeuronMat, networkMat)
     fracNeuron        = numFactorNeuron./numActNeuron;
     
     hold on
-    plot((1:numTime)/60, fracActNeuron, 'ok')
-    plot((1:numTime)/60, 1 - fracNeuron, 'or')
-    
+    % fit for fracNeuron    
+    factorTime               = find(numFactor>= max(numFactor)-1, 1, 'last');
+    fitResult                = fig_sigm((1:numTime)/60, fracNeuron, factorTime, 0, 1);
+    timePoints               = fitResult.x;
+    ypred                    = fitResult.ypred;
+    plotAlignPerc(timePoints, ypred, 90); 
+    box off
+    ylabel('Frac factored neuron')
+    xlabel('Time from 90% (hour)')
+end
+
+function Figure_2_d_2b(activeNeuronMat, networkMat)    
+    numActNeuron      = sum(activeNeuronMat, 1);
+    fracActNeuron     = mean(activeNeuronMat, 1);    
+    numTime           = length(numActNeuron);
+    numFactor         = zeros(numTime, 1);   
+    for nTime         = 1:numTime
+        factorSet     = networkMat{nTime, 1};
+        for nFactor   = 2:length(factorSet)
+            if length(factorSet(nFactor).neuronIndex) > 1
+                numFactor(nTime)       = numFactor(nTime)+1;
+            end
+        end
+    end
+    hold on
     % fit for fracActNeuron    
     factorTime               = find(numFactor>= max(numFactor)-1, 1, 'last');             
     fitResult                = fig_sigm((1:numTime)/60, fracActNeuron, factorTime, 0, nan);
     timePoints               = fitResult.x;
     ypred                    = fitResult.ypred;
-    ypredlowerCI             = fitResult.ypredlowerCI;
-    ypredupperCI             = fitResult.ypredupperCI;
-    plot(timePoints, ypred, '-', 'linewid', 2.0, 'Color', 'k');
-    plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
-    plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
-    ylim([0 1])
-    xlim([0 max(timePoints)])    
-    
-    % fit for fracNeuron           
-    fitResult                = fig_sigm((1:numTime)/60, fracNeuron, factorTime, 0, 1);
-    timePoints               = fitResult.x;
-    ypred                    = fitResult.ypred;
-    ypredlowerCI             = fitResult.ypredlowerCI;
-    ypredupperCI             = fitResult.ypredupperCI;
-    plot(timePoints, 1- ypred, '-', 'linewid', 2.0, 'Color', 'r');
-    plot(timePoints, 1- ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'r');
-    plot(timePoints, 1- ypredupperCI, '-', 'linewid', 0.5, 'Color', 'r');
-    ylim([0 1])
-    xlim([0 max(timePoints)])  
-    ylabel('Frac neuron')
-    xlabel('Time (hour)')    
+    plotAlignPerc(timePoints, ypred, 90); 
     box off
+    ylabel('Frac active neuron')
+    xlabel('Time from 90% (hour)')
 end
 
 %% 3a. radius of communities
@@ -151,20 +152,13 @@ function Figure_2_d_3a(clusterList, numTime)
     grps         = str2double(grps);
     factorRadius(grps) = means;
     timePoints   = (1:numTime)/60;
-    hold on
-    plot(timePoints, factorRadius, 'ok')
-    
+    hold on    
     fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
     ypred                    = fitResult.ypred;
-    ypredlowerCI             = fitResult.ypredlowerCI;
-    ypredupperCI             = fitResult.ypredupperCI;
-    plot(timePoints, ypred, '-', 'linewid', 2.0, 'Color', 'k');
-    plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
-    plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
-    xlim([0 max(timePoints)])  
-    ylabel('Radius factor')
-    xlabel('Time (hour)')
+    plotAlignPerc(timePoints, ypred, 90); 
     box off
+    ylabel('Radius factor')
+    xlabel('Time from 90% (hour)')
 end
 
 %% 3b. size of communities
@@ -174,29 +168,23 @@ function Figure_2_d_3b(clusterList, numTime)
     grps         = str2double(grps);
     factorRadius(grps) = means;
     timePoints   = (1:numTime)/60;
-    hold on
-    plot(timePoints, factorRadius, 'ok')
-    
+    hold on    
     fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
     ypred                    = fitResult.ypred;
-    ypredlowerCI             = fitResult.ypredlowerCI;
-    ypredupperCI             = fitResult.ypredupperCI;
-    plot(timePoints, ypred, '-', 'linewid', 2.0, 'Color', 'k');
-    plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
-    plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
-    xlim([0 max(timePoints)])  
+    plotAlignPerc(timePoints, ypred, 90);
     ylabel('Size factor')
-    xlabel('Time (hour)')
+    xlabel('Time from 90% (hour)')
     box off
 end
 
 %% 4. actTime vs location
 function Figure_2_d_4(halfActTime, neuronXLoc)
     hold on
-    plot(neuronXLoc, halfActTime, 'ok')
     fitActTime = linearFit(neuronXLoc, halfActTime);
-    plot(neuronXLoc, fitActTime, '-k', 'linewid', 1)
+    plot(neuronXLoc, fitActTime, 'linewid', 1)
     box off
+    ylabel('Frac neuron')
+    xlabel('Time (hour)')    
 end
 
 
@@ -230,4 +218,11 @@ function yfit   = linearFit(x, y)
     valid_index = ~isnan(x) & ~isnan(y);
     p           = robustfit(x(valid_index),y(valid_index));
     yfit        = polyval(p(end:-1:1), x);
+end
+
+
+function h = plotAlignPerc(x, y, percVal)
+    yp     = prctile(y, percVal);
+    yInd   = find(y > yp, 1, 'first');
+    h      = plot(x - x(yInd), y, '-');
 end
