@@ -6,7 +6,7 @@
 % 3b. size of communities
 
 
-function Figure_2_d(nFile)
+function Figure_2_c(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>  
@@ -39,27 +39,31 @@ function Figure_2_d(nFile)
     end
     
     totPlots = 5;
-        
+    
+    figure
+    
     subplot(1, totPlots, 1)
-    Figure_2_d_1(EVLONO)    
+    Figure_2_c_1(EVLONO)    
     
     subplot(1, totPlots, 2)
-    Figure_2_d_2(activeNeuronMat, networkMat)
+    Figure_2_c_2(activeNeuronMat, networkMat)
     
     subplot(1, totPlots, 3)
-    Figure_2_d_3a(clusterList, numTime)
+    Figure_2_c_3a(clusterList, numTime)
     
     subplot(1, totPlots, 4)
-    Figure_2_d_3b(clusterList, numTime)
+    Figure_2_c_3b(clusterList, numTime)
     
     subplot(1, totPlots, 5)
-    Figure_2_d_4(halfActTime, neuronXLoc(:, 1))
+    Figure_2_c_4(halfActTime, neuronXLoc(:, 1))
     
-    setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName '.pdf'])
+    setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName], 'pdf')
+    
+    close all
 end
 
 %% 1. number of communities
-function Figure_2_d_1(EVLONO)    
+function Figure_2_c_1(EVLONO)    
     numTime           = size(EVLONO, 1);
     LONOM             = zeros(numTime, 1);
     EVLONOMat         = squeeze(mean(EVLONO, 3));
@@ -92,7 +96,7 @@ end
 %% 2. 
 % a. Fraction of non-factored neurons 
 % b. percentage of total active neurons
-function Figure_2_d_2(activeNeuronMat, networkMat)    
+function Figure_2_c_2(activeNeuronMat, networkMat)    
     numActNeuron      = sum(activeNeuronMat, 1);
     fracActNeuron     = mean(activeNeuronMat, 1);    
     numTime           = length(numActNeuron);
@@ -145,7 +149,7 @@ function Figure_2_d_2(activeNeuronMat, networkMat)
 end
 
 %% 3a. radius of communities
-function Figure_2_d_3a(clusterList, numTime)    
+function Figure_2_c_3a(clusterList, numTime)    
     factorRadius = zeros(numTime, 1);
     [means, grps] = grpstats(clusterList(:, 3),clusterList(:, 1), {'mean', 'gname'});
     grps         = str2double(grps);
@@ -168,7 +172,7 @@ function Figure_2_d_3a(clusterList, numTime)
 end
 
 %% 3b. size of communities
-function Figure_2_d_3b(clusterList, numTime)    
+function Figure_2_c_3b(clusterList, numTime)    
     factorRadius = zeros(numTime, 1);
     [means, grps] = grpstats(clusterList(:, 2),clusterList(:, 1), {'mean', 'gname'});
     grps         = str2double(grps);
@@ -191,7 +195,7 @@ function Figure_2_d_3b(clusterList, numTime)
 end
 
 %% 4. actTime vs location
-function Figure_2_d_4(halfActTime, neuronXLoc)
+function Figure_2_c_4(halfActTime, neuronXLoc)
     hold on
     plot(neuronXLoc, halfActTime, 'ok')
     fitActTime = linearFit(neuronXLoc, halfActTime);

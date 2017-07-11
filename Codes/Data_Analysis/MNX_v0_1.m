@@ -43,4 +43,4 @@ function MNX_v0_1(nFile)
     ylabel('Half EV time (hour)');
     setPrint(8, 6, [plotDir, 'MNXNumNeuronsClassifier_', fileName], 'pdf');
     close all
-end
+e
