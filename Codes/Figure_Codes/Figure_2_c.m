@@ -201,6 +201,8 @@ function Figure_2_c_4(halfActTime, neuronXLoc)
     fitActTime = linearFit(neuronXLoc, halfActTime);
     plot(neuronXLoc, fitActTime, '-k', 'linewid', 1)
     box off
+    xlabel('x location (segments)')
+    ylabel('Activation time (hour)')
 end
 
 
