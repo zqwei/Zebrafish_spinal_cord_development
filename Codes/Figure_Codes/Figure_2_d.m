@@ -80,8 +80,10 @@ function Figure_2_d_1(EVLONO)
     c            = fitResult.c1;
     cr           = c;
     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], timePoints/60, LONOM);    
-    opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);    
-    plotAlignPerc(timePoints/60, opt1Dim, 98)
+    opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);  
+    
+    plot(timePoints/60, opt1Dim)
+%     plotAlignPerc(timePoints/60, opt1Dim, 98)
     ylabel('Num factor')
     xlabel('Time from peak (hour)')
     box off
@@ -114,7 +116,8 @@ function Figure_2_d_2a(activeNeuronMat, networkMat)
     fitResult                = fig_sigm((1:numTime)/60, fracNeuron, factorTime, 0, 1);
     timePoints               = fitResult.x;
     ypred                    = fitResult.ypred;
-    plotAlignPerc(timePoints, ypred, 90); 
+%     plotAlignPerc(timePoints, ypred, 90); 
+    plot(timePoints, ypred); 
     box off
     ylabel('Frac factored neuron')
     xlabel('Time from 90% (hour)')
@@ -139,7 +142,8 @@ function Figure_2_d_2b(activeNeuronMat, networkMat)
     fitResult                = fig_sigm((1:numTime)/60, fracActNeuron, factorTime, 0, nan);
     timePoints               = fitResult.x;
     ypred                    = fitResult.ypred;
-    plotAlignPerc(timePoints, ypred, 90); 
+%     plotAlignPerc(timePoints, ypred, 90); 
+    plot(timePoints, ypred); 
     box off
     ylabel('Frac active neuron')
     xlabel('Time from 90% (hour)')
@@ -155,7 +159,8 @@ function Figure_2_d_3a(clusterList, numTime)
     hold on    
     fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
     ypred                    = fitResult.ypred;
-    plotAlignPerc(timePoints, ypred, 90); 
+%     plotAlignPerc(timePoints, ypred, 90); 
+    plot(timePoints, ypred); 
     box off
     ylabel('Radius factor')
     xlabel('Time from 90% (hour)')
@@ -171,7 +176,8 @@ function Figure_2_d_3b(clusterList, numTime)
     hold on    
     fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
     ypred                    = fitResult.ypred;
-    plotAlignPerc(timePoints, ypred, 90);
+%     plotAlignPerc(timePoints, ypred, 90);
+    plot(timePoints, ypred); 
     ylabel('Size factor')
     xlabel('Time from 90% (hour)')
     box off
@@ -226,4 +232,7 @@ function h = plotAlignPerc(x, y, percVal)
     yInd   = find(y >= yp, 1, 'first');
     if isempty(yInd); keyboard(); end
     h      = plot(x - x(yInd), y, '-');
+end
+
+function h = plotAlignByTime(x, y, Time)
 end
