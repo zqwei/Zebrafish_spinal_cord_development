@@ -30,8 +30,9 @@ function Figure_2_c(nFile)
                 zLoc    = neuronZLoc(neuronIndex, nTime);
 %                 radius  = (xLoc - factorSet(nFactor).x).^2 + (yLoc - factorSet(nFactor).y).^2 + ...
 %                           (zLoc - factorSet(nFactor).z).^2;
-                radius  = (xLoc - factorSet(nFactor).x).^2;
-                radius  = sqrt(mean(radius));
+%                 radius  = (xLoc - factorSet(nFactor).x).^2;
+%                 radius  = sqrt(mean(radius));
+                radius = max(xLoc) - min(xLoc);
                 cluster = [cluster, radius];
                 clusterList = [clusterList; cluster];
             end
@@ -78,14 +79,15 @@ function Figure_2_c_1(EVLONO)
     timePoints        = (1:numTime)';
     hold on    
     plot(timePoints/60, LONOM,'o', 'color', [0.7 0.7 0.7])    
-    % fit of numFactor curve
-    fitResult    = fit(timePoints/60, LONOM-2, 'gauss1');
-    b            = fitResult.b1;
-    a            = fitResult.a1;
-    c            = fitResult.c1;
-    cr           = c;
-    fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], timePoints/60, LONOM);    
-    opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);    
+%     % fit of numFactor curve
+%     fitResult    = fit(timePoints/60, LONOM-2, 'gauss1');
+%     b            = fitResult.b1;
+%     a            = fitResult.a1;
+%     c            = fitResult.c1;
+%     cr           = c;
+%     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], timePoints/60, LONOM);    
+%     opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);   
+    opt1Dim        = smooth(LONOM, 201, 'rloess');
     plot(timePoints/60, opt1Dim,'k-', 'linewid', 2)
     xlim([0 max(timePoints)/60])  
     ylabel('Num factor')
@@ -151,12 +153,15 @@ end
 %% 3a. radius of communities
 function Figure_2_c_3a(clusterList, numTime)    
     factorRadius = zeros(numTime, 1);
-    [means, grps] = grpstats(clusterList(:, 3),clusterList(:, 1), {'mean', 'gname'});
+    [means, stds, grps] = grpstats(clusterList(:, 3),clusterList(:, 1), {'mean', 'std', 'gname'});
     grps         = str2double(grps);
     factorRadius(grps) = means;
+    factorStd    = zeros(numTime, 1);
+    factorStd(grps) = stds; 
     timePoints   = (1:numTime)/60;
     hold on
     plot(timePoints, factorRadius, 'ok')
+%     errorbar(timePoints, factorRadius, factorStd, '.k')
     
     fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
     ypred                    = fitResult.ypred;
