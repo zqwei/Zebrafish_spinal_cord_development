@@ -17,6 +17,10 @@ for i = 1:numel(dataset)
     copyfile([inputFolder '\FALONO_' dataset{i} '.mat'], [outputFolder '\FALONO.mat']);
     copyfile([inputFolder '\LONOLoading_' dataset{i} '.mat'], [outputFolder '\LONOLoading.mat']);
     
+    if exist([inputFolder '\LONOLoading_v_0_1' dataset{i} '.mat'], 'file')
+            copyfile([inputFolder '\LONOLoading_v_0_1' dataset{i} '.mat'], [outputFolder '\LONOLoading_v_0_1.mat']);
+    end
+    
     exfolder = [exMetrFolder '\' dataset{i}];
     if exist([exfolder '\islet.mat'], 'file')
         copyfile([exfolder '\islet.mat'], [outputFolder '\islet.mat']);
