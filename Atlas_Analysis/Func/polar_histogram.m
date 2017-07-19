@@ -21,6 +21,9 @@ for i = 1:numel(t_bins)-1
     end
 end
 
+% if normalization is used
+% count = count./repmat(max(count), numel(t_bins)-1, 1);
+
 spider(count, '', repmat([0, max(count(:))], numel(t_bins)-1, 1), strtrim(cellstr(num2str(leg'))'));
 
 end
