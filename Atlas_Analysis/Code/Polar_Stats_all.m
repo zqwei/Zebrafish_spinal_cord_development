@@ -9,7 +9,7 @@ MO_datasets = [17 18 19 20 21] ;
 
 % option 1: use Ziqiang's definition of neuronType
 % bins = 0.5:3;
-% metric_cmd = ' me=neuronType; me(me==2)=1; me(me==3)=2;';
+% metric_cmd = ' me=neuronType; me(me==3)=2;';
 bins = 0.5:4;
 metric_cmd = ' me=neuronType; ';
 
