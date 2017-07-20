@@ -6,7 +6,7 @@
 % 3b. size of communities
 
 
-function Figure_2_c(nFile)
+function stats = Figure_2_c(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>  
@@ -40,31 +40,32 @@ function Figure_2_c(nFile)
     end
     
     totPlots = 5;
+    stats = cell(totPlots, 1);
     
-    figure
+    figure('Position', [0, 0, 1200, 200]);
     
     subplot(1, totPlots, 1)
-    Figure_2_c_1(EVLONO)    
+    stats{1} = Figure_2_c_1(EVLONO);    
     
     subplot(1, totPlots, 2)
-    Figure_2_c_2(activeNeuronMat, networkMat)
+    stats{2} = Figure_2_c_2(activeNeuronMat, networkMat);
     
     subplot(1, totPlots, 3)
-    Figure_2_c_3a(clusterList, numTime)
+    stats{3} = Figure_2_c_3a(clusterList, numTime);
     
     subplot(1, totPlots, 4)
-    Figure_2_c_3b(clusterList, numTime)
+    stats{4} = Figure_2_c_3b(clusterList, numTime);
     
     subplot(1, totPlots, 5)
-    Figure_2_c_4(halfActTime, neuronXLoc(:, 1))
+    stats{5} = Figure_2_c_4(halfActTime, neuronXLoc(:, 1));
     
     setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName], 'pdf')
     
-    close all
+    close(gcf)
 end
 
 %% 1. number of communities
-function Figure_2_c_1(EVLONO)    
+function pred = Figure_2_c_1(EVLONO)    
     numTime           = size(EVLONO, 1);
     LONOM             = zeros(numTime, 1);
     EVLONOMat         = squeeze(mean(EVLONO, 3));
@@ -87,24 +88,28 @@ function Figure_2_c_1(EVLONO)
 %     cr           = c;
 %     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], timePoints/60, LONOM);    
 %     opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);   
-    opt1Dim        = smooth(LONOM, 201, 'rloess');
+%     opt1Dim        = smooth(LONOM, 61, 'rlowess');
+    opt1Dim = smooth(LONOM, 101, 'sgolay', 2);
     plot(timePoints/60, opt1Dim,'k-', 'linewid', 2)
     xlim([0 max(timePoints)/60])  
     ylabel('Num factor')
     xlabel('Time (hour)')
     box off
+    pred.t = timePoints/60;
+    pred.y = opt1Dim;
 end
 
 %% 2. 
 % a. Fraction of non-factored neurons 
 % b. percentage of total active neurons
-function Figure_2_c_2(activeNeuronMat, networkMat)    
+function pred = Figure_2_c_2(activeNeuronMat, networkMat)    
     numActNeuron      = sum(activeNeuronMat, 1);
-    fracActNeuron     = mean(activeNeuronMat, 1);    
+    fracActNeuron     = numActNeuron/sum(sum(activeNeuronMat, 2)>0);    %exclude never-active neurons
+%     fracActNeuron     = sum(activeNeuronMat(sum(activeNeuronMat, 2)>20, :), 1)/sum(sum(activeNeuronMat, 2)>20);    %exclude short-lived neurons
     numTime           = length(numActNeuron);
     numFactor         = zeros(numTime, 1);
     factorNeuronMat   = false(size(activeNeuronMat));
-    % computer number of factored neuron
+    % compute number of factored neuron
     for nTime         = 1:numTime
         factorSet     = networkMat{nTime, 1};
         for nFactor   = 2:length(factorSet)
@@ -133,6 +138,9 @@ function Figure_2_c_2(activeNeuronMat, networkMat)
     plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
     ylim([0 1])
     xlim([0 max(timePoints)])    
+    pred.t1 = timePoints;
+    pred.y1 = ypred;
+
     
     % fit for fracNeuron           
     fitResult                = fig_sigm((1:numTime)/60, fracNeuron, factorTime, 0, 1);
@@ -148,10 +156,14 @@ function Figure_2_c_2(activeNeuronMat, networkMat)
     ylabel('Frac neuron')
     xlabel('Time (hour)')    
     box off
+    
+    pred.t2 = timePoints;
+    pred.y2 = 1- ypred;
+    pred.fracAct50 = fitResult.param(1);
 end
 
 %% 3a. radius of communities
-function Figure_2_c_3a(clusterList, numTime)    
+function pred = Figure_2_c_3a(clusterList, numTime)    
     factorRadius = zeros(numTime, 1);
     [means, stds, grps] = grpstats(clusterList(:, 3),clusterList(:, 1), {'mean', 'std', 'gname'});
     grps         = str2double(grps);
@@ -174,18 +186,23 @@ function Figure_2_c_3a(clusterList, numTime)
     ylabel('Radius factor')
     xlabel('Time (hour)')
     box off
+    pred.t = timePoints;
+    pred.y = ypred;
 end
 
 %% 3b. size of communities
-function Figure_2_c_3b(clusterList, numTime)    
+function pred = Figure_2_c_3b(clusterList, numTime)    
     factorRadius = zeros(numTime, 1);
     [means, grps] = grpstats(clusterList(:, 2),clusterList(:, 1), {'mean', 'gname'});
     grps         = str2double(grps);
     factorRadius(grps) = means;
     timePoints   = (1:numTime)/60;
+    
+    fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
+    factorRadius = factorRadius/fitResult.param(1); % normalize by sigmoid amplitude
+    
     hold on
     plot(timePoints, factorRadius, 'ok')
-    
     fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
     ypred                    = fitResult.ypred;
     ypredlowerCI             = fitResult.ypredlowerCI;
@@ -194,13 +211,15 @@ function Figure_2_c_3b(clusterList, numTime)
     plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
     plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
     xlim([0 max(timePoints)])  
-    ylabel('Size factor')
+    ylabel('Normalized factor size')
     xlabel('Time (hour)')
     box off
+    pred.t = timePoints;
+    pred.y = ypred;
 end
 
 %% 4. actTime vs location
-function Figure_2_c_4(halfActTime, neuronXLoc)
+function pred = Figure_2_c_4(halfActTime, neuronXLoc)
     hold on
     plot(neuronXLoc, halfActTime, 'ok')
     fitActTime = linearFit(neuronXLoc, halfActTime);
@@ -208,6 +227,8 @@ function Figure_2_c_4(halfActTime, neuronXLoc)
     box off
     xlabel('x location (segments)')
     ylabel('Activation time (hour)')
+    pred.t = neuronXLoc;
+    pred.y = fitActTime;
 end
 
 
