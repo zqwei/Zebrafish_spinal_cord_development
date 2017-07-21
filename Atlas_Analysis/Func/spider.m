@@ -270,23 +270,31 @@ if len == 1
 else
 	% initial color posibilities (no white)
 	% default color scale
-	col = [	0 0 0
-			0 0 1
-			0 1 1
-			0 1 0
-			1 1 0
-			1 0 1
-			1 0 0];
+% 	col = [	0 0 0
+% 			0 0 1
+% 			0 1 1
+% 			0 1 0
+% 			1 1 0
+% 			1 0 1
+% 			1 0 0];
+	col = [	0.5 0.5 0.5
+            0.5 0 0
+            0 0 0
+            1 0 0
+            0.5 0.5 0.5
+            0.5 0 0
+			0 1 1];
 
 	% reduce if fewer than 6 items are needed (no interpolation needed)
-	switch len
-		case 1, col([2 3 4 5 6 7],:) = [];
-		case 2, col([2 3 4 5 6],:) = [];
-		case 3, col([3 4 5 6],:) = [];
-		case 4, col([3 5 6],:) = [];
-		case 5, col([5 6],:) = [];
-		case 6, col(6,:) = [];
-	end
+% 	switch len
+% 		case 1, col([2 3 4 5 6 7],:) = [];
+% 		case 2, col([2 3 4 5 6],:) = [];
+% 		case 3, col([3 4 5 6],:) = [];
+% 		case 4, col([3 5 6],:) = [];
+% 		case 5, col([5 6],:) = [];
+% 		case 6, col(6,:) = [];
+% 	end
+    col(len+1, :) = [];
 
 	% number of requested colors
 	val = zeros(len,3); val(:,3) = linspace(0,1,len)';
