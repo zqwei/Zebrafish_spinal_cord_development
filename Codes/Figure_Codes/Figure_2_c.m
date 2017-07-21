@@ -10,7 +10,7 @@ function stats = Figure_2_c(nFile)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile}; %#ok<USENS>  
-    load([tempDatDir, 'FALONO_', fileName, '.mat'], 'EVLONO');
+    load([tempDatDir, 'FALONO_', fileName, '.mat'], 'dumpDuplicatedFactorLONOM');
     load([tempDatDir, fileName, '.mat'],'activeNeuronMat', 'side', 'mnx');
     if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc')
@@ -45,7 +45,7 @@ function stats = Figure_2_c(nFile)
     figure('Position', [0, 0, 1200, 200]);
     
     subplot(1, totPlots, 1)
-    stats{1} = Figure_2_c_1(EVLONO);    
+    stats{1} = Figure_2_c_1(dumpDuplicatedFactorLONOM);    
     
     subplot(1, totPlots, 2)
     stats{2} = Figure_2_c_2(activeNeuronMat, networkMat);
@@ -65,18 +65,8 @@ function stats = Figure_2_c(nFile)
 end
 
 %% 1. number of communities
-function pred = Figure_2_c_1(EVLONO)    
-    numTime           = size(EVLONO, 1);
-    LONOM             = zeros(numTime, 1);
-    EVLONOMat         = squeeze(mean(EVLONO, 3));
-    for nTime         = 1:numTime    
-        if sum(~isnan(EVLONOMat(nTime, :))) > 0
-            maxEV        = nanmax(EVLONOMat(nTime, :));
-            if maxEV>0
-                LONOM(nTime) = find(EVLONOMat(nTime, :)>0.9*maxEV, 1, 'first');
-            end
-        end        
-    end
+function pred = Figure_2_c_1(LONOM)    
+    numTime           = numel(LONOM);
     timePoints        = (1:numTime)';
     hold on    
     plot(timePoints/60, LONOM,'o', 'color', [0.7 0.7 0.7])    
@@ -88,8 +78,10 @@ function pred = Figure_2_c_1(EVLONO)
 %     cr           = c;
 %     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], timePoints/60, LONOM);    
 %     opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);   
-%     opt1Dim        = smooth(LONOM, 61, 'rlowess');
-    opt1Dim = smooth(LONOM, 101, 'sgolay', 2);
+%     opt1Dim        = smooth(LONOM, 101, 'loess');
+    tmpLONOM = [zeros(100, 1); LONOM];
+    opt1Dim  = smooth(tmpLONOM, 101, 'sgolay', 2);
+    opt1Dim  = opt1Dim(101:end);
     plot(timePoints/60, opt1Dim,'k-', 'linewid', 2)
     xlim([0 max(timePoints)/60])  
     ylabel('Num factor')
