@@ -23,6 +23,7 @@ function FACluster_v0_2_2(nFile)
     for nTime         = 1:numTime    
         LMat          = CorrectedLMat{nTime};
         LMatNeuron    = LMat>0;
+        LMatNeuron(:, sum(LMatNeuron,1)<2) = [];
         numFactor     = size(LMatNeuron, 2);
         for nFactor   = 1:size(LMatNeuron, 2)
             for mFactor = nFactor+1:size(LMatNeuron, 2)
@@ -66,7 +67,9 @@ function FACluster_v0_2_2(nFile)
     xlim([0 numTime/60])
     ylim([0 8])
     box off
-
+    
+    dumpDuplicatedFactorLONOM = LONOM;
+    save([tempDatDir, 'FALONO_', fileName, '.mat'], 'dumpDuplicatedFactorLONOM', '-append');
 
     setPrint(8, 6, [plotDir, 'numFactorLONOActiveNeuronsDropOverlap_', fileName]);
     

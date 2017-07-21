@@ -13,7 +13,7 @@ function Figure_2(h, nFile)
     figure(h);
     
     % criteria 1: algin by peak factor number
-    xOffset = alignPerc(stats{1}.t, stats{1}.y, 100);
+    xOffset = alignPerc(stats{1}.t, stats{1}.y, 80);
     % criteria 2: algin by half recruit time of FracActNeuron
 %     xOffset = stats{2}.fracAct50;
     
@@ -60,7 +60,7 @@ function Figure_2_d_2a(t, y)
     hold on
     plot(t, y);
     box off
-    ylabel('Frac factored neuron')
+    ylabel('Frac active neuron')
     xlabel('Time (hour)')
 end
 
@@ -68,7 +68,7 @@ function Figure_2_d_2b(t, y)
     hold on
     plot(t, y);
     box off
-    ylabel('Frac active neuron')
+    ylabel('Frac single active neurons')
     xlabel('Time (hour)')
 end
 
