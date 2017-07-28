@@ -7,4 +7,4 @@ hold on;
 for nFile = control_datasets
     Figure_2(h, nFile);
 end
-setPrint(8*totPlots, 6, [plotDir 'Figure_2d'], 'pdf')
+setPrint(8*6, 6, [plotDir 'Figure_2d_alignbyPeakNumFactor'], 'pdf')
