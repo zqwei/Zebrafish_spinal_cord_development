@@ -14,10 +14,14 @@ MO_datasets = [17 18 19 20 21] ;
 % bins = 0.5:4;
 % metric_cmd = ' me=neuronType; ';
 
-% option 2: use factorSize definition
-bins = [0 1 1.2];
-metric_cmd = ' me=exp(1-factorSize);';
+% % option 2: use factorSize definition
+% bins = [0 1 1.2];
+% metric_cmd = ' me=exp(1-factorSize);';
 
+% option 3: use neuronActTime
+bins = [0 0.99 1.2];
+% bins = 0:0.1:1.2;
+metric_cmd = ' me=neuronActTime;';
 
 % for control datasets
 Polar_Stats_Boot_Std(control_datasets, nbins, bins, metric_cmd);
@@ -52,12 +56,23 @@ islet_all = [];
 mnx_all = [];
 me_all = [];
 for nFile = islet_datasets;
-    load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'factorSize', 'islet', 'mnx');
+    load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'factorSize', 'islet', 'mnx', 'x');
     load([DirNames{nFile} '/LONOLoading_v_0_1.mat'], 'neuronType');
+    load(['../../TempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
     eval(metric_cmd);
+    
+    if nFile == 16
+        me(x<1) = NaN;
+    end
     islet_all = [islet_all; islet];
     mnx_all = [mnx_all; mnx];
     me_all = [me_all; me;];
+    
+    if sum(me>0.7 & mnx==0)
+        disp([dataset{nFile} ' cell ' num2str(find(me>0.7 & mnx==0))]);
+    end
+    
+        
 end
 
 islet_all(isnan(me_all)) = [];
@@ -97,6 +112,7 @@ function Polar_Stats_Boot_Std(datasets, nbins, bins, metric_cmd)
         nFile = datasets(i);
         load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'x', 'factorSize');
         load([DirNames{nFile} '/LONOLoading_v_0_1.mat'], 'neuronType');
+        load(['../../TempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
         eval(metric_cmd);
         flag_plot = x>=1 & x<=floor(max(x)) & ~isnan(me);
         me = me(flag_plot);

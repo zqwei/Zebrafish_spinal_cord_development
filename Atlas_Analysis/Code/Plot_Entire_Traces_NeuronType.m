@@ -10,11 +10,18 @@ load([DirNames{nFile} '\data.mat'], 'dff');
 % load([DirNames{nFile} '\LONOLoading_v_0_1.mat'], 'neuronType');
 
 % option 2: use factorSize to determine neuronType
-load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'factorSize');
-neuronType = nan(size(dff, 1), 1);
-neuronType(factorSize<=1) = 1;
-neuronType(factorSize<=2 & factorSize>1) = 2;
-neuronType(factorSize>2) = 3;
+% load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'factorSize');
+% neuronType = nan(size(dff, 1), 1);
+% neuronType(factorSize<=1) = 1;
+% neuronType(factorSize<=2 & factorSize>1) = 2;
+% neuronType(factorSize>2) = 3;
+
+% option 3: use neuronActTime to determine neuronType
+load(['../../TempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
+neuronType = neuronActTime;
+neuronType(neuronActTime >= 0.9) = 1;
+neuronType(neuronActTime < 0.9) = 2;
+
 
 spacing = 2;
 timepoints = (1:size(dff, 2))/(4*3600);
@@ -33,6 +40,6 @@ for i = [0 unique(neuronType(~isnan(neuronType)))']
     colormap(lines)
     title(['neuron type = ' num2str(i)])
     box off;
-    export_fig([PlotDir '/Entire_Traces_' dataset{nFile} '_type_fs' num2str(i) '.pdf'], '-nocrop');
+    export_fig([PlotDir '/Entire_Traces_' dataset{nFile} 'NeuronActTime_type' num2str(i) '.pdf'], '-nocrop');
     close
 end
