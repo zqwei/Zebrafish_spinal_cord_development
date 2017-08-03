@@ -96,8 +96,8 @@ end
 % b. percentage of total active neurons
 function pred = Figure_2_c_2(activeNeuronMat, networkMat)    
     numActNeuron      = sum(activeNeuronMat, 1);
-    fracActNeuron     = numActNeuron/sum(sum(activeNeuronMat, 2)>0);    %exclude never-active neurons
-%     fracActNeuron     = sum(activeNeuronMat(sum(activeNeuronMat, 2)>20, :), 1)/sum(sum(activeNeuronMat, 2)>20);    %exclude short-lived neurons
+%     fracActNeuron     = numActNeuron/sum(sum(activeNeuronMat, 2)>0);    %exclude never-active neurons
+    fracActNeuron     = sum(activeNeuronMat(sum(activeNeuronMat, 2)>20, :), 1)/sum(sum(activeNeuronMat, 2)>40);    %exclude short-lived neurons
     numTime           = length(numActNeuron);
     numFactor         = zeros(numTime, 1);
     factorNeuronMat   = false(size(activeNeuronMat));

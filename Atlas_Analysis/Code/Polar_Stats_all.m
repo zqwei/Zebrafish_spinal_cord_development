@@ -9,14 +9,14 @@ control_datasets = [3, 4, 7, 12, 10, 11, 13, 15, 16];
 MO_datasets = [17 18 19 20 21] ;
 
 % option 1: use Ziqiang's definition of neuronType
-bins = 0.5:3;
-metric_cmd = ' me=neuronType; me(me==3)=2;';
+% bins = 0.5:3;
+% metric_cmd = ' me=neuronType; me(me==3)=2;';
 % bins = 0.5:4;
 % metric_cmd = ' me=neuronType; ';
 
 % option 2: use factorSize definition
-% bins = [0 exp(-1) 1];
-% metric_cmd = ' me=exp(1-factorSize);';
+bins = [0 1 1.2];
+metric_cmd = ' me=exp(1-factorSize);';
 
 
 % for control datasets
@@ -67,9 +67,9 @@ me_all(isnan(me_all)) = [];
 count = zeros(numel(bins)-1, 3);
 for type = 1: numel(bins) - 1
     select = me_all >= bins(type) & me_all<bins(type+1);
-    count(type, 1) = sum(me_all(select & mnx_all==1 & islet_all==1));
-    count(type, 2) = sum(me_all(select & mnx_all==1 & islet_all==0));
-    count(type, 3) = sum(me_all(select & mnx_all==0));
+    count(type, 1) = sum(select & mnx_all==1 & islet_all==1);
+    count(type, 2) = sum(select & mnx_all==1 & islet_all==0);
+    count(type, 3) = sum(select & mnx_all==0);
 end
 figure, 
 bar(count,'stacked');

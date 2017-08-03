@@ -267,24 +267,25 @@ if nargin < 1 || nargout < 1; help color_index; error('I / O error'); end
 
 if len == 1
 	val = [0 0 0];
-else
+elseif len<=6
 	% initial color posibilities (no white)
 	% default color scale
-% 	col = [	0 0 0
-% 			0 0 1
-% 			0 1 1
-% 			0 1 0
-% 			1 1 0
-% 			1 0 1
-% 			1 0 0];
 	col = [	0.5 0.5 0.5
             0.5 0 0
             0 0 0
             1 0 0
             0.5 0.5 0.5
             0.5 0 0
-			0 1 1];
-
+            ];
+else
+    	col = [	0 0 0
+			0 0 1
+			0 1 1
+			0 1 0
+			1 1 0
+			1 0 1
+			1 0 0];
+end
 	% reduce if fewer than 6 items are needed (no interpolation needed)
 % 	switch len
 % 		case 1, col([2 3 4 5 6 7],:) = [];
@@ -294,7 +295,7 @@ else
 % 		case 5, col([5 6],:) = [];
 % 		case 6, col(6,:) = [];
 % 	end
-    col(len+1, :) = [];
+%     col(len+1, :) = [];
 
 	% number of requested colors
 	val = zeros(len,3); val(:,3) = linspace(0,1,len)';
@@ -303,7 +304,6 @@ else
 	val(:,1) = interp1q(linspace(0,1,size(col,1))',col(:,1),val(:,3));
 	val(:,2) = interp1q(linspace(0,1,size(col,1))',col(:,2),val(:,3));
 	val(:,3) = interp1q(linspace(0,1,size(col,1))',col(:,3),val(:,3));
-end
 
 function [res] = isint(val)
 % determines if value is an integer
