@@ -24,7 +24,7 @@ function NeuralActivityFactorTime_v0_5_1(nFile)
     numNeuron         = size(new_activeNeuronMat, 1);
     neuronFactorIndex = false(size(new_activeNeuronMat));
     timeWin           = 40;
-    timeBin           = 21;
+    timeBin           = 31;
     linew             = 0.5;
     colorSet          = cbrewer('qual', 'Dark2',  numTime, 'cubic');
 
@@ -53,6 +53,10 @@ function NeuralActivityFactorTime_v0_5_1(nFile)
             neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
             actCurrNeuron       = activeNeuronMat(nNeuron, :); %#ok<*NODEF>
             actCurrNeuron       = smooth(double(actCurrNeuron), timeBin);
+            % dataset 15 FA not accurate, correct for a single cell 
+            if nNeuron == 26 && nFile == 15
+                neuronTime(nNeuron) = 99;
+            end
             if neuronTime(nNeuron)-(timeBin+1)/2 > 0
                 neuronActTime(nNeuron) = max(actCurrNeuron(1:neuronTime(nNeuron)-(timeBin+1)/2));
             end
@@ -66,6 +70,8 @@ function NeuralActivityFactorTime_v0_5_1(nFile)
     xlim([0 1.1])
     box off
     setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTime_' fileName],'pdf')
+    
+    save([tempDatDir, 'NeuronActTime', fileName, '.mat'], 'neuronActTime', 'neuronTime');
 % % %     
 % % %     % oscillation level distribution
 % % %     figure;
