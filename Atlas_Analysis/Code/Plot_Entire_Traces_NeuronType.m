@@ -17,10 +17,10 @@ load([DirNames{nFile} '\data.mat'], 'dff');
 % neuronType(factorSize>2) = 3;
 
 % option 3: use neuronActTime to determine neuronType
-load(['../../TempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
+load(['../../NetworkDynamicsTempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
 neuronType = neuronActTime;
-neuronType(neuronActTime >= 0.9) = 1;
-neuronType(neuronActTime < 0.9) = 2;
+neuronType(neuronActTime >= 0.6) = 1;
+neuronType(neuronActTime < 0.6) = 2;
 
 
 spacing = 2;
@@ -34,6 +34,7 @@ for i = [0 unique(neuronType(~isnan(neuronType)))']
     figure('Position', [0, 100, 500, sum(cell_id)* 30]);
     plot(timepoints, dff(cell_id, :)+ repmat(-(0:(sum(cell_id)-1))'*spacing, 1, numel(timepoints)));
     text(zeros(sum(cell_id), 1), -(0:(sum(cell_id)-1))'*spacing, cellstr(num2str(find(cell_id))));
+    text(zeros(sum(cell_id), 1)-0.5, -(0:(sum(cell_id)-1))'*spacing, cellstr(num2str(neuronActTime(cell_id), '%.2f')));
     xlim([0, max(timepoints)]);
     ylim([floor(-sum(cell_id)*spacing), spacing]);
     axis off

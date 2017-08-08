@@ -19,8 +19,8 @@ MO_datasets = [17 18 19 20 21] ;
 % metric_cmd = ' me=exp(1-factorSize);';
 
 % option 3: use neuronActTime
-bins = [0 0.99 1.2];
-% bins = 0:0.1:1.2;
+% bins = [0 0.99 1.2];
+bins = 0:0.1:1.2;
 metric_cmd = ' me=neuronActTime;';
 
 % for control datasets
@@ -58,7 +58,7 @@ me_all = [];
 for nFile = islet_datasets;
     load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'factorSize', 'islet', 'mnx', 'x');
     load([DirNames{nFile} '/LONOLoading_v_0_1.mat'], 'neuronType');
-    load(['../../TempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
+    load(['../../NetworkDynamicsTempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
     eval(metric_cmd);
     
     if nFile == 16
@@ -81,7 +81,8 @@ me_all(isnan(me_all)) = [];
 
 count = zeros(numel(bins)-1, 3);
 for type = 1: numel(bins) - 1
-    select = me_all >= bins(type) & me_all<bins(type+1);
+%     select = me_all >= bins(type) & me_all<bins(type+1);
+    select = me_all >= bins(type);
     count(type, 1) = sum(select & mnx_all==1 & islet_all==1);
     count(type, 2) = sum(select & mnx_all==1 & islet_all==0);
     count(type, 3) = sum(select & mnx_all==0);
@@ -112,7 +113,7 @@ function Polar_Stats_Boot_Std(datasets, nbins, bins, metric_cmd)
         nFile = datasets(i);
         load([TempDataDir '/tmp_' dataset{nFile} '.mat'], 'x', 'factorSize');
         load([DirNames{nFile} '/LONOLoading_v_0_1.mat'], 'neuronType');
-        load(['../../TempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
+        load(['../../NetworkDynamicsTempDat/NeuronActTime' dataset{nFile} '.mat'], 'neuronActTime');
         eval(metric_cmd);
         flag_plot = x>=1 & x<=floor(max(x)) & ~isnan(me);
         me = me(flag_plot);
