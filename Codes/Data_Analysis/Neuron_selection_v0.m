@@ -97,13 +97,13 @@ function Neuron_selection_v0(nFile)
         end
     end
 
-    refActiveNeuronMat = activeMatUseSGFit(rawf, 9, 511, timePoints, 0.05);
-    activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
-    
-    for w                  = [21 41]
-        refActiveNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, 0.01);
-        activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
-    end
+%     refActiveNeuronMat = activeMatUseSGFit(rawf, 9, 511, timePoints, 0.05);
+%     activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
+%     
+%     for w                  = [21 41]
+%         refActiveNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, 0.01);
+%         activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
+%     end
 
     save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat');
     if exist('mnx', 'var')
