@@ -35,4 +35,7 @@ fileDirNames{19} = '../../Data/20170412';
 fileDirNames{20} = '../../Data/20170503';
 fileDirNames{21} = '../../Data/20170517';
 
+% data with lineage
+fileDirNames{22} = '../../Data/20170731';
+
 
