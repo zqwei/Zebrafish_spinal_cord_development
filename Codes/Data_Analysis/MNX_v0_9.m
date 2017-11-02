@@ -1,31 +1,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 3.  Covariance analysis: Factor analysis -- loadin matrix evolution --
 % reordering
-% 
+%
 % Yinan's version of FACluster_v0_5_1 with MNX - markers
-% 
+%
 % -------------------------------------------------------------------------
 % Yinan Wan
 % wany@janelia.hhmi.org
-% 
+%
 % Integrated by Ziqiang Wei
 
 
-function MNX_v0_9(nFile)            
+function MNX_v0_9(nFile)
     addpath('../Func');
-    setDir;    
-    fileName          = fileNames{nFile}; %#ok<USENS>    
-    load([tempDatDir, fileName, '.mat'], 'dff', 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'mnx'); 
-    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat') 
-    
+    setDir;
+    fileName          = fileNames{nFile}; %#ok<USENS>
+    load([tempDatDir, fileName, '.mat'], 'dff', 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'mnx', 'timeStep'); 
+    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat')
+
     if ~exist('mnx', 'var') || ~exist('new_x', 'var'); return; end
-    
+
     x                 = new_x;
     y                 = new_y;
     z                 = new_z;
     numTime           = length(CorrectedLMat);
     numNeuron         = length(side);
-    
+
     [~, neworder]     = sort(x);
     neworder = [neworder(side(neworder)==1); neworder(side(neworder)==2)];
 
@@ -48,7 +48,7 @@ function MNX_v0_9(nFile)
     z = z/max(z) * 1.8;
     y = y/2;
     for period = 1:numel(timePoints)
-        timeRange = timePoints(period)+1:timePoints(period)+1200;
+        timeRange = timePoints(period)+1:timePoints(period)+timeStep;
         clf reset
         radius = 0.2;
 
@@ -56,7 +56,7 @@ function MNX_v0_9(nFile)
         LMat(isnan(LMat)) = 0;
         LMat(:, sum(LMat, 1)==0) = [];
         activeTag = activeNeuronMat(:, period);
-        
+
         % code to drop overlapped factors
         LMatNeuron    = LMat>0;
         numFactor     = size(LMatNeuron, 2);
@@ -74,9 +74,9 @@ function MNX_v0_9(nFile)
                     end
                 end
             end
-        end 
+        end
         LMat(LMatNeuron == 0)    = 0;
-        LMat(:, sum(LMat, 1)==0) = []; % drop factors with zero weight        
+        LMat(:, sum(LMat, 1)==0) = []; % drop factors with zero weight
         % end of drop overlapped factor code
 
         % determine the factor index
@@ -182,7 +182,7 @@ function MNX_v0_9(nFile)
 %                     else
 %                         plot(x(otherSideNeuron), y(otherSideNeuron), 'o', 'Color', mColor(factorIndex(nFactor), :), 'MarkerFaceColor', mColor(factorIndex(nFactor), :), 'linewidth', linew)
                     end
-                end                
+                end
 % %                 if length(unique(side(neuronFactor)))==1
 % %                     CHPoints = smoothedBoundary(x(neuronFactor), y(neuronFactor), radius);
 % %                     patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
@@ -274,5 +274,5 @@ function MNX_v0_9(nFile)
     end
     close(video);
     close;
-    
+
 end
