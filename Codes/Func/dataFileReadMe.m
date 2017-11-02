@@ -34,8 +34,12 @@ fileDirNames{18} = '../../Data/20170323';
 fileDirNames{19} = '../../Data/20170412';
 fileDirNames{20} = '../../Data/20170503';
 fileDirNames{21} = '../../Data/20170517';
-
-% data with lineage
 fileDirNames{22} = '../../Data/20170731';
+fileDirNames{23} = '../../Data/20170828';
+fileDirNames{24} = '../../Data/20170925';
 
+for nFish = 1:8
+    fileDirNames{23 + nFish * 2} = ['../../AblationData/fish_' num2str(nFish) '_before'];
+    fileDirNames{24 + nFish * 2} = ['../../AblationData/fish_' num2str(nFish) '_after'];
+end
 
