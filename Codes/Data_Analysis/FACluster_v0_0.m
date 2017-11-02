@@ -1,36 +1,36 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 3.  Covariance analysis: Factor analysis -- number of island using LONO 
+% 3.  Covariance analysis: Factor analysis -- number of island using LONO
 % methods with selected neurons
-% 
 %
-% 
+%
+%
 % -------------------------------------------------------------------------
 % Ziqiang Wei
 % weiz@janelia.hhmi.org
-% 
+%
 
 
-function FACluster_v0_0(nFile)            
+function FACluster_v0_0(nFile)
     addpath('../Func');
-    setDir;    
-    fileName          = fileNames{nFile}; %#ok<USENS>    
-    load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints','activeNeuronMat');
-    
+    setDir;
+    fileName          = fileNames{nFile}; %#ok<USENS>
+    load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints','activeNeuronMat', 'timeStep');
+
     maxNumFactor      = 12;
-    numFold           = 10;  
-    
+    numFold           = 10;
+
     numPlot           = length(timePoints);
     EVLONO            = nan(numPlot, maxNumFactor, numFold);
-    
-    numSample         = 1200;
+
+    numSample         = timeStep;
     numTest           = ceil(numSample/numFold);
 
-    
+
     for nPlot        = 1:numPlot
-        slicedDFF    = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+1200); %#ok<NODEF>
+        slicedDFF    = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+timeStep); %#ok<NODEF>
         slicedDFF    = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
         slicedDFF    = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
-        slicedDFF    = slicedDFF(:, activeNeuronMat(:, nPlot)); %#ok<NODEF>     
+        slicedDFF    = slicedDFF(:, activeNeuronMat(:, nPlot)); %#ok<NODEF>
         if ~isempty(slicedDFF)
             numActive     = size(slicedDFF, 2);
             currNumFactor = min([numActive-1, floor(numActive + 0.5 -sqrt(2*numActive + 0.25)), maxNumFactor]);
@@ -47,7 +47,7 @@ function FACluster_v0_0(nFile)
             end
         end
         disp(nPlot)
-    end    
-    save([tempDatDir, 'FALONO_', fileName, '.mat'], 'EVLONO');  
-    
+    end
+    save([tempDatDir, 'FALONO_', fileName, '.mat'], 'EVLONO');
+
 end

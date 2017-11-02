@@ -1,47 +1,47 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 3.  Covariance analysis: Factor analysis -- loadin matrix evolution --
 % reordering
-% 
+%
 % center of the factor
 % connectivity strength to each node
-% 
+%
 % -------------------------------------------------------------------------
 % Ziqiang Wei
 % weiz@janelia.hhmi.org
-% 
+%
 
 
-function FACluster_v0_7_1(nFile)            
+function FACluster_v0_7_1(nFile)
     addpath('../Func');
-    setDir;    
-    fileName          = fileNames{nFile}; %#ok<USENS> 
+    setDir;
+    fileName          = fileNames{nFile}; %#ok<USENS>
     mnx               = [];
-    load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'dff', 'mnx', 'new_x', 'new_y', 'new_z'); 
-    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat', 'PsiMat'); 
-    
+    load([tempDatDir, fileName, '.mat'], 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'dff', 'mnx', 'new_x', 'new_y', 'new_z', 'timeStep'); 
+    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat', 'PsiMat');
+
     if ~exist('new_x', 'var'); return; end
-    
+
     numTime           = length(CorrectedLMat); %#ok<USENS>
     numNeuron         = length(side);
     networkMat        = cell(numTime, 2);
-    
+
     neuronXLoc        = zeros(numNeuron, numTime);
     neuronYLoc        = zeros(numNeuron, numTime);
     neuronZLoc        = zeros(numNeuron, numTime);
-    
-    
+
+
     for nTime         = 1:numTime
         LMat                     = CorrectedLMat{nTime};
-        LMat(isnan(LMat))        = 0;  
+        LMat(isnan(LMat))        = 0;
         Ph                       = PsiMat{nTime}; %#ok<USENS>
-        LMat(:, sum(LMat, 1)==0) = []; 
-        xtracks   = new_x; % squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 1), 2));  %#ok<NODEF>
-        ytracks   = new_y; % squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 2), 2));    
-        ztracks   = new_z; % squeeze(mean(tracks(:, timePoints(nTime)+(1:1200), 3), 2)); 
+        LMat(:, sum(LMat, 1)==0) = [];
+        xtracks   = new_x; % squeeze(mean(tracks(:, timePoints(nTime)+(1:timeStep), 1), 2));  %#ok<NODEF>
+        ytracks   = new_y; % squeeze(mean(tracks(:, timePoints(nTime)+(1:timeStep), 2), 2));
+        ztracks   = new_z; % squeeze(mean(tracks(:, timePoints(nTime)+(1:timeStep), 3), 2));
         nAct      = activeNeuronMat(:, nTime); %#ok<NODEF>
-        slicedDFF    = dff(:,timePoints(nTime)+1:timePoints(nTime)+1200); %#ok<NODEF>
+        slicedDFF    = dff(:,timePoints(nTime)+1:timePoints(nTime)+timeStep); %#ok<NODEF>
         slicedDFF    = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
-        slicedDFF    = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';  
+        slicedDFF    = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
         neuronXLoc(:, nTime) = xtracks;
         neuronYLoc(:, nTime) = ytracks;
         neuronZLoc(:, nTime) = ztracks;
@@ -49,7 +49,7 @@ function FACluster_v0_7_1(nFile)
         nFactor.x            = nan;
         nFactor.y            = nan;
         nFactor.z            = nan;
-        nFactor.DFF          = nan(1200, 1);
+        nFactor.DFF          = nan(timeStep, 1);
         nFactor.neuronIndex  = find(~nAct);
         nFactor.neuronCCMat  = nan(length(nFactor.neuronIndex), 2); % cross correlation mat % first col: corr; second col: time
         nFactor.side         = nan;
@@ -58,7 +58,7 @@ function FACluster_v0_7_1(nFile)
             nFactor.mnxFrac  = mean(mnx(nFactor.neuronIndex));
         end
 
-        factorSet            = nFactor;   
+        factorSet            = nFactor;
 
         % single neuron factor
         singleNeuronSet      = [];
@@ -71,7 +71,7 @@ function FACluster_v0_7_1(nFile)
             nFactor.z            = ztracks(nNeuron);
             nFactor.DFF          = slicedDFF(:, nNeuron);
             nFactor.neuronIndex  = nNeuron;
-            nFactor.neuronCCMat  = nan(length(nFactor.neuronIndex), 2); % cross correlation mat % first col: corr; second col: time  
+            nFactor.neuronCCMat  = nan(length(nFactor.neuronIndex), 2); % cross correlation mat % first col: corr; second col: time
             nFactor.side         = side(nNeuron);
             nFactor.nUnit        = length(nFactor.neuronIndex);
             if ~isempty(mnx)
@@ -87,11 +87,11 @@ function FACluster_v0_7_1(nFile)
         LMat(:, sum(LMat, 1)==0) = [];
         Ph(sum(LMat, 2)==0)  = 1; % put the noise of kicking-out neurons to ones
         DFF                  = estFactor(LMat, Ph, slicedDFF);
-        
+
         fs                   = 4;
         maxLags              = 25 * fs;
         numStd               = 3;
-        
+
 
         % nodes inside factors
         for mFactor          = 1:size(LMat, 2)
@@ -108,7 +108,7 @@ function FACluster_v0_7_1(nFile)
             if sideFactor>0
                 nFactor.x            = xtracks(side==sideFactor)'*abs(lVec(side==sideFactor))/sum(abs(lVec(side==sideFactor)));
                 nFactor.y            = ytracks(side==sideFactor)'*abs(lVec(side==sideFactor))/sum(abs(lVec(side==sideFactor)));
-                nFactor.z            = ztracks(side==sideFactor)'*abs(lVec(side==sideFactor))/sum(abs(lVec(side==sideFactor)));        
+                nFactor.z            = ztracks(side==sideFactor)'*abs(lVec(side==sideFactor))/sum(abs(lVec(side==sideFactor)));
                 mDFF                 = DFF(mFactor, :)';
                 nFactor.DFF          = mDFF;
                 nFactor.neuronIndex  = find(lVec~=0);
@@ -143,7 +143,7 @@ function FACluster_v0_7_1(nFile)
                 if ~isempty(mnx)
                     nFactor.mnxFrac  = mean(mnx(nFactor.neuronIndex));
                 end
-                factorSet        = [factorSet, nFactor];        
+                factorSet        = [factorSet, nFactor];
             else
                 for nSide  = 1:2
                     nFactor.x            = xtracks(side==nSide)'*abs(lVec(side==nSide))/sum(abs(lVec(side==nSide)));
@@ -181,9 +181,9 @@ function FACluster_v0_7_1(nFile)
                     if ~isempty(mnx)
                         nFactor.mnxFrac  = mean(mnx(nFactor.neuronIndex));
                     end
-                    factorSet        = [factorSet, nFactor];        
+                    factorSet        = [factorSet, nFactor];
                 end
-            end    
+            end
         end
 
         % among factors
@@ -204,7 +204,7 @@ function FACluster_v0_7_1(nFile)
                         pks              = pks(pklocs);
                         [~,  pklocs]     = max(pks);
                         locs             = locs(pklocs);
-                        pks              = pks(pklocs);            
+                        pks              = pks(pklocs);
                         if ~isempty(locs)
                             if locs>=0
                                 [~, corrSig]        = corr(pFactorDFF(1:end-locs), qFactorDFF(1+locs:end));
@@ -220,14 +220,14 @@ function FACluster_v0_7_1(nFile)
                     end
                 end
             end
-            % factorSet        = [factorSet, factorsMat]; 
+            % factorSet        = [factorSet, factorsMat];
         end
-    
+
         networkMat{nTime, 1}    = factorSet;
         if exist('factorsMat', 'var')
             networkMat{nTime, 2}    = factorsMat;
         end
     end
-    
-    save([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc'); 
+
+    save([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc');
 end

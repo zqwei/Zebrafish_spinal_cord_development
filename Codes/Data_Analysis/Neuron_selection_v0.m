@@ -91,7 +91,7 @@ function Neuron_selection_v0(nFile)
 
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
-            slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
+            slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
         end
@@ -99,13 +99,13 @@ function Neuron_selection_v0(nFile)
 
 %     refActiveNeuronMat = activeMatUseSGFit(rawf, 9, 511, timePoints, 0.05);
 %     activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
-%     
+%
 %     for w                  = [21 41]
 %         refActiveNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, 0.01);
 %         activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
 %     end
 
-    save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat');
+    save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat', 'timeStep');
     if exist('mnx', 'var')
         mnx       = mnx(slicedIndex); %#ok<NODEF>
         mnx       = mnx(leafOrder); %#ok<NASGU>
@@ -125,7 +125,7 @@ function activeNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePo
     activeNeuronMat   = false(size(dff, 1), length(timePoints));
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
-            slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
+            slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep); %timeStep
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', alpha_value) && (skewness(slicedDFF)>0);
         end
@@ -141,10 +141,9 @@ function activeNeuronMat = activeMatUseSGFit(rawf, numOrder, lenWindow, timePoin
     activeNeuronMat   = false(size(dff, 1), length(timePoints));
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
-            slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
+            slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep); %timeStep
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', alpha_value) && (skewness(slicedDFF)>0);
         end
     end
 end
-
