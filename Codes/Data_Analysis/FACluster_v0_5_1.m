@@ -1,38 +1,38 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 3.  Covariance analysis: Factor analysis -- loadin matrix evolution --
 % reordering
-% 
+%
 % Yinan's version of FACluster_v0_5
-% 
+%
 % -------------------------------------------------------------------------
 % Yinan Wan
 % wany@janelia.hhmi.org
-% 
+%
 % Integrated by Ziqiang Wei
 
 
-function FACluster_v0_5_1(nFile)            
+function FACluster_v0_5_1(nFile)
     addpath('../Func');
-    setDir;    
-    fileName          = fileNames{nFile}; %#ok<USENS>    
-    load([tempDatDir, fileName, '.mat'], 'dff', 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'new_x', 'new_y', 'new_z'); 
-    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat') 
-    
+    setDir;
+    fileName          = fileNames{nFile}; %#ok<USENS>
+    load([tempDatDir, fileName, '.mat'], 'dff', 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'timeStep'); 
+    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat')
+
     if ~exist('new_x', 'var'); return; end
-    
+
     x                 = new_x;
     y                 = new_y;
     z                 = new_z;
     numTime           = length(CorrectedLMat);
     numNeuron         = length(side);
-    
+
     [~, neworder]     = sort(x);
     neworder = [neworder(side(neworder)==1); neworder(side(neworder)==2)];
 
     mColor = cbrewer('qual', 'Dark2',  8, 'cubic');
     mColor            = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
     preLMat           = nan(numNeuron, 1);
-    
+
     if ispc
         video          = VideoWriter([plotDir '\movie_' fileName '.avi'], 'Uncompressed AVI');
     elseif ismac
@@ -52,7 +52,7 @@ function FACluster_v0_5_1(nFile)
     z = z/max(z) * 1.8;
     y = y/2;
     for period = 1:numel(timePoints)
-        timeRange = timePoints(period)+1:timePoints(period)+1200;
+        timeRange = timePoints(period)+1:timePoints(period)+timeStep;
         clf reset
         radius = 0.2;
 
@@ -60,7 +60,7 @@ function FACluster_v0_5_1(nFile)
         LMat(isnan(LMat)) = 0;
         LMat(:, sum(LMat, 1)==0) = [];
         activeTag = activeNeuronMat(:, period);
-        
+
         % code to drop overlapped factors
         LMatNeuron    = LMat>0;
         numFactor     = size(LMatNeuron, 2);
@@ -78,9 +78,9 @@ function FACluster_v0_5_1(nFile)
                     end
                 end
             end
-        end 
+        end
         LMat(LMatNeuron == 0)    = 0;
-        LMat(:, sum(LMat, 1)==0) = []; % drop factors with zero weight        
+        LMat(:, sum(LMat, 1)==0) = []; % drop factors with zero weight
         % end of drop overlapped factor code
 
         % determine the factor index
@@ -90,10 +90,10 @@ function FACluster_v0_5_1(nFile)
         LMatLeft(side == 1, :)   = LMat(side == 1, :);
         LMatRight(side == 2, :)  = LMat(side == 2, :);
         LMat                     = [LMatLeft, LMatRight];
-        
+
         % remove the single-unit factor in movie
-        LMat(:, sum(LMat>0, 1)<=1) = []; % drop factors with zero weight   
-        
+        LMat(:, sum(LMat>0, 1)<=1) = []; % drop factors with zero weight
+
         if size(LMat,2) >= 1
             if sum(~isnan(preLMat(:))) == 0
                 factorIndex  = 1:size(LMat, 2);
@@ -192,7 +192,7 @@ function FACluster_v0_5_1(nFile)
                         CHPoints = smoothedBoundary(x(otherSideNeuron), y(otherSideNeuron), radius);
                         patch(CHPoints(:,1), CHPoints(:,2), mColor(factorIndex(nFactor), :), 'facealpha', 0.6, 'edgecolor', 'none');
                     end
-                end                
+                end
             end
         end
         plot(x(~activeTag), y(~activeTag), 'ok', 'linewidth', linew, 'MarkerFaceColor', 'w');
@@ -250,5 +250,5 @@ function FACluster_v0_5_1(nFile)
     end
     close(video);
     close;
-    
+
 end
