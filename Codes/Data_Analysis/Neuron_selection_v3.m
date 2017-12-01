@@ -93,7 +93,7 @@ function Neuron_selection_v3(nFile)
         for nTime  = 1:length(timePoints)
             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
         end
     end
 
@@ -105,13 +105,7 @@ function Neuron_selection_v3(nFile)
 %         activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
 %     end
 
-    save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat', 'timeStep');
-    if exist('mnx', 'var')
-        mnx       = mnx(slicedIndex); %#ok<NODEF>
-        mnx       = mnx(leafOrder); %#ok<NASGU>
-        save([tempDatDir, fileName, '.mat'], 'mnx', '-append')
-    end
-
+    
 end
 
 function activeNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, alpha_value)
