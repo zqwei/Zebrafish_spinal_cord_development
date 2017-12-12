@@ -93,22 +93,24 @@ function Neuron_selection_v3(nFile)
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
             slicedDFF  = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
-            slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
+%             powerNeuronMat(nNeuron, nTime)  = std(slicedDFF);
+%             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
             maxNeuronMat(nNeuron, nTime)    = max(zscore(slicedDFF));
         end
     end
     
-    for nTime      = 1:length(timePoints)
-        if sum(activeNeuronMat(:, nTime)) > 0
-            actMax     = maxNeuronMat(activeNeuronMat(:, nTime), nTime);
-            actThres   = min(actMax) + 0.9 * (max(actMax) - min(actMax));
-            activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | maxNeuronMat(:, nTime) > actThres;
-%             activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) & maxNeuronMat(:, nTime) > 4;
-        else
-            activeNeuronMat(:, nTime) = maxNeuronMat(:, nTime) > 6;
-        end
-    end
+%     for nTime      = 1:length(timePoints)
+%         if sum(activeNeuronMat(:, nTime)) > 0
+%             actMax     = maxNeuronMat(activeNeuronMat(:, nTime), nTime);
+%             actThres   = min(actMax) + 0.9 * (max(actMax) - min(actMax));
+%             actThres   = max(actThres, prctile(maxNeuronMat(:, nTime), 90));
+%             activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | maxNeuronMat(:, nTime) > actThres;
+% %             activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) & maxNeuronMat(:, nTime) > 4;
+%         else
+%             activeNeuronMat(:, nTime) = maxNeuronMat(:, nTime) > 6;
+%         end
+%     end
     
     
     makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
