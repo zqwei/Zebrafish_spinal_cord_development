@@ -90,11 +90,16 @@ function Neuron_selection_v3(nFile)
     activeNeuronMat  = false(size(dff, 1), length(timePoints));
     maxNeuronMat     = nan(size(dff, 1), length(timePoints));
 
+    lev = 5;
+    wname = 'sym8';
+    
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
             slicedDFF  = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
 %             powerNeuronMat(nNeuron, nTime)  = std(slicedDFF);
 %             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
+            slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
+            [slicedDFF, ~, ~, ~] = wden(slicedDFF, 'sqtwolog', 'h', 'mln', lev, wname);
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
             maxNeuronMat(nNeuron, nTime)    = max(zscore(slicedDFF));
         end
