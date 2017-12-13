@@ -99,9 +99,9 @@ function Neuron_selection_v3(nFile)
 %             powerNeuronMat(nNeuron, nTime)  = std(slicedDFF);
 %             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            [slicedDFF, ~, ~, ~] = wden(slicedDFF, 'sqtwolog', 'h', 'mln', lev, wname);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
-            maxNeuronMat(nNeuron, nTime)    = max(zscore(slicedDFF));
+            [smoothedSlicedDFF, ~, ~, ~] = wden(slicedDFF, 'sqtwolog', 'h', 'mln', lev, wname);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0) && -max(smoothedSlicedDFF)/min(smoothedSlicedDFF) > 4;
+            maxNeuronMat(nNeuron, nTime)    = max(slicedDFF);
         end
     end
     
