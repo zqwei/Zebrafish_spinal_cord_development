@@ -99,34 +99,40 @@ function Neuron_selection_v3(nFile)
 %             powerNeuronMat(nNeuron, nTime)  = std(slicedDFF);
 %             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            [smoothedSlicedDFF, ~, ~, ~] = wden(slicedDFF, 'sqtwolog', 'h', 'mln', lev, wname);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0) && -max(smoothedSlicedDFF)/min(smoothedSlicedDFF) > 4;
+%             [smoothedSlicedDFF, ~, ~, ~] = wden(slicedDFF, 'sqtwolog', 'h', 'mln', lev, wname);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
             maxNeuronMat(nNeuron, nTime)    = max(slicedDFF);
         end
     end
     
-%     for nTime      = 1:length(timePoints)
-%         if sum(activeNeuronMat(:, nTime)) > 0
-%             actMax     = maxNeuronMat(activeNeuronMat(:, nTime), nTime);
-%             actThres   = min(actMax) + 0.9 * (max(actMax) - min(actMax));
-%             actThres   = max(actThres, prctile(maxNeuronMat(:, nTime), 90));
-%             activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | maxNeuronMat(:, nTime) > actThres;
-% %             activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) & maxNeuronMat(:, nTime) > 4;
-%         else
-%             activeNeuronMat(:, nTime) = maxNeuronMat(:, nTime) > 6;
-%         end
-%     end
-    
-    
-    makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
-    
-%     refActiveNeuronMat = activeMatUseSGFit(rawf, 9, 511, timePoints, 0.05);
-%     activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
-%
+    refActiveNeuronMat = activeMatUseSGFit(rawf, 9, 511, timePoints, 0.05, timeStep);
+    activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
+
 %     for w                  = [21 41]
 %         refActiveNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, 0.01);
 %         activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
 %     end
+    
+    for nTime      = 1:length(timePoints)
+        slicedDFF  = dff(:, timePoints(nTime)+1:timePoints(nTime)+timeStep);
+        [corrVal, p_val] = corr(slicedDFF');
+        corrMat    = sum(corrVal > 0.3 & p_val < 0.05)>0;
+        if sum(activeNeuronMat(:, nTime)) > 0
+            actMax     = maxNeuronMat(activeNeuronMat(:, nTime), nTime);
+            actThres   = min(actMax) + 0.9 * (max(actMax) - min(actMax));
+            actThres   = max(actThres, prctile(maxNeuronMat(:, nTime), 90));
+            actThres   = min(actThres, 5);
+            activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | maxNeuronMat(:, nTime) > actThres;
+        else
+            activeNeuronMat(:, nTime) = maxNeuronMat(:, nTime) > 5;
+        end
+        activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | corrMat';
+    end
+    
+    
+    makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
+    
+
 
     
 end
@@ -150,7 +156,7 @@ function activeNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePo
 end
 
 
-function activeNeuronMat = activeMatUseSGFit(rawf, numOrder, lenWindow, timePoints, alpha_value)
+function activeNeuronMat = activeMatUseSGFit(rawf, numOrder, lenWindow, timePoints, alpha_value, timeStep)
     dff           = rawf;
     % Savitzky-Golay filtering
     baseline      = sgolayfilt(dff, numOrder, lenWindow, [], 2);
