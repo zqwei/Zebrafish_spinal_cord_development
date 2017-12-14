@@ -90,8 +90,8 @@ function Neuron_selection_v3(nFile)
     activeNeuronMat  = false(size(dff, 1), length(timePoints));
     maxNeuronMat     = nan(size(dff, 1), length(timePoints));
 
-    lev = 5;
-    wname = 'sym8';
+%     lev = 5;
+%     wname = 'sym8';
     
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
