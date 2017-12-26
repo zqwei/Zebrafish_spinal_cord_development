@@ -129,11 +129,16 @@ function Neuron_selection_v3(nFile)
         activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | corrMat';
     end
     
+    timeBin           = 7;
+    activeThres       = 3/timeBin;
+    
+    for nNeuron  = 1:size(activeNeuronMat, 1)
+        activeCurr = activeNeuronMat(nNeuron, :);
+        activeCurr = smooth(double(activeCurr), timeBin) > activeThres;
+        activeNeuronMat(nNeuron, timeBin:end) = activeCurr(timeBin:end);
+    end
     
     makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
-    
-
-
     
 end
 
@@ -172,11 +177,11 @@ function activeNeuronMat = activeMatUseSGFit(rawf, numOrder, lenWindow, timePoin
 end
 
 function makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
-    if ispc
-        video          = VideoWriter([plotDir '\movie_actMat_' fileName '.avi'], 'Uncompressed AVI');
-    elseif ismac
-        video          = VideoWriter([plotDir '\movie_actMat_' fileName '.mp4'], 'MPEG-4');
-    end
+%     if ispc
+    video          = VideoWriter([plotDir '\movie_actMat_' fileName '.avi'], 'Uncompressed AVI');
+%     elseif ismac
+%         video          = VideoWriter([plotDir '\movie_actMat_' fileName '.mp4'], 'MPEG-4');
+%     end
     video.FrameRate = 10;
     open(video);
     % frame size in pixels
@@ -192,11 +197,12 @@ function makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep
         hold on
         for i = 1:size(dff, 1)
             if ~activeTag(i)
-                plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+i*4, 'Color', [.8, .8, .8], 'linewidth', linew);
+                plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+i*4, 'Color', 'b', 'linewidth', linew);
             else
-                plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+i*4, 'k', 'linewidth', linew);
+                plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+i*4, 'r', 'linewidth', linew);
             end
         end
+        title(num2str(period))
         xlim([0, 5])
         ylim([0, size(dff, 1)*4+4]);
         set(gca, 'YTickLabel', '');
