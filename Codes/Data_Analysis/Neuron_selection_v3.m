@@ -129,8 +129,8 @@ function Neuron_selection_v3(nFile)
         activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | corrMat';
     end
     
-    timeBin           = 7;
-    activeThres       = 3/timeBin;
+    timeBin           = 11;
+    activeThres       = 5/timeBin;
     
     for nNeuron  = 1:size(activeNeuronMat, 1)
         activeCurr = activeNeuronMat(nNeuron, :);
