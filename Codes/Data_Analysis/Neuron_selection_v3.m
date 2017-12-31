@@ -129,16 +129,23 @@ function Neuron_selection_v3(nFile)
         activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | corrMat';
     end
     
-    timeBin           = 11;
-    activeThres       = 5/timeBin;
-    
-    for nNeuron  = 1:size(activeNeuronMat, 1)
-        activeCurr = activeNeuronMat(nNeuron, :);
-        activeCurr = smooth(double(activeCurr), timeBin) > activeThres;
-        activeNeuronMat(nNeuron, timeBin:end) = activeCurr(timeBin:end);
+    save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat', 'timeStep');
+    if exist('mnx', 'var')
+        mnx       = mnx(slicedIndex); %#ok<NODEF>
+        mnx       = mnx(leafOrder); %#ok<NASGU>
+        save([tempDatDir, fileName, '.mat'], 'mnx', '-append')
     end
     
-    makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
+%     timeBin           = 11;
+%     activeThres       = 5/timeBin;
+%     
+%     for nNeuron  = 1:size(activeNeuronMat, 1)
+%         activeCurr = activeNeuronMat(nNeuron, :);
+%         activeCurr = smooth(double(activeCurr), timeBin) > activeThres;
+%         activeNeuronMat(nNeuron, timeBin:end) = activeCurr(timeBin:end);
+%     end
+%     
+%     makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
     
 end
 
