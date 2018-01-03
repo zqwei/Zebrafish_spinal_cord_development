@@ -16,7 +16,7 @@
 %
 
 
-function Neuron_selection_v3(nFile)
+function Neuron_selection_v3(nFile, thresTwichCor)
     % load data
     addpath('../Func');
     setDir;
@@ -94,20 +94,17 @@ function Neuron_selection_v3(nFile)
     % signal with strong positive correlation
     timeTwitch        = 60;
     thresTwitchNeuron = 10; % percentile of neurons
-    thresTwichCor     = 0.3;
-    for nTime     = 1:length(dff)/timeTwitch
-        slicedDFF = dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch);
-        negDFF    = slicedDFF < 0;
-        [corVal, pVal] = corr(negDFF');
-        corVal(pVal>0.05) = 0;
-        if sum(sum(corVal > thresTwichCor)>thresTwitchNeuron) > thresTwitchNeuron
-            figure; plot(slicedDFF')
-            disp(nTime)
-%             dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch) = nan;
-        end
-    end    
-    
-%     keyboard()
+    if thresTwichCor > 0
+        for nTime     = 1:length(dff)/timeTwitch
+            slicedDFF = dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch);
+            negDFF    = slicedDFF < 0;
+            [corVal, pVal] = corr(negDFF');
+            corVal(pVal>0.05) = 0;
+            if sum(sum(corVal > thresTwichCor)>thresTwitchNeuron) > thresTwitchNeuron
+                dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch) = nan;
+            end
+        end    
+    end
     
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
@@ -155,16 +152,6 @@ function Neuron_selection_v3(nFile)
         save([tempDatDir, fileName, '.mat'], 'mnx', '-append')
     end
     
-%     timeBin           = 11;
-%     activeThres       = 5/timeBin;
-%     
-%     for nNeuron  = 1:size(activeNeuronMat, 1)
-%         activeCurr = activeNeuronMat(nNeuron, :);
-%         activeCurr = smooth(double(activeCurr), timeBin) > activeThres;
-%         activeNeuronMat(nNeuron, timeBin:end) = activeCurr(timeBin:end);
-%     end
-%     
-%     makeMovie(plotDir, fileName, timePoints, dff, activeNeuronMat, timeStep)
     
 end
 
