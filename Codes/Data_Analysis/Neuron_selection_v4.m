@@ -103,6 +103,8 @@ function TwitchCount = Neuron_selection_v4(nFile, thresTwichCor)
         corVal(pVal>0.05) = 0;
         if sum(sum(corVal > thresTwichCor)>thresTwitchNeuron) > thresTwitchNeuron
             TwitchCount = TwitchCount + 1;
+            figure; plot(slicedDFF')
+            disp(nTime)
         end
     end    
     

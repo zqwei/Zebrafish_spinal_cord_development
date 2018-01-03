@@ -9,7 +9,11 @@
 % Ziqiang Wei
 % weiz@janelia.hhmi.org
 % 
-
+% -------------------------------------------------------------------------
+% TODO
+% save firstActivationTime matrix
+%
+%
 
 function FAEV_v0_1(nFile)            
     addpath('../Func');
