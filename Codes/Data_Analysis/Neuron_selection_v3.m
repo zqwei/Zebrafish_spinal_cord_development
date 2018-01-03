@@ -89,17 +89,32 @@ function Neuron_selection_v3(nFile)
 
     activeNeuronMat  = false(size(dff, 1), length(timePoints));
     maxNeuronMat     = nan(size(dff, 1), length(timePoints));
-
-%     lev = 5;
-%     wname = 'sym8';
+    
+    % remove time points with twitching behavioral -- global negative
+    % signal with strong positive correlation
+    timeTwitch        = 60;
+    thresTwitchNeuron = 10; % percentile of neurons
+    thresTwichCor     = 0.3;
+    for nTime     = 1:length(dff)/timeTwitch
+        slicedDFF = dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch);
+        negDFF    = slicedDFF < 0;
+        [corVal, pVal] = corr(negDFF');
+        corVal(pVal>0.05) = 0;
+        if sum(sum(corVal > thresTwichCor)>thresTwitchNeuron) > thresTwitchNeuron
+            figure; plot(slicedDFF')
+            disp(nTime)
+%             dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch) = nan;
+        end
+    end    
+    
+%     keyboard()
     
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
             slicedDFF  = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
-%             powerNeuronMat(nNeuron, nTime)  = std(slicedDFF);
-%             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
+            % remove data with twitch times
+            slicedDFF(isnan(slicedDFF))     = [];
             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-%             [smoothedSlicedDFF, ~, ~, ~] = wden(slicedDFF, 'sqtwolog', 'h', 'mln', lev, wname);
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
             maxNeuronMat(nNeuron, nTime)    = max(slicedDFF);
         end
@@ -115,6 +130,10 @@ function Neuron_selection_v3(nFile)
     
     for nTime      = 1:length(timePoints)
         slicedDFF  = dff(:, timePoints(nTime)+1:timePoints(nTime)+timeStep);
+        
+        % remove data with twitch times
+        slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
+            
         [corrVal, p_val] = corr(slicedDFF');
         corrMat    = sum(corrVal > 0.3 & p_val < 0.05)>0;
         if sum(activeNeuronMat(:, nTime)) > 0
