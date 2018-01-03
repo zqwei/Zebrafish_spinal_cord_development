@@ -89,6 +89,7 @@ function Neuron_selection_v3(nFile, thresTwichCor)
 
     activeNeuronMat  = false(size(dff, 1), length(timePoints));
     maxNeuronMat     = nan(size(dff, 1), length(timePoints));
+    remvoeTwitchTime = false(size(rawf, 2), 1);
     
     % remove time points with twitching behavioral -- global negative
     % signal with strong positive correlation
@@ -103,21 +104,22 @@ function Neuron_selection_v3(nFile, thresTwichCor)
             if sum(sum(corVal > thresTwichCor)>thresTwitchNeuron) > thresTwitchNeuron
                 dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch) = nan;
             end
-        end    
+        end   
+        remvoeTwitchTime          = sum(isnan(dff))>0;
+        dff(:, remvoeTwitchTime)  = [];
+        timePoints    = timePoints(1:end-2);
     end
     
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
             slicedDFF  = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
-            % remove data with twitch times
-            slicedDFF(isnan(slicedDFF))     = [];
             slicedDFF  = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
             maxNeuronMat(nNeuron, nTime)    = max(slicedDFF);
         end
     end
     
-    refActiveNeuronMat = activeMatUseSGFit(rawf, 9, 511, timePoints, 0.05, timeStep);
+    refActiveNeuronMat = activeMatUseSGFit(rawf(:, ~remvoeTwitchTime), 9, 511, timePoints, 0.05, timeStep);
     activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
 
 %     for w                  = [21 41]
@@ -126,11 +128,7 @@ function Neuron_selection_v3(nFile, thresTwichCor)
 %     end
     
     for nTime      = 1:length(timePoints)
-        slicedDFF  = dff(:, timePoints(nTime)+1:timePoints(nTime)+timeStep);
-        
-        % remove data with twitch times
-        slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
-            
+        slicedDFF  = dff(:, timePoints(nTime)+1:timePoints(nTime)+timeStep);            
         [corrVal, p_val] = corr(slicedDFF');
         corrMat    = sum(corrVal > 0.3 & p_val < 0.05)>0;
         if sum(activeNeuronMat(:, nTime)) > 0
