@@ -27,6 +27,8 @@ function FAEV_v0_0(nFile)
         psi           = PsiMat{nTime};
         psi(sum(abs(lambda), 2)==0) = 1;
         slicedDFF     = dff(:,timePoints(nTime)+1:timePoints(nTime)+timeStep);
+        % remove data with twitch times
+        slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
         slicedDFF     = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
         slicedDFF     = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
         EVMat(:, nTime) = LONOFASingleUnitEV(slicedDFF, lambda, psi);

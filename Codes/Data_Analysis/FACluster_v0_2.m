@@ -41,6 +41,8 @@ function FACluster_v0_2(nFile)
         if sum(nNeuronIndex)>1
             disp(nTime)
             slicedDFF = dff(nNeuronIndex,timePoints(nTime)+1:timePoints(nTime)+timeStep);
+            % remove data with twitch times
+            slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
             slicedDFF = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
             slicedDFF = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
             KG_M      = sum(eig(corr(slicedDFF))>1);

@@ -154,16 +154,16 @@ function FACluster_v0_5_1(nFile)
         hold on
         for i = 1:size(LMat, 1)
             if ~activeTag(i)
-                plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+find(neworder==i)*4, 'Color', [.8, .8, .8], 'linewidth', linew);
+                plot(linspace(0, 5, numel(timeRange)), nanzscore(dff(i, timeRange))+find(neworder==i)*4, 'Color', [.8, .8, .8], 'linewidth', linew);
             end
         end
         for i = 1:size(LMat, 1)
             if activeTag(i)
                 if ~any(isnan(LMat(i, :))) && sum(LMat(i, :))>0 && size(LMat,2) >= 1
                     [~, nFactor] = max(LMat(i, :));
-                    plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+find(neworder==i)*4, 'Color', mColor(factorIndex(nFactor), :), 'linewidth', linew);
+                    plot(linspace(0, 5, numel(timeRange)), nanzscore(dff(i, timeRange))+find(neworder==i)*4, 'Color', mColor(factorIndex(nFactor), :), 'linewidth', linew);
                 else
-                    plot(linspace(0, 5, numel(timeRange)), zscore(dff(i, timeRange))+find(neworder==i)*4, 'k', 'linewidth', linew);
+                    plot(linspace(0, 5, numel(timeRange)), nanzscore(dff(i, timeRange))+find(neworder==i)*4, 'k', 'linewidth', linew);
                 end
             end
         end
