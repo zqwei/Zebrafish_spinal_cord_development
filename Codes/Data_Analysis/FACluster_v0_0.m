@@ -22,9 +22,6 @@ function FACluster_v0_0(nFile)
     numPlot           = length(timePoints);
     EVLONO            = nan(numPlot, maxNumFactor, numFold);
 
-    numSample         = timeStep;
-    numTest           = ceil(numSample/numFold);
-
 
     for nPlot        = 1:numPlot
         slicedDFF    = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+timeStep); %#ok<NODEF>
@@ -34,6 +31,8 @@ function FACluster_v0_0(nFile)
         slicedDFF    = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
         slicedDFF    = slicedDFF(:, activeNeuronMat(:, nPlot)); %#ok<NODEF>
         if ~isempty(slicedDFF)
+            numSample     = size(slicedDFF, 1);
+            numTest       = ceil(numSample/numFold);
             numActive     = size(slicedDFF, 2);
             currNumFactor = min([numActive-1, floor(numActive + 0.5 -sqrt(2*numActive + 0.25)), maxNumFactor]);
             if currNumFactor >= 1
