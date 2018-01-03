@@ -4,7 +4,7 @@ inputFolder = '../../TempDat';
 outputBase = '../Data';
 
 exMetrFolder = 'D:\Code\atlas3D\Data';
-for i = 1:numel(dataset)
+for i = 23:24
     load([inputFolder '\' dataset{i} '.mat']);
     % number of never-active neurons
     % sum(sum(activeNeuronMat, 2)==0)

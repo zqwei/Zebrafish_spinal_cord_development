@@ -1,5 +1,5 @@
 numFiles = 21;
-for nFile = 3:numFiles
+for nFile = fileList
     disp(['processing dataset nFile = ' num2str(nFile)]);
 %     % step 1: plot calcium traces and atlas
 %     disp('plotting calcium traces and atlas');

@@ -15,20 +15,21 @@ MO_datasets = [17 18 19 20 21] ;
 % metric_cmd = ' me=neuronType; ';
 
 % % option 2: use factorSize definition
-% bins = [0 1 1.2];
-% metric_cmd = ' me=exp(1-factorSize);';
+bins = [0 1 1.2];
+metric_cmd = ' me=exp(1-factorSize);';
 
 % option 3: use neuronActTime
-bins = [0 0.99 1.2];
-metric_cmd = ' me=neuronActTime;';
+% bins = [0 0.99 1.2];
+% metric_cmd = ' me=neuronActTime;';
 
 % for control datasets
 Linear_Stats_Boot_Std(control_datasets, nbins, bins, metric_cmd);
-export_fig([PlotDir '/seg_distr_dkbg/WT_segRatio_leader.pdf'], '-nocrop');
+set(gcf, 'InvertHardCopy', 'off', 'PaperPositionMode', 'Auto');   
+% print([PlotDir '/seg_distr_dkbg/WT_segRatio_leader.pdf'], '-dpdf', '-r0');
 
 % for MO
 Linear_Stats_Boot_Std(MO_datasets, nbins, bins, metric_cmd);
-export_fig([PlotDir '/seg_distr_dkbg/MO_segRatio_leader.pdf'], '-nocrop');
+% print([PlotDir '/seg_distr_dkbg/MO_segRatio_leader.pdf'], '-dpdf', '-r0');
 
 
 %% plotting individual circular statistics
@@ -91,15 +92,15 @@ for type = 1: numel(bins) - 1
 end
 figure,
 set(0, 'defaultaxeslayer', 'top')
-whitebg('black');
+whitebg('whilte');
 set(gcf, 'Color', 'black');
-set(0 ,'defaultfigurecolor', 'black')
+% set(0 ,'defaultfigurecolor', 'black')
 bar(count,'stacked');
 set(gca, 'XTickLabel', {'type 1', 'type 2', 'type3'});
 legend({'islet+', 'islet-', 'mnx-'});
 title('activation type and cell type');
 ylabel('count');
-export_fig([PlotDir '/seg_distr_dkbg/IHC_leader.pdf'], '-nocrop');
+% export_fig([PlotDir '/seg_distr_dkbg/IHC_leader.pdf'], '-nocrop');
 % Version for normalization
 % figure,
 % bar(count./repmat(sum(count, 2), 1, 3), 'stacked');
@@ -107,6 +108,22 @@ export_fig([PlotDir '/seg_distr_dkbg/IHC_leader.pdf'], '-nocrop');
 % legend({'islet+', 'islet-', 'mnx-'});
 % title('activation type and cell type');
 % ylabel('normalized percentage');
+
+me_all = 1-log(me_all);
+y1 = me_all(islet_all==1 & mnx_all==1);
+y2 = me_all(islet_all==0 & mnx_all==1);
+y1(numel(y1)+1:numel(y2)) = NaN;
+y2(numel(y2)+1:numel(y1)) = NaN;
+figure,
+distributionPlot([y1, y2], 'showMM', 0, 'globalNorm', 3, 'addSpread', 1, 'histOpt', 1, 'divFactor', 0.9);
+hold on
+set(gca, 'xTickLabel', {'islet+', 'islet-'})
+ylim([0 20])
+set(gca, 'YTick', [1 10 20])
+% export_fig([PlotDir '/islet_fs_dist_' dataset{nFile} '.tif'], '-nocrop');
+hold off
+% close
+
 end
 
 function Linear_Stats_Boot_Std(datasets, nbins, bins, metric_cmd)
@@ -143,9 +160,9 @@ count_all = count_all./repmat(sum(count_all, 1), nbins, 1);
 %     spider(count_plot, '', repmat([0, max(count_plot(:))], nbins, 1), strtrim(cellstr(num2str(leg'))'));
 figure, 
 set(0, 'defaultaxeslayer', 'top')
-whitebg('black');
+whitebg('white');
 set(gcf, 'Color', 'black');
-set(0 ,'defaultfigurecolor', 'black')
+% set(0 ,'defaultfigurecolor', 'black')
 hold on
 anglebins = linspace(0, 360, nbins+1);
 index = circshift((1:nbins)', nbins/2);

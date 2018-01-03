@@ -20,9 +20,9 @@ end
 
 % throw away bad fitted tact and tEV
 
-halfActTime(~validFitIndex) = NaN;
+% halfActTime(~validFitIndex) = NaN;
 halfActTime(halfActTime<0 | halfActTime>timePoints(end)/(4*3600)) = NaN;
-halfEVTime(~validFitIndex) = NaN;
+halfEVTime(~validFitIndex | RSquare<0) = NaN;
 halfEVTime(halfEVTime<0 | halfEVTime>timePoints(end)/(4*3600)) = NaN;
 
 nNeurons = numel(new_x);
