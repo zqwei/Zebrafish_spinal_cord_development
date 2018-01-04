@@ -86,11 +86,8 @@ function Neuron_selection_v3(nFile, thresTwichCor)
     dff           = dff(leafOrder, :); %#ok<NASGU>
     tracks        = tracks(leafOrder, :, :); %#ok<NASGU>
     side          = side(leafOrder, :);  %#ok<NASGU>
-
-    activeNeuronMat  = false(size(dff, 1), length(timePoints));
-    maxNeuronMat     = nan(size(dff, 1), length(timePoints));
     remvoeTwitchTime = false(size(rawf, 2), 1);
-    
+
     % remove time points with twitching behavioral -- global negative
     % signal with strong positive correlation
     timeTwitch        = 60;
@@ -104,12 +101,16 @@ function Neuron_selection_v3(nFile, thresTwichCor)
             if sum(sum(corVal > thresTwichCor)>thresTwitchNeuron) > thresTwitchNeuron
                 dff(:, (nTime-1)*timeTwitch+1:nTime*timeTwitch) = nan;
             end
-        end   
+        end
         remvoeTwitchTime          = sum(isnan(dff))>0;
         dff(:, remvoeTwitchTime)  = [];
+        tracks(:, remvoeTwitchTime, :) = [];
         timePoints    = timePoints(1:end-2);
     end
-    
+
+    activeNeuronMat  = false(size(dff, 1), length(timePoints));
+    maxNeuronMat     = nan(size(dff, 1), length(timePoints));
+
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
             slicedDFF  = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
@@ -118,7 +119,7 @@ function Neuron_selection_v3(nFile, thresTwichCor)
             maxNeuronMat(nNeuron, nTime)    = max(slicedDFF);
         end
     end
-    
+
     refActiveNeuronMat = activeMatUseSGFit(rawf(:, ~remvoeTwitchTime), 9, 511, timePoints, 0.05, timeStep);
     activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
 
@@ -126,9 +127,9 @@ function Neuron_selection_v3(nFile, thresTwichCor)
 %         refActiveNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, 0.01);
 %         activeNeuronMat    = activeNeuronMat & refActiveNeuronMat;
 %     end
-    
+
     for nTime      = 1:length(timePoints)
-        slicedDFF  = dff(:, timePoints(nTime)+1:timePoints(nTime)+timeStep);            
+        slicedDFF  = dff(:, timePoints(nTime)+1:timePoints(nTime)+timeStep);
         [corrVal, p_val] = corr(slicedDFF');
         corrMat    = sum(corrVal > 0.3 & p_val < 0.05)>0;
         if sum(activeNeuronMat(:, nTime)) > 0
@@ -142,15 +143,15 @@ function Neuron_selection_v3(nFile, thresTwichCor)
         end
         activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) | corrMat';
     end
-    
+
     save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat', 'timeStep');
     if exist('mnx', 'var')
         mnx       = mnx(slicedIndex); %#ok<NODEF>
         mnx       = mnx(leafOrder); %#ok<NASGU>
         save([tempDatDir, fileName, '.mat'], 'mnx', '-append')
     end
-    
-    
+
+
 end
 
 function activeNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, alpha_value)
