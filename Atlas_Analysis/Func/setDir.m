@@ -9,17 +9,21 @@ DirNames{8} = '../Data/20161026';
 DirNames{12} = '../Data/20170112';
 
 
+
 % data with functional imaging + dev info (birth time) "birthtime.mat"
 DirNames{6} = '../Data/20160328';
 DirNames{9} = '../Data/20161027'; % missing birthtime
 DirNames{11} = '../Data/20170111'; % missing birthtime
 DirNames{14} = '../Data/20170201'; % missing birthtime
+DirNames{22} = '../Data/20170731'; % missing birthtime
+DirNames{24} = '../Data/20170925'; % missing birthtime
 
 % data with functional imaging + IHC info "islet.mat"
 DirNames{10} = '../Data/20161028';
 DirNames{13} = '../Data/20170126';
 DirNames{15} = '../Data/20170202';
 DirNames{16} = '../Data/20170216';
+DirNames{23} = '../Data/20170828'; % missing islet
 
 
 % data with functional imaging but no atlas information
@@ -32,6 +36,7 @@ DirNames{18} = '../Data/20170323';
 DirNames{19} = '../Data/20170412';
 DirNames{20} = '../Data/20170503';
 DirNames{21} = '../Data/20170517';
+
 
 %% Plot Folders
 PlotDir = '../Plot';
