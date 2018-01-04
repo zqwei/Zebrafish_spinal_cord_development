@@ -103,24 +103,26 @@ function MNX_v0_7(nFile)
     box off
 
     % fit of numFactor curve
-    fitResult    = fit((1:numTime)'/60, numFactorTime-2, 'gauss1');
-    b            = fitResult.b1;
-    a            = fitResult.a1;
-    c            = fitResult.c1;
-    cr           = c;
-    fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], (1:numTime)'/60, numFactorTime);    
-    opt1Dim      = doubleSizedGauss(fitResult,(1:numTime)'/60);
-    
-    if yyPlot
-        yyaxis right
-        plot((1:numTime)'/60, opt1Dim,'k-', 'linewid', 2)    
-        hold off
-        xlabel('Time (hour)')
-        ylabel('Num Factors')
-        xlim([0 numTime/60])
-        ylim([0 ceil(max(opt1Dim))])
-    else
-        plot((1:numTime)'/60, opt1Dim./max(opt1Dim)*24,'k-', 'linewid', 2)
+    try
+        fitResult    = fit((1:numTime)'/60, numFactorTime-2, 'gauss1');
+        b            = fitResult.b1;
+        a            = fitResult.a1;
+        c            = fitResult.c1;
+        cr           = c;
+        fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], (1:numTime)'/60, numFactorTime);    
+        opt1Dim      = doubleSizedGauss(fitResult,(1:numTime)'/60);
+
+        if yyPlot
+            yyaxis right
+            plot((1:numTime)'/60, opt1Dim,'k-', 'linewid', 2)    
+            hold off
+            xlabel('Time (hour)')
+            ylabel('Num Factors')
+            xlim([0 numTime/60])
+            ylim([0 ceil(max(opt1Dim))])
+        else
+            plot((1:numTime)'/60, opt1Dim./max(opt1Dim)*24,'k-', 'linewid', 2)
+        end
     end
     box off
     
