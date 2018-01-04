@@ -47,8 +47,8 @@ function FAEV_v0_1(nFile)
         timeIndex = ~isnan(EVMat(nNeuron, :));
         actCurrNeuron   = activeNeuronMat(nNeuron, :);
         firstActiveTime = find(smooth(double(actCurrNeuron), timeBin) > activeThres, 1, 'first');
-        firstActTime(nNeuron) = firstActiveTime;
         if ~isempty(firstActiveTime)
+            firstActTime(nNeuron) = firstActiveTime;
             removeIndex     = find(actCurrNeuron==0);
             removeIndex(removeIndex<firstActiveTime) = [];
             removeTimeIndex = false(1, numTime);
