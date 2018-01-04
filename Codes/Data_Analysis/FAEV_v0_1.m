@@ -9,11 +9,6 @@
 % Ziqiang Wei
 % weiz@janelia.hhmi.org
 % 
-% -------------------------------------------------------------------------
-% TODO
-% save firstActivationTime matrix
-%
-%
 
 function FAEV_v0_1(nFile)            
     addpath('../Func');
@@ -28,6 +23,7 @@ function FAEV_v0_1(nFile)
     halfEVTime        = nan(numNeuron, 1);
     RSquare           = zeros(numNeuron, 1);
     halfActTime       = nan(numNeuron, 1);
+    firstActTime      = nan(numNeuron, 1);
     validFitIndex     = false(numNeuron, 1);
     
     m                 = ceil(sqrt(numNeuron));
@@ -51,6 +47,7 @@ function FAEV_v0_1(nFile)
         timeIndex = ~isnan(EVMat(nNeuron, :));
         actCurrNeuron   = activeNeuronMat(nNeuron, :);
         firstActiveTime = find(smooth(double(actCurrNeuron), timeBin) > activeThres, 1, 'first');
+        firstActTime(nNeuron) = firstActiveTime;
         if ~isempty(firstActiveTime)
             removeIndex     = find(actCurrNeuron==0);
             removeIndex(removeIndex<firstActiveTime) = [];
@@ -127,5 +124,5 @@ function FAEV_v0_1(nFile)
     end
     
     setPrint(8*m, 6*m, [plotDir, 'SigFitEVActiveNeuron_', fileName], 'pdf');
-    save([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'halfEVTime', 'RSquare', 'validFitIndex', '-append');
+    save([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'halfEVTime', 'firstActTime', 'RSquare', 'validFitIndex', '-append');
 end
