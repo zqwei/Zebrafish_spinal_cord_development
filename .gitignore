@@ -12,9 +12,7 @@ Codes/Single_neuron_network_tracks
 NetworkDynamicsPlots
 NetworkDynamicsTempDat
 
-Data_Analysis_List.m
 Data_Analysis_List_Yinan.m
-Data_Analysis_List_server.m
 Data_Analysis_List_all.m
 Data_Analysis_List_Twitch_Detection.m
 #
