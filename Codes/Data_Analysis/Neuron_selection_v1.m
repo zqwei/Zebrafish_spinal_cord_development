@@ -34,8 +34,6 @@ function Neuron_selection_v1(nFile)
         subplot(m, m, (nPlot-1)/10+1)
         hold on
         slicedDFF       = dff(:, timePoints(nPlot)+1:timePoints(nPlot)+timeStep);
-        % remove data with twitch times
-        slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
         imagesc(corr(slicedDFF(leafOrder,:)'),[-1 1]);
         plot([1 numNeuron], [sideSplitter sideSplitter], '--w')
         plot([sideSplitter sideSplitter], [1 numNeuron], '--w')

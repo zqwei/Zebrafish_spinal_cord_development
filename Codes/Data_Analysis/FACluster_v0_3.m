@@ -30,10 +30,7 @@ function FACluster_v0_3(nFile)
         else
             LMat_nPlot    = nan(numNeuron, LONOM(nPlot));
             PsiMat_nPlot  = ones(numNeuron, 1);
-
             slicedDFF     = dff(activeNeuronMat(:, nPlot),timePoints(nPlot)+1:timePoints(nPlot)+timeStep);
-            % remove data with twitch times
-            slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
             slicedDFF     = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
             slicedDFF     = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
 

@@ -27,8 +27,6 @@ function FACluster_v0_0(nFile)
     
     for nPlot        = 1:numPlot
         slicedDFF    = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+timeStep); %#ok<NODEF>
-        % remove data with twitch times
-        slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
         slicedDFF    = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
         slicedDFF    = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
         slicedDFF    = slicedDFF(:, activeNeuronMat(:, nPlot)); %#ok<NODEF>

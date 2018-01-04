@@ -30,8 +30,6 @@ function FACluster_v0_4(nFile)
 
         if sum(nanIndex)>0
             slicedDFF         = dff(:,timePoints(nTime)+1:timePoints(nTime)+timeStep); %#ok<NODEF>
-            % remove data with twitch times
-            slicedDFF(:, sum(isnan(slicedDFF))>0)     = [];
             slicedDFF         = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
             slicedDFF         = bsxfun(@rdivide, slicedDFF, std(slicedDFF,[],2))';
             slicedDFF         = slicedDFF(:, nanIndex);
