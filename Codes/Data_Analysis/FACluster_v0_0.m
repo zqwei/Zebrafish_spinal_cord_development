@@ -21,11 +21,10 @@ function FACluster_v0_0(nFile)
 
     numPlot           = length(timePoints);
     EVLONO            = nan(numPlot, maxNumFactor, numFold);
-
+    
     numSample         = timeStep;
     numTest           = ceil(numSample/numFold);
-
-
+    
     for nPlot        = 1:numPlot
         slicedDFF    = dff(:,timePoints(nPlot)+1:timePoints(nPlot)+timeStep); %#ok<NODEF>
         slicedDFF    = bsxfun(@minus, slicedDFF, mean(slicedDFF,2));
