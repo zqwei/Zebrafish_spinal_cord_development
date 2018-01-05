@@ -17,6 +17,10 @@ plotNetDir          = '../../NetworkDynamicsPlots/';
 tempDatDir          = '../../TempDat/';
 tempDatNetDir       = '../../NetworkDynamicsTempDat/';
 
-%if ~exist(tempDatDir, 'dir')
-%    mkdir(tempDatDir)
-%end
+if ~exist(tempDatDir, 'dir')
+    mkdir(tempDatDir)
+end
+
+if ~exist(plotDir, 'dir')
+    mkdir(plotDir)
+end
