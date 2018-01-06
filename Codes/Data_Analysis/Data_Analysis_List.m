@@ -1,11 +1,11 @@
 % % function Data_Analysis_List_all
 
 all_analysis   = 1:24;
-fileAnalyzed   = [1 2 3 18 20];
+fileAnalyzed   = [1 2 3 18 20 9 10 12 14 17 19 20 23];
 fileToAnalysis = all_analysis;
 fileToAnalysis(fileAnalyzed) = [];
 
-for nFile = 20
+for nFile = fileToAnalysis
     Neuron_selection_v2(nFile); % add New x, y, z coordinates to analysis
     FACluster_v0_2_2(nFile) % plot LONOM optimal number with dropping the overlapped factors
     FACluster_v0_5_1(nFile) % generate FA evolution video -- Yinan version

@@ -46,7 +46,11 @@ function FAEV_v0_1(nFile)
         
         timeIndex = ~isnan(EVMat(nNeuron, :));
         actCurrNeuron   = activeNeuronMat(nNeuron, :);
-        firstActiveTime = find(smooth(double(actCurrNeuron), timeBin) > activeThres, 1, 'first');
+        smoothActIndex  = smooth(double(actCurrNeuron), timeBin);
+        if sum(actCurrNeuron(1:9)) < 5
+            smoothActIndex(1:5) = 0;
+        end
+        firstActiveTime = find(smoothActIndex > activeThres, 1, 'first');
         if ~isempty(firstActiveTime)
             firstActTime(nNeuron) = firstActiveTime;
             removeIndex     = find(actCurrNeuron==0);
