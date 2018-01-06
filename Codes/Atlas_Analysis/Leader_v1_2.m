@@ -64,4 +64,5 @@ for it = 1:numel(listLeaderMetrics)
     title(listLeaderMetrics{it});
 end
     setPrint(8*nCol, 8*nRow, [plotDir,  'LeaderMetricsPolar_' fileName], 'pdf');
+    close;
 end

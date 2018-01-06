@@ -23,6 +23,7 @@ function FAEV_v0_1(nFile)
     halfEVTime        = nan(numNeuron, 1);
     RSquare           = zeros(numNeuron, 1);
     halfActTime       = nan(numNeuron, 1);
+    halfEVTimeCI      = nan(numNeuron, 2);
     firstActTime      = nan(numNeuron, 1);
     validFitIndex     = false(numNeuron, 1);
     
@@ -45,6 +46,7 @@ function FAEV_v0_1(nFile)
         end
         
         timeIndex = ~isnan(EVMat(nNeuron, :));
+%         timeIndex = EVMat(nNeuron, :)>0.05;
         actCurrNeuron   = activeNeuronMat(nNeuron, :);
         smoothActIndex  = smooth(double(actCurrNeuron), timeBin);
         if sum(actCurrNeuron(1:9)) < 5
@@ -90,6 +92,7 @@ function FAEV_v0_1(nFile)
             ypredupperCI             = fitResult.ypredupperCI(paddingLength+2:end);
             RSquare(nNeuron)         = 1 - mean((EVMat(nNeuron, timeIndex)' - ypred).^2)./var(EVMat(nNeuron, timeIndex)'); %#ok<UDIM>
             halfEVTime(nNeuron)      = fitParams(3);
+            halfEVTimeCI(nNeuron, :)    = fitResult.paramCI(3, :);
             if halfEVTime(nNeuron) < 0 || halfEVTime(nNeuron) > numTime/60
                 halfEVTime(nNeuron)  = nan;
             end
@@ -128,5 +131,5 @@ function FAEV_v0_1(nFile)
     end
     
     setPrint(8*m, 6*m, [plotDir, 'SigFitEVActiveNeuron_', fileName], 'pdf');
-    save([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'halfEVTime', 'firstActTime', 'RSquare', 'validFitIndex', '-append');
+    save([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'halfEVTime', 'firstActTime', 'RSquare', 'validFitIndex', 'halfEVTimeCI', '-append');
 end

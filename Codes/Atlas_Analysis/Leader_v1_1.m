@@ -15,7 +15,7 @@ fileName          = fileNames{nFile};
 % calculate factor size
 load([tempDatDir, fileName, '.mat'], 'new_x', 'new_y', 'new_z', 'side', 'timePoints', 'mnx');
 load([tempDatDir, 'Leader_' fileName, '.mat']);
-load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime');
+load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime', 'firstActTime');
 
 
 % calculate other metrics
