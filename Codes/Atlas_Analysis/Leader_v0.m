@@ -2,8 +2,7 @@
 % 0.  Prepare statistics for leader cell analysis
 %
 % mnx_level_func
-% factorSize: mean size of first active timeWindow=20 with outliers (>3sigma
-% away) removed
+% factorSize: mean size of first active timeWindow=20 after firstActTime
 % birthtime, siblins (if available)
 % islet (if available)
 %
@@ -19,12 +18,20 @@ addpath('../Func');
 setDir;
 fileName          = fileNames{nFile};
 
-% calculate factor size
-windowSize = 20;
 load([tempDatDir, fileName, '.mat'], 'timePoints', 'slicedIndex', 'leafOrder', 'activeNeuronMat');
 load([tempDatDir, 'LONOLoading_', fileName, '.mat'], 'CorrectedLMat');
-listLeaderMetrics = {'halfActTime', 'halfEVTime', 'diffHalfTime', 'factorSize', 'mnx', 'mnxFunc'};
+load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime', 'firstActTime', 'validFitIndex', 'RSquare', 'halfEVTimeCI');
+listLeaderMetrics = {'activeTime', 'patternTime', 'diffTime', 'factorSize', 'mnx', 'mnxFunc'};
 
+% pattern time and active time
+activeTime = firstActTime/60;
+patternTime = halfEVTime;
+% valid patternTime should not be much ealier than activeTime
+patternTime(RSquare<=0 | ~validFitIndex | activeTime - halfEVTimeCI(:, 2)>0.2)= NaN;
+save([tempDatDir, 'Leader_', fileName, '.mat'], 'patternTime', 'activeTime');
+
+% calculate factor size
+windowSize = 20;
 nNeurons = numel(leafOrder);
 factorSizeTimeSeries = nan(nNeurons, numel(timePoints));
 
@@ -45,23 +52,56 @@ end
 
 factorSize = nan(nNeurons, 1);
 for i = 1:nNeurons
-    ft = factorSizeTimeSeries(i, ~isnan(factorSizeTimeSeries(i, :)));
-    if ~isempty(ft) && numel(ft)>windowSize
-        f = ft(1:windowSize);
-        f(abs(f-mean(f))>3*std(f)) = [];
-        factorSize(i) = mean(f);
+    if ~isnan(firstActTime(i))
+        factorSizeTimeSeries(i, 1:firstActTime(i)-1) = NaN;
+        ft = factorSizeTimeSeries(i, ~isnan(factorSizeTimeSeries(i, :)));
+        if ~isempty(ft) && numel(ft)>windowSize
+            f = ft(1:windowSize);
+    %         f(abs(f-mean(f))>3*std(f)) = [];
+            factorSize(i) = mean(f);
+        end
     end
 end
-plotFactorSize(factorSizeTimeSeries, factorSize, plotDir, fileName);
-save([tempDatDir, 'Leader_', fileName, '.mat'], 'factorSize');
+factorSize(isnan(activeTime) | isnan(patternTime)) = NaN;
+
+% plot factor size over time
+nCol = 8;
+nRow = ceil(nNeurons/nCol);
+figure,
+
+for i = 1:nNeurons
+    subplot(nRow, nCol, i);
+    hold on
+    titleText = sprintf(['#' num2str(i) ' FSize:' num2str(factorSize(i), '%.2f') '\nactTime:' num2str(activeTime(i), '%.2f')  ' patternTime:' num2str(patternTime(i), '%.2f')]);
+    title(titleText);
+    scatter(timePoints(factorSizeTimeSeries(i, :)>2)/3600/4, factorSizeTimeSeries(i, factorSizeTimeSeries(i, :)>2), 5, 'b');
+    scatter(timePoints(factorSizeTimeSeries(i, :)==1)/3600/4, factorSizeTimeSeries(i, factorSizeTimeSeries(i, :)==1), 5, 'r');
+    scatter(timePoints(factorSizeTimeSeries(i, :)==2)/3600/4, factorSizeTimeSeries(i, factorSizeTimeSeries(i, :)==2), 5, 'g');
+%     plot([halfActTime(i), halfActTime(i)], [0, max(factorSizeTimeSeries(:))], 'k-');
+    plot([activeTime(i), activeTime(i)], [0, max(factorSizeTimeSeries(:))], 'r-');
+    plot([patternTime(i), patternTime(i)], [0, max(factorSizeTimeSeries(:))], 'g-');
+%     plot([halfEVTime(i), halfEVTime(i)], [0, max(factorSizeTimeSeries(:))], 'g-');
+    ylim([0 max(factorSizeTimeSeries(:))]);
+    xlim([0 max(timePoints)/3600/4]);
+    xlabel('Time (h)')
+    ylabel('FactorSize')
+    hold off
+end
+setPrint(8*nCol, 6*nRow, [plotDir, 'FactorSizeEvolution_', fileName], 'pdf');
+close
+    
+save([tempDatDir, 'Leader_', fileName, '.mat'], 'factorSize', '-append');
+
 
 
 % calculate support data
 % mnx level at the end of functional imaging
 load([fileDirNames{nFile} '\profile.mat'], 'mnx_level_func', 'birthtime', 'islet');
-mnxFunc = mnx_level_func(slicedIndex, :);
-mnxFunc = mnxFunc(leafOrder, 1);
-save([tempDatDir, 'Leader_', fileName, '.mat'], 'mnxFunc', '-append');
+if (exist('mnx_level_func', 'var'))
+    mnxFunc = mnx_level_func(slicedIndex, :);
+    mnxFunc = mnxFunc(leafOrder, 1);
+    save([tempDatDir, 'Leader_', fileName, '.mat'], 'mnxFunc', '-append');
+end
 
 % birthtime
 if (exist('birthtime', 'var'))
@@ -79,29 +119,4 @@ if (exist('islet', 'var'))
 end
 
 save([tempDatDir, 'Leader_', fileName, '.mat'], 'listLeaderMetrics', '-append');
-end
-
-function plotFactorSize(factorSizeTimeSeries, factorSize, plotDir, fileName)
-nNeurons = size(factorSizeTimeSeries, 1);
-timePoints = (1:size(factorSizeTimeSeries, 2))*240;
-nCol = 8;
-nRow = ceil(nNeurons/nCol);
-figure,
-
-for i = 1:nNeurons
-    subplot(nRow, nCol, i);
-    hold on
-    title(['#' num2str(i) ' factorSize:' num2str(factorSize(i), '%.2f')]);
-    scatter(timePoints(factorSizeTimeSeries(i, :)>2)/3600/4, factorSizeTimeSeries(i, factorSizeTimeSeries(i, :)>2), 5, 'b');
-    scatter(timePoints(factorSizeTimeSeries(i, :)==1)/3600/4, factorSizeTimeSeries(i, factorSizeTimeSeries(i, :)==1), 5, 'r');
-    scatter(timePoints(factorSizeTimeSeries(i, :)==2)/3600/4, factorSizeTimeSeries(i, factorSizeTimeSeries(i, :)==2), 5, 'g');
-    ylim([0 max(factorSizeTimeSeries(:))]);
-    xlim([0 max(timePoints)/3500/4]);
-    xlabel('Time (h)')
-    ylabel('FactorSize')
-    hold off
-end
-
-    setPrint(8*nCol, 6*nRow, [plotDir, 'FactorSizeEvolution_', fileName], 'pdf');
-
 end
