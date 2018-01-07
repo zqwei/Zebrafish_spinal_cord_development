@@ -18,11 +18,12 @@ fileName          = fileNames{nFile};
 % calculate factor size
 load([tempDatDir, fileName, '.mat'], 'new_x', 'new_y', 'new_z', 'side', 'timePoints', 'mnx');
 load([tempDatDir, 'Leader_' fileName, '.mat']);
-load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime');
 
-
+if ~exist('new_x', 'var')
+    return;
+end
 % calculate other metrics
-diffHalfTime = halfEVTime - halfActTime;
+diffTime = patternTime - activeTime;
 
 % plot atlas with different metrics
 x = new_x;
@@ -32,15 +33,10 @@ figure,
 for it = 1:numel(listLeaderMetrics)
     me = eval(listLeaderMetrics{it});
     switch listLeaderMetrics{it}
-        case {'halfActTime', 'halfEVTime'}
+        case {'activeTime', 'patternTime'}
             lm = fitlm(x, me, 'linear');
             me = me - x * lm.Coefficients.Estimate(2) - lm.Coefficients.Estimate(1);
             minR = floor(min(me));
-            maxR = ceil(max(me));
-            ticks = linspace(minR, maxR, 5);
-            ticks = ticks(2:end-1);
-        case {'diffHalfTime', 'mnx', 'islet'}
-            minR = -0.2;
             maxR = ceil(max(me));
             ticks = linspace(minR, maxR, 5);
             ticks = ticks(2:end-1);
@@ -51,7 +47,7 @@ for it = 1:numel(listLeaderMetrics)
             maxR = 1;
             ticks = 0:0.2:1;
         otherwise
-            minR = min(me);
+            minR = min(me)-(max(me)-min(me))*0.2;
             maxR = max(me);
             ticks = linspace(minR, maxR, 5);
             ticks = ticks(2:end-1);

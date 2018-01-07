@@ -18,16 +18,16 @@ addpath('../Func');
 setDir;
 fileName          = fileNames{nFile};
 
-
 load([tempDatDir, fileName, '.mat'], 'timePoints', 'slicedIndex', 'leafOrder', 'activeNeuronMat');
 load([tempDatDir, 'LONOLoading_', fileName, '.mat'], 'CorrectedLMat');
-load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime', 'firstActTime', 'validFitIndex', 'RSquare');
-listLeaderMetrics = {'halfActTime', 'halfEVTime', 'diffHalfTime', 'factorSize', 'mnx', 'mnxFunc', 'activeTime', 'patternTime'};
+load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime', 'firstActTime', 'validFitIndex', 'RSquare', 'halfEVTimeCI');
+listLeaderMetrics = {'activeTime', 'patternTime', 'diffTime', 'factorSize', 'mnx', 'mnxFunc'};
 
 % pattern time and active time
-patternTime = halfEVTime;
-patternTime(RSquare<=0.6 | ~validFitIndex)= NaN;
 activeTime = firstActTime/60;
+patternTime = halfEVTime;
+% valid patternTime should not be much ealier than activeTime
+patternTime(RSquare<=0 | ~validFitIndex | activeTime - halfEVTimeCI(:, 2)>0.2)= NaN;
 save([tempDatDir, 'Leader_', fileName, '.mat'], 'patternTime', 'activeTime');
 
 % calculate factor size
@@ -62,7 +62,7 @@ for i = 1:nNeurons
         end
     end
 end
-
+factorSize(isnan(activeTime) | isnan(patternTime)) = NaN;
 
 % plot factor size over time
 nCol = 8;
