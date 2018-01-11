@@ -10,20 +10,20 @@
 
 addpath('../Func');
 setDir;
-% fileList = [3,4,10,12,13,15,16,23];
-fileList = 6;
+fileList = [3,4,10,12,13,15,16,23];
+% fileList = 6;
 
 locationList = [];
 orderList = [];
 for nFile = fileList
     fileName          = fileNames{nFile};
-    load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime');
+    load([tempDatDir, 'Leader_', fileName, '.mat'], 'activeTime');
     load([tempDatDir, fileName, '.mat'], 'timePoints', 'new_x', 'new_y', 'mnx');
     actOrder = nan(numel(new_x), 1);
     
     x = new_x;
     y = new_y;
-    metric = halfEVTime;
+    metric = activeTime;
     for seg = floor(min(x-0.5)):ceil(max(x-0.5))
         currentSegLeft = find(y<0 & x>=seg+0.5 & x<seg+1.5 & mnx==1 & ~isnan(metric));
         [~, ~, ic] = unique(metric(currentSegLeft));
