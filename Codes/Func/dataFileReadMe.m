@@ -38,7 +38,7 @@ fileDirNames{22} = '../../Data/20170731';
 fileDirNames{23} = '../../Data/20170828';
 fileDirNames{24} = '../../Data/20170925';
 
-for nFish = 1:8
+for nFish = 1:17
     fileDirNames{23 + nFish * 2} = ['../../AblationData/fish_' num2str(nFish) '_before'];
     fileDirNames{24 + nFish * 2} = ['../../AblationData/fish_' num2str(nFish) '_after'];
 end
