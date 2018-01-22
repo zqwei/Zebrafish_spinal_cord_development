@@ -24,6 +24,8 @@ Plots
 Data/*.*
 Data/
 
+*.mat
+
 # old files
 TempDatOld_v1
 TempDatOld_v2_DFF_Win40_Per20
