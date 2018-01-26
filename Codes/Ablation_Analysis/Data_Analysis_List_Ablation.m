@@ -16,10 +16,10 @@ for nFile = [24+nFish*2-1, 24+nFish*2]
     disp('Analysis #2 -- factor analysis -- number of factors -- non-LONO');
     disp('Analysis #2 -- factor analysis -- number of factors -- LONO');
     FACluster_v0_0(nFile) % # factors with selected active neurons
-%     FACluster_v0_1(nFile) % plot LONO - time-dim (pcolor & contourf)
+    FACluster_v0_1(nFile) % plot LONO - time-dim (pcolor & contourf)
     FACluster_v0_2_short_win(nFile) % plot LONOM optimal number -- LONO or non-LONO
-    FACluster_v0_2_1(nFile) % plot LONOM optimal number with Confidence Interval
-    FACluster_v0_3(nFile) % compute loading matrix for optimal number FA
+%     FACluster_v0_2_1(nFile) % plot LONOM optimal number with Confidence Interval
+    FACluster_v0_3_short_win(nFile) % compute loading matrix for optimal number FA
     FACluster_v0_4(nFile) % correct FA, removing the projection without low EV
     FACluster_v0_5_1_short_win(nFile) % generate FA evolution video
 
