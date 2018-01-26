@@ -35,8 +35,12 @@ function Neuron_selection_v0_short_win(nFile)
     background    = 90;
     baseline      = dff;
     nCells        = size(dff, 1);
+    w             = 21;
+    p             = 20;
+    
     for nNeuron   = 1:nCells
-          baseline      = sgolayfilt(dff, 9, 511, [], 2);
+%           baseline      = sgolayfilt(dff, 9, 511, [], 2);
+            baseline(nNeuron, :) = running_percentile(dff(nNeuron, :), w, p);
     end
     dff           = bsxfun(@rdivide,(dff - baseline), (mean(baseline, 2)-background));
 

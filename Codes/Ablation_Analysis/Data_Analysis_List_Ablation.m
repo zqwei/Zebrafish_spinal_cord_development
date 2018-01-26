@@ -1,6 +1,6 @@
 % % function Data_Analysis_List_Ablation
 addpath('../Data_Analysis/')
-nFish = 9;
+nFish = 1:17;
 for nFile = [24+nFish*2-1, 24+nFish*2]       
     disp(['Generate the orginal data file for dataset #' num2str(nFile)]);
     disp('==================================');
