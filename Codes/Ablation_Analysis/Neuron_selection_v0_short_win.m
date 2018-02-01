@@ -4,11 +4,10 @@
 % -------------------------------------------------------------------------
 %
 % version 0.0
-% preprocessing of orginal data using sgolayfilt
+% preprocessing of orginal data using window of r=10, prc=20%
+% used for 3 min short win data (for ablation analysis)
 %
 %
-% --- Deleting the time points has unreasonbale colinearity
-% --- Deleting the units without oscillatory activity (KS test)
 %
 % -------------------------------------------------------------------------
 % Ziqiang Wei
@@ -91,7 +90,7 @@ function Neuron_selection_v0_short_win(nFile)
         for nTime  = 1:length(timePoints)
             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
         end
     end
 
