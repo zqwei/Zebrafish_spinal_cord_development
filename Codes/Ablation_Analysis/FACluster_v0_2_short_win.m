@@ -43,7 +43,7 @@ function FACluster_v0_2_short_win(nFile)
 
     uncorrectedLONOM  = LONOM; %#ok<NASGU>
 
-    maxNumFactor  = 12;
+    maxNumFactor  = 8;
     numFactors    = repmat(struct('kgM', 0, 'paM', 0, 'SRMRM', 0, 'CFIM', 0), length(timePoints), 4); %#ok<NODEF>
     for nTime     = 1:length(timePoints)
         nNeuronIndex  = activeNeuronMat(:, nTime); %#ok<NODEF>

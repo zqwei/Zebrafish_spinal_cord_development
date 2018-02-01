@@ -96,6 +96,7 @@ function Neuron_selection_v0_1_short_win(nFile, activeTagBefore)
         end
     end
     
+    
 %     for nTime       = 1:length(timePoints)
 %         activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) & activeTagBefore;
 %     end
