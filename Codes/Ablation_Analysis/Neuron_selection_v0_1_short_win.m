@@ -15,7 +15,7 @@
 %
 
 
-function activeNeuronMat = Neuron_selection_v0_short_win(nFile)
+function Neuron_selection_v0_1_short_win(nFile, activeTagBefore)
     % load data
     addpath('../Func');
     setDir;
@@ -60,6 +60,7 @@ function activeNeuronMat = Neuron_selection_v0_short_win(nFile)
     timeEnd       = numT;
     
     slicedIndex   = ksTestAllTime;
+    slicedIndex   = slicedIndex & activeTagBefore;
     baseline      = baseline(slicedIndex, timeStart+1:timeEnd);
     rawf          = rawf(slicedIndex, timeStart+1:timeEnd);
     dff           = dff(slicedIndex, timeStart+1:timeEnd);
@@ -94,41 +95,10 @@ function activeNeuronMat = Neuron_selection_v0_short_win(nFile)
             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.01) && (skewness(slicedDFF)>0);
         end
     end
+    
+%     for nTime       = 1:length(timePoints)
+%         activeNeuronMat(:, nTime) = activeNeuronMat(:, nTime) & activeTagBefore;
+%     end
 
     save([tempDatDir, fileName, '.mat'], 'dff', 'tracks', 'leafOrder', 'slicedIndex', 'side', 'timePoints', 'sideSplitter', 'activeNeuronMat', 'timeStep');
 end
-
-% function activeNeuronMat = activeMatUsePercentile(rawf, w, p, background, timePoints, alpha_value)
-%     dff           = rawf;
-%     baseline      = dff;
-%     % percentile window
-%     for nNeuron   = 1:size(dff, 1)
-%         baseline(nNeuron, :) = running_percentile(dff(nNeuron, :), w, p);
-%     end
-%     dff           = bsxfun(@rdivide,(dff - baseline), (mean(baseline, 2)-background));
-%     activeNeuronMat   = false(size(dff, 1), length(timePoints));
-%     for nNeuron    = 1:size(dff, 1)
-%         for nTime  = 1:length(timePoints)
-%             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
-%             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-%             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', alpha_value) && (skewness(slicedDFF)>0);
-%         end
-%     end
-% end
-% 
-% 
-% function activeNeuronMat = activeMatUseSGFit(rawf, numOrder, lenWindow, timePoints, alpha_value)
-%     dff           = rawf;
-%     % Savitzky-Golay filtering
-%     baseline      = sgolayfilt(dff, numOrder, lenWindow, [], 2);
-%     dff           = bsxfun(@rdivide,(dff - baseline), mean(baseline, 2));
-%     activeNeuronMat   = false(size(dff, 1), length(timePoints));
-%     for nNeuron    = 1:size(dff, 1)
-%         for nTime  = 1:length(timePoints)
-%             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+1200); %1200
-%             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-%             activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', alpha_value) && (skewness(slicedDFF)>0);
-%         end
-%     end
-% end
-

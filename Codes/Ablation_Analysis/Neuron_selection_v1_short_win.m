@@ -16,7 +16,7 @@
 %
 
 
-function Neuron_selection_v0_short_win(nFile)
+function Neuron_selection_v1_short_win(nFile)
     % load data
     addpath('../Func');
     setDir;
