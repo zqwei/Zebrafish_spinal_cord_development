@@ -1,8 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2.  evaluate change of number of active neurons and level of sync
 %
-% version using only analyzing neurons from before ablation
-% synchronization level calculated only on active neurons (activeLevel>half)
+% version using only all active neurons, independently drawn from before &
+% after
+% synchronization level calculated only on active neurons 
+% (0 for before, activeThres for after)
 % -------------------------------------------------------------------------
 % Yinan Wan
 % wany@janelia.hhmi.org
@@ -26,7 +28,7 @@ numCells = zeros(numel(fishList), 4, 2);
 numActCells = zeros(numel(fishList), 4, 2);
 percOverlap = zeros(numel(fishList), 1);
 
-tagExt = '_ActiveBeforeOnly';
+tagExt = '_AllActive';
 
 
 for i = 1:numel(fishList)
@@ -38,10 +40,14 @@ for i = 1:numel(fishList)
         
         dirImageData  = [fileDirName '/'];
         load([dirImageData, 'profile.mat'], 'segAblation');
-        load ([tempDatDir, fileName, '.mat'], 'dff', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'slicedIndex');
         
-        
-        activeTag = sum(activeNeuronMat, 2)>floor(size(activeNeuronMat, 2)/2);
+        if nExp == 1
+            load([tempDatDir, fileName, '.mat'], 'dff', 'activeNeuronMat', 'new_x', 'new_y');
+            activeTag = activeNeuronMat>0;
+        else
+            load([tempDatDir, fileName, '_full.mat'], 'dff', 'activeNeuronMat', 'activeThres', 'new_x', 'new_y');
+            activeTag = sum(activeNeuronMat, 2)>activeThres*10;
+        end
         ind{1} = new_x<segAblation(1) & new_y<0;
         ind{2} = new_x<segAblation(1) & new_y>0;
         ind{3} = new_x>segAblation(2) & new_y<0;
@@ -96,33 +102,33 @@ setPrint(8, 6, [plotDir '/CorrelationAP' tagExt], 'pdf');
 
 fishListType = {1:numel(fishListCutA), numel(fishListCutA)+1:numel(fishListCutA)+numel(fishListCutM), numel(fishListCutA)+numel(fishListCutM)+1:numel(fishList); ...
     'Cut A', 'Cut M', 'Cut P'};
-figure('Position', [0, 0, 400*3, 300]);
+figure('Position', [0, 0, 400*3, 300*2]);
 for nExpType = 1:size(fishListType, 2)
     currfishList = fishListType{1, nExpType};
     fracActNeuronCombined = [fracActNeuron(currfishList, [1, 3], :); fracActNeuron(currfishList, [2, 4], :)];
     avgCorrCombined = [avgCorr(currfishList, [1, 3], :); avgCorr(currfishList, [2, 4], :)];
-%     subplot(2, size(fishListType, 2), nExpType);
-%     hold on,
-%     for nSec = 1:2
-%         xSeq = repmat([2*nSec-1; 2*nSec], 1, numel(currfishList)*2);
-%         ySeq = squeeze(fracActNeuronCombined(:, nSec, :))';
-%         scatter(xSeq(:), ySeq(:), 'ok');
-%         plot(xSeq, ySeq, 'k');
-%         h = ttest(ySeq(1, :), ySeq(2, :), 'alpha', p);
-%         if ~isnan(h) && h
-%             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
-%         end
-%         scatter([2*nSec-1, 2*nSec], nanmean(squeeze(fracActNeuronCombined(:, nSec, :)))', 'or', 'linew', 3);
-%         plot([2*nSec-1, 2*nSec], nanmean(squeeze(fracActNeuronCombined(:, nSec, :)))', 'r', 'linew', 3);
-%     end
-%     hold off
-%     xlim([0, 5]);
-%     ylim([0, 1]);
-%     set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
-%     title(['fraction of active neurons - ' fishListType{2, nExpType}])
+    subplot(2, size(fishListType, 2), nExpType);
+    hold on,
+    for nSec = 1:2
+        xSeq = repmat([2*nSec-1; 2*nSec], 1, numel(currfishList)*2);
+        ySeq = squeeze(fracActNeuronCombined(:, nSec, :))';
+        scatter(xSeq(:), ySeq(:), 'ok');
+        plot(xSeq, ySeq, 'k');
+        h = ttest(ySeq(1, :), ySeq(2, :), 'alpha', p);
+        if ~isnan(h) && h
+            text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
+        end
+        scatter([2*nSec-1, 2*nSec], nanmean(squeeze(fracActNeuronCombined(:, nSec, :)))', 'or', 'linew', 3);
+        plot([2*nSec-1, 2*nSec], nanmean(squeeze(fracActNeuronCombined(:, nSec, :)))', 'r', 'linew', 3);
+    end
+    hold off
+    xlim([0, 5]);
+    ylim([0, 0.5]);
+    set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
+    title(['fraction of active neurons - ' fishListType{2, nExpType}])
 
     
-    subplot(1, size(fishListType, 2), nExpType);
+    subplot(2, size(fishListType, 2), size(fishListType, 2)+nExpType);
     hold on,
     for nSec = 1:2
         xSeq = repmat([2*nSec-1; 2*nSec], 1, numel(currfishList)*2);
@@ -144,6 +150,6 @@ for nExpType = 1:size(fishListType, 2)
 end
 
 
-setPrint(8*3, 6, [plotDir '/AblationTypeSummary' tagExt], 'pdf');
+setPrint(8*3, 6*2, [plotDir '/AblationTypeSummary' tagExt], 'pdf');
 
 close all

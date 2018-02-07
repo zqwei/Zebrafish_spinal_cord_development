@@ -33,7 +33,7 @@ function FACluster_v0_5_1_short_win(nFile)
     mColor            = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
     preLMat           = nan(numNeuron, 1);
     
-    factorThres       = 0.3;
+    factorThres       = 0.6;
 
     if ispc
         video          = VideoWriter([plotDir '\movie_' fileName '.avi'], 'Uncompressed AVI');

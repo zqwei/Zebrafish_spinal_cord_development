@@ -93,11 +93,15 @@ function Neuron_selection_v1_short_win(nFile)
 
     activeNeuronMat   = false(size(dff, 1), length(timePoints));
 
+    alpha_value = 0.05;
+    if mod(nFile, 2)==0
+        alpha_value = 0.01;
+    end
     for nNeuron    = 1:size(dff, 1)
         for nTime  = 1:length(timePoints)
             slicedDFF           = dff(nNeuron, timePoints(nTime)+1:timePoints(nTime)+timeStep);
             slicedDFF           = (slicedDFF - mean(slicedDFF))/std(slicedDFF);
-            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', 0.05) && (skewness(slicedDFF)>0);
+            activeNeuronMat(nNeuron, nTime) = kstest2(-slicedDFF(slicedDFF<0), slicedDFF(slicedDFF>0), 'alpha', alpha_value) && (skewness(slicedDFF)>0);
         end
     end
 

@@ -21,21 +21,19 @@ for nExp = 1:2
     fileName      = fileNames{nFile};
     
     dirImageData  = [fileDirName '/'];
-    load([dirImageData, 'profile.mat'], 'segAblation');
-    load([tempDatDir, fileName, '.mat'], 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'leafOrder');
+    load([dirImageData, 'profile.mat'], 'segAblation', 'x', 'y', 'z');
     
-    if nExp == 1
-        [~, revInd] = sort(leafOrder);
-        activeTagOri = activeNeuronMat(revInd);
-    else
-        activeTagBefore   = activeTagOri(leafOrder);
+    if nExp == 2
+        movefile([tempDatDir, fileName, '.mat'], [tempDatDir, fileName, '_tmp', '.mat']);
+        activeNeuronMat = Neuron_selection_v0_short_win(nFile);
         activeLevelAfter = sum(activeNeuronMat, 2)/size(activeNeuronMat, 2);
+        Neuron_selection_v2(nFile);
     end
 end
 
-x = new_x;
-y = new_y/2;
-z = new_z/max(new_z) * 1.8;
+
+y = y/2;
+z = z/max(z) * 1.8;
 
 figure,
 subplot(3, 1, 1);
@@ -98,7 +96,6 @@ distInAct = histcounts(activeLevelAfter(~activeTagBefore), edges)/sum(~activeTag
 diffPdf = cumsum(distInAct) - cumsum(distAct);
 [~, thresIdx] = max(diffPdf);
 activeThres = edges(thresIdx + 1);
-activeTagAfter = activeLevelAfter >= activeThres;
 
 bar(edges(1:end-1)+0.05, [distInAct; distAct]', 'hist');
 hold on,
@@ -109,5 +106,8 @@ ylabel('percentage');
 export_fig([plotDir, 'ActiveLevelDistr_', fileName, '.pdf']);
 close
 
-save([tempDatDir, fileName, '.mat'], 'activeTagBefore', 'activeTagAfter', 'activeThres', '-append');
+movefile([tempDatDir, fileName, '.mat'], [tempDatDir, fileName, '_full', '.mat']);
+save([tempDatDir, fileName, '_full', '.mat'], 'activeThres', '-append');
+movefile([tempDatDir, fileName, '_tmp', '.mat'], [tempDatDir, fileName, '.mat']);
+
 end
