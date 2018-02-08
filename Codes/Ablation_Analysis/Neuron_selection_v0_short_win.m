@@ -77,7 +77,7 @@ function activeNeuronMat = Neuron_selection_v0_short_win(nFile)
     tSide         = side(leafOrder, :);
     sideIndex     = [find(tSide == 1); find(tSide == 2)];
     sideSplitter  = sum(tSide == 1)+0.5; %#ok<*NASGU>
-    leafOrder     = leafOrder(sideIndex);
+%     leafOrder     = leafOrder(sideIndex);
 
     baseline      = baseline(leafOrder, :);
     rawf          = rawf(leafOrder, :);

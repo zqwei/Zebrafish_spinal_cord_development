@@ -78,7 +78,7 @@ function Neuron_selection_v0_1_short_win(nFile, activeTagBefore)
     tSide         = side(leafOrder, :);
     sideIndex     = [find(tSide == 1); find(tSide == 2)];
     sideSplitter  = sum(tSide == 1)+0.5; %#ok<*NASGU>
-    leafOrder     = leafOrder(sideIndex);
+%     leafOrder     = leafOrder(sideIndex);
 
     baseline      = baseline(leafOrder, :);
     rawf          = rawf(leafOrder, :);
