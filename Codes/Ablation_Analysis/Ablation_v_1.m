@@ -23,11 +23,14 @@ for nExp = 1:2
     dirImageData  = [fileDirName '/'];
     load([dirImageData, 'profile.mat'], 'segAblation', 'x', 'y', 'z');
     
-    if nExp == 2
-        movefile([tempDatDir, fileName, '.mat'], [tempDatDir, fileName, '_tmp', '.mat']);
+    if nExp == 1
+        load([tempDatDir, fileName, '.mat'], 'activeNeuronMat');
+        activeTagBefore =  activeNeuronMat;
+    else
+        copyfile([tempDatDir, fileName, '.mat'], [tempDatDir, fileName, '_tmp', '.mat']);
         activeNeuronMat = Neuron_selection_v0_short_win(nFile);
         activeLevelAfter = sum(activeNeuronMat, 2)/size(activeNeuronMat, 2);
-        Neuron_selection_v2(nFile);
+%         Neuron_selection_v2(nFile);
     end
 end
 

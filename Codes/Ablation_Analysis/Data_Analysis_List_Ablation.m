@@ -1,7 +1,7 @@
 % % function Data_Analysis_List_Ablation
 addpath('../Data_Analysis/')
 nFish = [1,2,3,4,7,8,9,10,12,13,15,16,17];
-for nFile = [24+nFish*2]
+for nFile = [24+nFish*2-1]
     disp(['Generate the orginal data file for dataset #' num2str(nFile)]);
     disp('==================================');
     disp('Analysis #1 -- clustering analysis');
@@ -14,7 +14,7 @@ for nFile = [24+nFish*2]
         activeNeuronMat = Neuron_selection_v0_short_win(nFile);
     end
 %     Neuron_selection_v1(nFile); % Correlation matrix using AP information
-%     Neuron_selection_v2(nFile); 
+    Neuron_selection_v2(nFile); 
 % 
 % %     disp('==================================');
 % %     disp('Analysis #2 -- factor analysis -- number of factors');
