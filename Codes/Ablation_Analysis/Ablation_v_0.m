@@ -28,13 +28,14 @@ for i = 1:numel(fishList)
         
         dirImageData  = [fileDirName '/'];
         load([dirImageData, 'profile.mat'], 'segAblation');
-        load ([tempDatDir, fileName, '.mat'], 'dff', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'leafOrder');
         if nExp == 1
-            [~, revInd] = sort(leafOrder);
-            activeTagOri = activeNeuronMat(revInd);
+            load([tempDatDir, fileName, '.mat'], 'activeNeuronMat');
+            activeTagBefore = activeNeuronMat;
+        else
+            load([tempDatDir, fileName, '_full.mat'], 'activeNeuronMat');
         end
     end
-    activeTagBefore = activeTagOri(leafOrder);
+    
     for j = 1:numel(actThresList)
         activeThres = actThresList(j);
         activeTag = sum(activeNeuronMat, 2)>= 10* activeThres;
