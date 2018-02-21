@@ -41,7 +41,7 @@ for i = 1:numel(fishList)
         load ([tempDatDir, fileName, '.mat'], 'dff', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'slicedIndex');
         
         
-        activeTag = sum(activeNeuronMat, 2)>floor(size(activeNeuronMat, 2)/2);
+        activeTag = sum(activeNeuronMat, 2)>0; %floor(size(activeNeuronMat, 2)/2);
         ind{1} = new_x<segAblation(1) & new_y<0;
         ind{2} = new_x<segAblation(1) & new_y>0;
         ind{3} = new_x>segAblation(2) & new_y<0;
@@ -96,6 +96,8 @@ setPrint(8, 6, [plotDir '/CorrelationAP' tagExt], 'pdf');
 
 fishListType = {1:numel(fishListCutA), numel(fishListCutA)+1:numel(fishListCutA)+numel(fishListCutM), numel(fishListCutA)+numel(fishListCutM)+1:numel(fishList); ...
     'Cut A', 'Cut M', 'Cut P'};
+hSyncLevelAblation    = nan(size(fishListType, 2), 1);
+pSyncLevelAblation    = nan(size(fishListType, 2), 1);
 figure('Position', [0, 0, 400*3, 300]);
 for nExpType = 1:size(fishListType, 2)
     currfishList = fishListType{1, nExpType};
@@ -141,6 +143,9 @@ for nExpType = 1:size(fishListType, 2)
     ylim([-0.1, 1])
     set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
     title(['level of synchronization - '  fishListType{2, nExpType}])
+    syncLevelRatio = squeeze(avgCorrCombined(:, :, 2)./avgCorrCombined(:, :, 1));
+    [hSyncLevelAblation(nExpType), pSyncLevelAblation(nExpType)] = ttest(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
+
 end
 
 
