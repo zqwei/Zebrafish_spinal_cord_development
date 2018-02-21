@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Segmental analysis: 
-% 0. export the location of segmental leaders ranked by halfActTime
+% 0. export the location of segmental leaders ranked by activeTime
 % 
 % 
 % -------------------------------------------------------------------------
@@ -13,7 +13,7 @@ addpath('../Func');
 setDir;
 fileName          = fileNames{nFile};
 
-load([tempDatDir, 'EV_', fileName, '.mat'], 'halfActTime', 'halfEVTime');
+load([tempDatDir, 'Leader_', fileName, '.mat'], 'activeTime', 'patternTime');
 load([tempDatDir, fileName, '.mat'], 'timePoints', 'tracks', 'new_x', 'new_y');
 
 x = new_x;
@@ -25,11 +25,11 @@ leaderPoints_rank2 = nan(0, 3);
 points(:, 3) = points(:, 3) * 6;
 for seg = floor(min(x-0.5)):ceil(max(x-0.5))
     currentSegLeft = find(y<0 & x>=seg+0.5 & x<seg+1.5);
-    [~, ~, ic] = unique(halfActTime(currentSegLeft));
+    [~, ~, ic] = unique(activeTime(currentSegLeft));
     leaderPoints_rank1 = [leaderPoints_rank1; points(currentSegLeft(ic==1), :)];
     leaderPoints_rank2 = [leaderPoints_rank2; points(currentSegLeft(ic==2), :)];
     currentSegRight = find(y>0 & x>=seg+0.5 & x<seg+1.5);
-    [~, ~, ic] = unique(halfActTime(currentSegRight));
+    [~, ~, ic] = unique(activeTime(currentSegRight));
     leaderPoints_rank1 = [leaderPoints_rank1; points(currentSegRight(ic==1), :)];
     leaderPoints_rank2 = [leaderPoints_rank2; points(currentSegRight(ic==2), :)];
 end
