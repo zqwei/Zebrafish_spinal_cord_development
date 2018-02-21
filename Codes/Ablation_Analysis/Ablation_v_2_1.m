@@ -103,6 +103,10 @@ setPrint(8, 6, [plotDir '/CorrelationAP' tagExt], 'pdf');
 fishListType = {1:numel(fishListCutA), numel(fishListCutA)+1:numel(fishListCutA)+numel(fishListCutM), numel(fishListCutA)+numel(fishListCutM)+1:numel(fishList); ...
     'Cut A', 'Cut M', 'Cut P'};
 figure('Position', [0, 0, 400*3, 300*2]);
+hFracActAblation   = nan(size(fishListType, 2), 1);
+pFracActAblaiton   = nan(size(fishListType, 2), 1);
+hSyncLevelAblation    = nan(size(fishListType, 2), 1);
+pSyncLevelAblation    = nan(size(fishListType, 2), 1);
 for nExpType = 1:size(fishListType, 2)
     currfishList = fishListType{1, nExpType};
     fracActNeuronCombined = [fracActNeuron(currfishList, [1, 3], :); fracActNeuron(currfishList, [2, 4], :)];
@@ -114,8 +118,8 @@ for nExpType = 1:size(fishListType, 2)
         ySeq = squeeze(fracActNeuronCombined(:, nSec, :))';
         scatter(xSeq(:), ySeq(:), 'ok');
         plot(xSeq, ySeq, 'k');
-        h = ttest(ySeq(1, :), ySeq(2, :), 'alpha', p);
-        if ~isnan(h) && h
+        [h, p] = ttest(ySeq(1, :), ySeq(2, :));
+        if p < pThres
             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
         end
         scatter([2*nSec-1, 2*nSec], nanmean(squeeze(fracActNeuronCombined(:, nSec, :)))', 'or', 'linew', 3);
@@ -126,7 +130,8 @@ for nExpType = 1:size(fishListType, 2)
     ylim([0, 0.5]);
     set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
     title(['fraction of active neurons - ' fishListType{2, nExpType}])
-
+    fracActRatio = squeeze(fracActNeuronCombined(:, :, 2)./fracActNeuronCombined(:, :, 1));
+    [hFracActAblation(nExpType), pFracActAblaiton(nExpType)] = ttest(fracActRatio(:, 1), fracActRatio(:, 2));
     
     subplot(2, size(fishListType, 2), size(fishListType, 2)+nExpType);
     hold on,
@@ -147,6 +152,8 @@ for nExpType = 1:size(fishListType, 2)
     ylim([-0.1, 1])
     set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
     title(['level of synchronization - '  fishListType{2, nExpType}])
+    syncLevelRatio = squeeze(avgCorrCombined(:, :, 2)./avgCorrCombined(:, :, 1));
+    [hSyncLevelAblation(nExpType), pSyncLevelAblation(nExpType)] = ttest(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
 end
 
 
