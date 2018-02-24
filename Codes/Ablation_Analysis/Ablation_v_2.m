@@ -65,9 +65,7 @@ end
 fishListType = {1:numel(fishListCutA), numel(fishListCutA)+1:numel(fishListCutA)+numel(fishListCutM), numel(fishListCutA)+numel(fishListCutM)+1:numel(fishList); ...
     'Cut A', 'Cut M', 'Cut P'};
 figure('Position', [0, 0, 400*3, 300*2]);
-hFracFacNeuronAblation = nan(size(fishListType, 2), 1);
 pFracFacNeuronAblaiton = nan(size(fishListType, 2), 1);
-hFactorSpanAblation    = nan(size(fishListType, 2), 1);
 pFactorSpanAblation    = nan(size(fishListType, 2), 1);
 for nExpType = 1:size(fishListType, 2)
     currfishList = fishListType{1, nExpType};
@@ -80,8 +78,8 @@ for nExpType = 1:size(fishListType, 2)
         ySeq = squeeze(fracFacNeuronCombined(:, nSec, :))';
         scatter(xSeq(:), ySeq(:), 'ok');
         plot(xSeq, ySeq, 'k');
-        [h, p] = ttest(ySeq(1, :), ySeq(2, :));
-        if ~isnan(h) && h && p<pThres
+        p = signrank(ySeq(1, :), ySeq(2, :));
+        if p < pThres
             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
         end
         scatter([2*nSec-1, 2*nSec], nanmean(squeeze(fracFacNeuronCombined(:, nSec, :)))', 'or', 'linew', 3);
@@ -94,7 +92,7 @@ for nExpType = 1:size(fishListType, 2)
     ylabel('#factored/#active')
     title(fishListType{2, nExpType})
     fracFacNeuronRatio = squeeze(fracFacNeuronCombined(:, :, 2)./fracFacNeuronCombined(:, :, 1));
-    [hFracFacNeuronAblation(nExpType), pFracFacNeuronAblaiton(nExpType)] = ttest(fracFacNeuronRatio(:, 1), fracFacNeuronRatio(:, 2));
+    pFracFacNeuronAblaiton(nExpType) = signrank(fracFacNeuronRatio(:, 1), fracFacNeuronRatio(:, 2));
     
     subplot(2, size(fishListType, 2), size(fishListType, 2)+nExpType);
     hold on,
@@ -103,7 +101,7 @@ for nExpType = 1:size(fishListType, 2)
         ySeq = squeeze(factorSpanCombined(:, nSec, :))';
         scatter(xSeq(:), ySeq(:), 'ok');
         plot(xSeq, ySeq, 'k');
-        [h, p] = ttest(ySeq(1, :), ySeq(2, :));
+        p = signrank(ySeq(1, :), ySeq(2, :));
         if p < pThres
             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
         end
@@ -117,8 +115,7 @@ for nExpType = 1:size(fishListType, 2)
     ylabel('normalized AP span')
     title(fishListType{2, nExpType})
     factorSpanRatio = squeeze(factorSpanCombined(:, :, 2)./factorSpanCombined(:, :, 1));
-    [hFactorSpanAblation(nExpType), pFactorSpanAblation(nExpType)] = ttest(factorSpanRatio(:, 1), factorSpanRatio(:, 2));
-
+    pFactorSpanAblation(nExpType) = signrank(factorSpanRatio(:, 1), factorSpanRatio(:, 2));
 end
 
 

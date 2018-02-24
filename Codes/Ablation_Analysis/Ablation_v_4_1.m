@@ -97,8 +97,8 @@ for i = 1:3
     plot([2*i-1, 2*i], corrCombined', 'k');
     scatter([2*i-1, 2*i], nanmean(corrCombined, 1), 'or', 'linew', 3);
     plot([2*i-1, 2*i], nanmean(corrCombined, 1), 'r', 'linew', 3);
-    [h, p] = ttest(corrCombined(: , 1), corrCombined(: , 2));
-    if h
+    p = signrank(corrCombined(: , 1), corrCombined(: , 2));
+    if p < pThres
         text(2*i-0.5, max(corrCombined(:))*1.2, '*');
     end
 end
@@ -121,7 +121,7 @@ for nSec = 1:3
     ySeq = squeeze(fracActNeuronCombined(:, nSec, :))';
     scatter(xSeq(:), ySeq(:), 'ok');
     plot(xSeq, ySeq, 'k');
-    [h, p] = ttest(ySeq(1, :), ySeq(2, :));
+    p = signrank(ySeq(1, :), ySeq(2, :));
     if p < pThres
         text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
     end
@@ -134,10 +134,9 @@ ylim([-0.2, 0.8]);
 set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'M', 'P'});
 ylabel('fraction of active neurons')
 fracActRatio = squeeze(fracActNeuronCombined(:, :, 2)./fracActNeuronCombined(:, :, 1));
-%     [hFracActAblation(nExpType), pFracActAblaiton(nExpType)] = ttest(fracActRatio(:, 1), fracActRatio(:, 2));
-[hFracActAblation.AP, pFracActAblation.AP] = ttest(fracActRatio(:, 1), fracActRatio(:, 3));
-[hFracActAblation.AM, pFracActAblation.AM] = ttest(fracActRatio(:, 1), fracActRatio(:, 2));
-[hFracActAblation.MP, pFracActAblation.MP] = ttest(fracActRatio(:, 2), fracActRatio(:, 3));
+pFracActAblation.AP = signrank(fracActRatio(:, 1), fracActRatio(:, 3));
+pFracActAblation.AM = signrank(fracActRatio(:, 1), fracActRatio(:, 2));
+pFracActAblation.MP = signrank(fracActRatio(:, 2), fracActRatio(:, 3));
 
 subplot(1, 2, 2);
 hold on,
@@ -146,7 +145,7 @@ for nSec = 1:3
     ySeq = squeeze(avgCorrCombined(:, nSec, :))';
     scatter(xSeq(:), ySeq(:), 'ok');
     plot(xSeq, ySeq, 'k');
-    [h, p] = ttest(ySeq(1, :), ySeq(2, :));
+    [h, p] = signrank(ySeq(1, :), ySeq(2, :));
     if p < pThres
         text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
     end
@@ -159,10 +158,9 @@ ylim([-0.1, 1.2])
 set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'M', 'P'});
 ylabel('level of synchronization')
 syncLevelRatio = squeeze(avgCorrCombined(:, :, 2)./avgCorrCombined(:, :, 1));
-%     [hSyncLevelAblation(nExpType), pSyncLevelAblation(nExpType)] = ttest(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
-[hSyncLevelAblation.AP, pSyncLevelAblation.AP] = ttest(syncLevelRatio(:, 1), syncLevelRatio(:, 3));
-[hSyncLevelAblation.AM, pSyncLevelAblation.AM] = ttest(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
-[hSyncLevelAblation.MP, pSyncLevelAblation.MP] = ttest(syncLevelRatio(:, 2), syncLevelRatio(:, 3));
+pSyncLevelAblation.AP = signrank(syncLevelRatio(:, 1), syncLevelRatio(:, 3));
+pSyncLevelAblation.AM = signrank(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
+pSyncLevelAblation.MP = signrank(syncLevelRatio(:, 2), syncLevelRatio(:, 3));
 setPrint(8*3, 6*2, [plotDir '/AblationTypeSummary' tagExt], 'pdf');
 
 close all

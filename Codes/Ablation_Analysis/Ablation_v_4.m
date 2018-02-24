@@ -72,7 +72,7 @@ for nSec = 1:3
     scatter(xSeq(:), ySeq(:), 'ok');
     plot(xSeq, ySeq, 'k');
     p = signrank(ySeq(1, :), ySeq(2, :));
-    if ~isnan(h) && h && p<pThres
+    if p<pThres
         text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
     end
     scatter([2*nSec-1, 2*nSec], nanmean(squeeze(fracFacNeuronCombined(:, nSec, :)))', 'or', 'linew', 3);
@@ -83,13 +83,11 @@ xlim([0, 7]);
 ylim([-0.2, 1.5]);
 set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'M', 'P'});
 ylabel('#factored/#active')
-% fracFacNeuronRatio = squeeze(fracFacNeuronCombined(:, :, 2)./fracFacNeuronCombined(:, :, 1));
 fracFacNeuronRatio = squeeze(fracFacNeuronCombined(:, :, 1) - fracFacNeuronCombined(:, :, 2));
 
-% [hFracFacNeuronAblation(nExpType), pFracFacNeuronAblaiton(nExpType)] = signrank(fracFacNeuronRatio(:, 1), fracFacNeuronRatio(:, 2));
-[hFracFacNeuronRatio.AP, pFracFacNeuronRatio.AP] = signrank(fracFacNeuronRatio(:, 1), fracFacNeuronRatio(:, 3));
-[hFracFacNeuronRatio.AM, pFracFacNeuronRatio.AM] = signrank(fracFacNeuronRatio(:, 1), fracFacNeuronRatio(:, 2));
-[hFracFacNeuronRatio.MP, pFracFacNeuronRatio.MP] = signrank(fracFacNeuronRatio(:, 2), fracFacNeuronRatio(:, 3));
+pFracFacNeuronRatio.AP = signrank(fracFacNeuronRatio(:, 1), fracFacNeuronRatio(:, 3));
+pFracFacNeuronRatio.AM = signrank(fracFacNeuronRatio(:, 1), fracFacNeuronRatio(:, 2));
+pFracFacNeuronRatio.MP = signrank(fracFacNeuronRatio(:, 2), fracFacNeuronRatio(:, 3));
 
 subplot(1, 2, 2);
 hold on,
@@ -110,15 +108,31 @@ xlim([0, 7]);
 ylim([-0.1, 1.5])
 set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'M', 'P'});
 ylabel('normalized AP span')
-% factorSpanRatio = squeeze(factorSpanCombined(:, :, 2)./factorSpanCombined(:, :, 1));
 factorSpanRatio = squeeze(factorSpanCombined(:, :, 1) - factorSpanCombined(:, :, 2));
-% [hFactorSpanAblation(nExpType), pFactorSpanAblation(nExpType)] = signrank(factorSpanRatio(:, 1), factorSpanRatio(:, 2));
-[hFracFacNeuronAblation.AP, pFactorSpanAblation.AP] = signrank(factorSpanRatio(:, 1), factorSpanRatio(:, 3));
-[hFracFacNeuronAblation.AM, pFactorSpanAblation.AM] = signrank(factorSpanRatio(:, 1), factorSpanRatio(:, 2));
-[hFracFacNeuronAblation.MP, pFactorSpanAblation.MP] = signrank(factorSpanRatio(:, 2), factorSpanRatio(:, 3));
-
-
+pFactorSpanAblation.AP = signrank(factorSpanRatio(:, 1), factorSpanRatio(:, 3));
+pFactorSpanAblation.AM = signrank(factorSpanRatio(:, 1), factorSpanRatio(:, 2));
+pFactorSpanAblation.MP = signrank(factorSpanRatio(:, 2), factorSpanRatio(:, 3));
 
 setPrint(8*3, 6*2, [plotDir '/AblationTypeSummary' tagExt], 'pdf');
 
-close all
+figure('Position', [0, 0, 400*2, 300]);
+subplot(1, 2, 1);
+imagesc((factorSpanCombined(1:9, :, 1)+factorSpanCombined(10:end, :, 1))/2, [0, 1]);
+set(gca, 'Xtick', [1 2 3], 'XtickLabel', {'A', 'M', 'P'});
+colorbar
+title('before ablation')
+ylabel('fish number');
+subplot(1, 2, 2);
+imagesc((factorSpanCombined(1:9, :, 2)+factorSpanCombined(10:end, :, 2))/2, [0, 1]);
+set(gca, 'Xtick', [1 2 3], 'XtickLabel', {'A', 'M', 'P'});
+ylabel('fish number');
+colorbar
+title('after ablation');
+
+% close all
+
+% cross table for independence test
+factorTag = fracFacNeuronCombined(:, :, 2)>0;
+[hFisher.AM, pFisher.AM , ~] = fishertest(crosstab(factorTag(:, 1), factorTag(:, 2)));
+[hFisher.AP, pFisher.AP , ~] = fishertest(crosstab(factorTag(:, 1), factorTag(:, 3)));
+[hFisher.PM, pFisher.PM , ~] = fishertest(crosstab(factorTag(:, 2), factorTag(:, 3)));

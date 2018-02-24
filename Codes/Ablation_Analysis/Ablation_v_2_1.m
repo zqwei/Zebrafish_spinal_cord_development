@@ -89,10 +89,10 @@ plot([1, 2], correlationAPCombined', 'k');
 xlim([0.5, 2.5]);
 scatter([1, 2], mean(correlationAPCombined, 1), 'or', 'linew', 3);
 plot([1, 2], mean(correlationAPCombined, 1), 'r', 'linew', 3);
-[h, p] = ttest(correlationAPCombined(: , 1), correlationAPCombined(: , 2));
+p = signrank(correlationAPCombined(: , 1), correlationAPCombined(: , 2));
 ylim([-0.2, 1]);
 set(gca, 'Xtick', [1, 2], 'Xticklabel', {'before', 'after'});
-if h
+if p < pThres
     text(1.5, max(correlationAPCombined(:))*1.2, '*');
 end
 hold off
@@ -103,9 +103,7 @@ setPrint(8, 6, [plotDir '/CorrelationAP' tagExt], 'pdf');
 fishListType = {1:numel(fishListCutA), numel(fishListCutA)+1:numel(fishListCutA)+numel(fishListCutM), numel(fishListCutA)+numel(fishListCutM)+1:numel(fishList); ...
     'Cut A', 'Cut M', 'Cut P'};
 figure('Position', [0, 0, 400*3, 300*2]);
-hFracActAblation   = nan(size(fishListType, 2), 1);
 pFracActAblaiton   = nan(size(fishListType, 2), 1);
-hSyncLevelAblation    = nan(size(fishListType, 2), 1);
 pSyncLevelAblation    = nan(size(fishListType, 2), 1);
 for nExpType = 1:size(fishListType, 2)
     currfishList = fishListType{1, nExpType};
@@ -118,7 +116,7 @@ for nExpType = 1:size(fishListType, 2)
         ySeq = squeeze(fracActNeuronCombined(:, nSec, :))';
         scatter(xSeq(:), ySeq(:), 'ok');
         plot(xSeq, ySeq, 'k');
-        [h, p] = ttest(ySeq(1, :), ySeq(2, :));
+        p = signrank(ySeq(1, :), ySeq(2, :));
         if p < pThres
             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
         end
@@ -131,7 +129,7 @@ for nExpType = 1:size(fishListType, 2)
     set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
     title(['fraction of active neurons - ' fishListType{2, nExpType}])
     fracActRatio = squeeze(fracActNeuronCombined(:, :, 2)./fracActNeuronCombined(:, :, 1));
-    [hFracActAblation(nExpType), pFracActAblaiton(nExpType)] = ttest(fracActRatio(:, 1), fracActRatio(:, 2));
+    pFracActAblaiton(nExpType) = signrank(fracActRatio(:, 1), fracActRatio(:, 2));
     
     subplot(2, size(fishListType, 2), size(fishListType, 2)+nExpType);
     hold on,
@@ -140,7 +138,7 @@ for nExpType = 1:size(fishListType, 2)
         ySeq = squeeze(avgCorrCombined(:, nSec, :))';
         scatter(xSeq(:), ySeq(:), 'ok');
         plot(xSeq, ySeq, 'k');
-        [h, p] = ttest(ySeq(1, :), ySeq(2, :));
+        [h, p] = signrank(ySeq(1, :), ySeq(2, :));
         if p < pThres
             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
         end
@@ -153,7 +151,7 @@ for nExpType = 1:size(fishListType, 2)
     set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
     title(['level of synchronization - '  fishListType{2, nExpType}])
     syncLevelRatio = squeeze(avgCorrCombined(:, :, 2)./avgCorrCombined(:, :, 1));
-    [hSyncLevelAblation(nExpType), pSyncLevelAblation(nExpType)] = ttest(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
+    pSyncLevelAblation(nExpType) = signrank(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
 end
 
 

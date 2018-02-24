@@ -83,10 +83,10 @@ plot([1, 2], correlationAPCombined', 'k');
 xlim([0.5, 2.5]);
 scatter([1, 2], mean(correlationAPCombined, 1), 'or', 'linew', 3);
 plot([1, 2], mean(correlationAPCombined, 1), 'r', 'linew', 3);
-[h, p] = ttest(correlationAPCombined(: , 1), correlationAPCombined(: , 2));
+p = signrank(correlationAPCombined(: , 1), correlationAPCombined(: , 2));
 ylim([-0.2, 1]);
 set(gca, 'Xtick', [1, 2], 'Xticklabel', {'before', 'after'});
-if h
+if p < pThres
     text(1.5, max(correlationAPCombined(:))*1.2, '*');
 end
 hold off
@@ -96,7 +96,6 @@ setPrint(8, 6, [plotDir '/CorrelationAP' tagExt], 'pdf');
 
 fishListType = {1:numel(fishListCutA), numel(fishListCutA)+1:numel(fishListCutA)+numel(fishListCutM), numel(fishListCutA)+numel(fishListCutM)+1:numel(fishList); ...
     'Cut A', 'Cut M', 'Cut P'};
-hSyncLevelAblation    = nan(size(fishListType, 2), 1);
 pSyncLevelAblation    = nan(size(fishListType, 2), 1);
 figure('Position', [0, 0, 400*3, 300]);
 for nExpType = 1:size(fishListType, 2)
@@ -110,8 +109,8 @@ for nExpType = 1:size(fishListType, 2)
 %         ySeq = squeeze(fracActNeuronCombined(:, nSec, :))';
 %         scatter(xSeq(:), ySeq(:), 'ok');
 %         plot(xSeq, ySeq, 'k');
-%         h = ttest(ySeq(1, :), ySeq(2, :), 'alpha', p);
-%         if ~isnan(h) && h
+%         p = signrank(ySeq(1, :), ySeq(2, :), 'alpha', p);
+%         if p < pThres
 %             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
 %         end
 %         scatter([2*nSec-1, 2*nSec], nanmean(squeeze(fracActNeuronCombined(:, nSec, :)))', 'or', 'linew', 3);
@@ -131,7 +130,7 @@ for nExpType = 1:size(fishListType, 2)
         ySeq = squeeze(avgCorrCombined(:, nSec, :))';
         scatter(xSeq(:), ySeq(:), 'ok');
         plot(xSeq, ySeq, 'k');
-        [h, p] = ttest(ySeq(1, :), ySeq(2, :));
+        p = signrank(ySeq(1, :), ySeq(2, :));
         if p < pThres
             text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
         end
@@ -144,8 +143,7 @@ for nExpType = 1:size(fishListType, 2)
     set(gca, 'Xtick', 1.5:2:5.5, 'XtickLabel', {'A', 'P'});
     title(['level of synchronization - '  fishListType{2, nExpType}])
     syncLevelRatio = squeeze(avgCorrCombined(:, :, 2)./avgCorrCombined(:, :, 1));
-    [hSyncLevelAblation(nExpType), pSyncLevelAblation(nExpType)] = ttest(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
-
+    pSyncLevelAblation(nExpType) = signrank(syncLevelRatio(:, 1), syncLevelRatio(:, 2));
 end
 
 
