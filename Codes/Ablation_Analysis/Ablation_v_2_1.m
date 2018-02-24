@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 2.  evaluate change of number of active neurons and level of sync
+% 2.1  evaluate change of number of active neurons and level of sync
 %
 % version using only all active neurons, independently drawn from before &
 % after
