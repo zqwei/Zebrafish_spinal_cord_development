@@ -46,3 +46,10 @@ legend(num2str(bins(1:end-1)'));
 hold on
 plot([0.5, 0.5], [0, 25], '--k');
 hold off
+
+hList = nan(max(orderList), 1);
+pList = nan(max(orderList), 1);
+for i = 1:max(orderList)
+    currentLoc = locationList(orderList==i);
+    [hList(i), pList(i)] = kstest(currentLoc, 'cdf', makedist('uniform'));
+end
