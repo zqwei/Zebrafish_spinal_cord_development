@@ -1,7 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 5.  MNX neurons -- active neurons
+% 5.  MNX neurons -- LR phase delay
 % 
-%  EV and activation as a function of time
+%  Finite delay -- circle
+%  Random delay -- square
+%  
 % 
 % -------------------------------------------------------------------------
 % Ziqiang Wei
