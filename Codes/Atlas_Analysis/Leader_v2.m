@@ -15,7 +15,7 @@ setDir;
 
 %% plotting pioneer factor onto polar plot
 nbins = 6;
-bins = [0 exp(1-1) 1.2];
+bins = [0 1.4 Inf];
 
 control_datasets = [3, 4, 7, 12, 10, 11, 13, 15, 16];
 MO_datasets = [17 18 19 20 21] ;
@@ -23,7 +23,7 @@ MO_datasets = [17 18 19 20 21] ;
 % for control datasets
 Linear_Stats_Boot_Std(control_datasets, nbins, bins);
 set(gcf, 'InvertHardCopy', 'off', 'PaperPositionMode', 'Auto');   
-% print([PlotDir '/seg_distr_dkbg/WT_segRatio_leader.pdf'], '-dpdf', '-r0');
+print([plotDir 'WT_segRatio_leader.pdf'], '-dpdf', '-r0');
 % 
 % % for MO
 % Linear_Stats_Boot_Std(MO_datasets, nbins, bins);
@@ -123,8 +123,8 @@ for i = 1:numel(datasets)
     load([tempDatDir, 'Leader_' fileName, '.mat'], 'factorSize', 'patternTime', 'activeTime');
     load([tempDatDir, fileName, '.mat'], 'new_x');
     x              = new_x;
-%     me             = exp(1-factorSize);
-    me             = patternTime - activeTime;
+    me             = factorSize;
+%     me             = patternTime - activeTime;
     flag_plot      = x>=1 & x<=floor(max(x)) & ~isnan(me);
     me             = me(flag_plot);
     x              = x(flag_plot);
@@ -164,7 +164,7 @@ for i = 1:size(count_all, 2)
 end
 set(gca, 'XTick', anglebins, 'XTickLabel', strtrim(cellstr(num2str(linspace(-180, 180, nbins+1)'))));
 xlim([0, 360]);
-legend(hl, {'non-leader', 'leader'})
+legend(hl, {'leader', 'non-leader'})
 %     % mean and regular std - not working because of negative values!!
 %     count_all = squeeze(mean(count, 1));
 %     count_plot = [count_all-squeeze(std(count)), count_all, count_all+squeeze(std(count))];
