@@ -51,6 +51,7 @@ function Figure_2_d_1(t, y)
     ylabel('Num factor')
     xlabel('Time from peak (hour)')
     box off
+    set(gca, 'TickDir', 'out');
 end
 
 %% 2. 
@@ -62,8 +63,8 @@ function Figure_2_d_2a(t, y)
     box off
     ylabel('Frac active neuron')
     xlabel('Time (hour)')
-    ylim([0, 1.5])
-
+    ylim([0, 1.01])
+    set(gca, 'TickDir', 'out');
 end
 
 function Figure_2_d_2b(t, y)    
@@ -72,8 +73,8 @@ function Figure_2_d_2b(t, y)
     box off
     ylabel('Frac single active neurons')
     xlabel('Time (hour)')
-    ylim([0, 1.5])
-
+    ylim([0, 1.01])
+    set(gca, 'TickDir', 'out');
 end
 
 %% 3a. radius of communities
@@ -83,6 +84,7 @@ function Figure_2_d_3a(t, y)
     box off
     ylabel('Radius factor')
     xlabel('Time (hour)')
+    set(gca, 'TickDir', 'out');    
 end
 
 %% 3b. size of communities
@@ -92,6 +94,8 @@ function Figure_2_d_3b(t, y)
     ylabel('Size factor')
     xlabel('Time (hour)')
     box off
+    ylim([0, 1]);
+    set(gca, 'TickDir', 'out');
 end
 
 %% 4. actTime vs location
@@ -100,7 +104,8 @@ function Figure_2_d_4(t, y)
     plot(t, y);
     box off
     ylabel('Activation time (hour)')
-    xlabel('segment')    
+    xlabel('segment')
+    set(gca, 'TickDir', 'out');
 end
 
 

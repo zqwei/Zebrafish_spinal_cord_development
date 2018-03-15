@@ -79,7 +79,6 @@ end
 figure;
 scatter(corrMatMat(:, 1), corrMatMat(:, 2), [], cell_typeMat, 'filled')
 refline(1)
-
 xlabel('Peak correlation before merge')
 ylabel('Peak correlation after merge')
 setPrint(8, 6, 'Neuron_57', 'pdf')
