@@ -60,6 +60,7 @@ set(gca, 'xticklabel', {'Leader-Leader', 'Leader-NonLeader', 'NonLeader-NonLeade
 xlabel('Type of Pair')
 ylabel('Count');
 setPrint(8, 6, [plotDir,  'InitialPairTypes_' fileName], 'pdf');
+close;
 
 [histCount, centers] = hist3(actLevelBeforePattern);
 figure, imagesc(centers{1}, centers{2}, histCount);
