@@ -136,3 +136,14 @@ factorTag = fracFacNeuronCombined(:, :, 2)>0;
 [hFisher.AM, pFisher.AM , ~] = fishertest(crosstab(factorTag(:, 1), factorTag(:, 2)));
 [hFisher.AP, pFisher.AP , ~] = fishertest(crosstab(factorTag(:, 1), factorTag(:, 3)));
 [hFisher.PM, pFisher.PM , ~] = fishertest(crosstab(factorTag(:, 2), factorTag(:, 3)));
+
+[hFisher.EitherEdge, pFisher.EitherEdge , ~] = fishertest(crosstab(factorTag(:, 2), factorTag(:, 3)|factorTag(:, 1)));
+[hFisher.BothEdge, pFisher.BothEdge , ~] = fishertest(crosstab(factorTag(:, 2), factorTag(:, 3)&factorTag(:, 1)));
+
+n_boot = 10000;
+bootMean = bootstrp(n_boot, @mean, factorTag);
+
+p_AM = mean(bootMean(:, 1) < bootMean(:, 2));
+p_PM = mean(bootMean(:, 3) < bootMean(:, 2));
+p_AP = mean(bootMean(:, 1) < bootMean(:, 3));
+

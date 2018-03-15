@@ -14,7 +14,9 @@ function stats = Figure_2_c(nFile)
     load([tempDatDir, fileName, '.mat'],'activeNeuronMat', 'side', 'mnx');
     if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc')
-    load([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'validFitIndex')
+%     load([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'validFitIndex')
+    load([tempDatDir, 'Leader_', fileName, '.mat'], 'activeTime');
+
     
     numTime           = length(networkMat); %#ok<*USENS>
     clusterList       = []; % time, size, radius    
@@ -39,7 +41,7 @@ function stats = Figure_2_c(nFile)
         end
     end
     
-    totPlots = 5;
+    totPlots = 6;
     stats = cell(totPlots, 1);
     
     figure('Position', [0, 0, 1200, 200]);
@@ -57,7 +59,10 @@ function stats = Figure_2_c(nFile)
     stats{4} = Figure_2_c_3b(clusterList, numTime);
     
     subplot(1, totPlots, 5)
-    stats{5} = Figure_2_c_4(halfActTime, neuronXLoc(:, 1));
+    stats{5} = Figure_2_c_4(activeTime, neuronXLoc(:, 1));
+    
+    subplot(1, totPlots, 6)
+    Figure_2_c_5(activeTime, mnx);
     
     setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName], 'pdf')
     
@@ -194,16 +199,17 @@ function pred = Figure_2_c_3b(clusterList, numTime)
     factorRadius = factorRadius/fitResult.param(1); % normalize by sigmoid amplitude
     
     hold on
-    plot(timePoints, factorRadius, 'ok')
+%     plot(timePoints, factorRadius, 'ok')
+    plot(clusterList(:, 1)/60, clusterList(:, 2), 'ok');
     fitResult                = fig_sigm(timePoints, factorRadius, numTime, 0, nan);
     ypred                    = fitResult.ypred;
-    ypredlowerCI             = fitResult.ypredlowerCI;
-    ypredupperCI             = fitResult.ypredupperCI;
-    plot(timePoints, ypred, '-', 'linewid', 2.0, 'Color', 'k');
-    plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
-    plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
+%     ypredlowerCI             = fitResult.ypredlowerCI;
+%     ypredupperCI             = fitResult.ypredupperCI;
+%     plot(timePoints, ypred, '-', 'linewid', 2.0, 'Color', 'k');
+%     plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
+%     plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
     xlim([0 max(timePoints)])  
-    ylabel('Normalized factor size')
+    ylabel('Factor size')
     xlabel('Time (hour)')
     box off
     pred.t = timePoints;
@@ -211,16 +217,33 @@ function pred = Figure_2_c_3b(clusterList, numTime)
 end
 
 %% 4. actTime vs location
-function pred = Figure_2_c_4(halfActTime, neuronXLoc)
+function pred = Figure_2_c_4(activeTime, neuronXLoc)
     hold on
-    plot(neuronXLoc, halfActTime, 'ok')
-    fitActTime = linearFit(neuronXLoc, halfActTime);
+    plot(neuronXLoc, activeTime, 'ok')
+    fitActTime = linearFit(neuronXLoc, activeTime);
     plot(neuronXLoc, fitActTime, '-k', 'linewid', 1)
     box off
     xlabel('x location (segments)')
     ylabel('Activation time (hour)')
     pred.t = neuronXLoc;
     pred.y = fitActTime;
+end
+
+%% 5. actTime vs location
+function Figure_2_c_5(activeTime, mnx)
+    y1 = activeTime(mnx>0 & ~isnan(activeTime));
+    y2 = activeTime(mnx==0 & ~isnan(activeTime));
+    y2(numel(y2)+1:numel(y1)) = NaN;
+%     distributionPlot([y1, y2], 'color', [0.5, 0.5, 1], 'showMM', 0, 'globalNorm', 3);
+    
+    hold on
+    scatter(ones(numel(y1), 1)+randn(numel(y1), 1)/10, y1,10, 'filled', 'MarkerFaceColor', [0.8, 0.8, 0.8]);
+    scatter(ones(numel(y2), 1)+randn(numel(y2), 1)/10+1, y2, 10, 'filled', 'MarkerFaceColor', [0.8, 0.8, 0.8]);
+    h = boxplot([y1, y2]);
+    set(h, 'linew', 1);
+    hold off
+    set(gca, 'xTickLabel', {'mnx+', 'mnx-'})    
+    ylabel('Activation time (hour)')
 end
 
 

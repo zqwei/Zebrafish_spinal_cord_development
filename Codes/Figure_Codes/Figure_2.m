@@ -1,4 +1,4 @@
-% Fit for Figure 2c for each fish
+% Fit for multi-fish statistics
 % 1. number of communities
 % 2a. Fraction of non-factored neurons
 % 2b. percentage of total active neurons
@@ -13,9 +13,9 @@ function Figure_2(h, nFile)
     figure(h);
     
     % criteria 1: algin by peak factor number
-    xOffset = alignPerc(stats{1}.t, stats{1}.y, 80);
+%     xOffset = alignPerc(stats{1}.t, stats{1}.y, 80);
     % criteria 2: algin by half recruit time of FracActNeuron
-%     xOffset = stats{2}.fracAct50;
+    xOffset = stats{2}.fracAct50;
     
     subplot(1, totPlots, 1)
     Figure_2_d_1(stats{1}.t-xOffset, stats{1}.y)    
@@ -62,6 +62,8 @@ function Figure_2_d_2a(t, y)
     box off
     ylabel('Frac active neuron')
     xlabel('Time (hour)')
+    ylim([0, 1.5])
+
 end
 
 function Figure_2_d_2b(t, y)    
@@ -70,6 +72,8 @@ function Figure_2_d_2b(t, y)
     box off
     ylabel('Frac single active neurons')
     xlabel('Time (hour)')
+    ylim([0, 1.5])
+
 end
 
 %% 3a. radius of communities
