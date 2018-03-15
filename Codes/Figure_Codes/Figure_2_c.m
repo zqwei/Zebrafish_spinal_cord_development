@@ -14,8 +14,7 @@ function stats = Figure_2_c(nFile)
     load([tempDatDir, fileName, '.mat'],'activeNeuronMat', 'side', 'mnx');
     if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
     load([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'networkMat', 'neuronXLoc', 'neuronYLoc', 'neuronZLoc')
-%     load([tempDatDir, 'EV_' fileName, '.mat'], 'halfActTime', 'validFitIndex')
-    load([tempDatDir, 'Leader_', fileName, '.mat'], 'activeTime');
+    load([tempDatDir, 'Leader_', fileName, '.mat'], 'activeTime', 'patternTime');
 
     
     numTime           = length(networkMat); %#ok<*USENS>
@@ -59,7 +58,8 @@ function stats = Figure_2_c(nFile)
     stats{4} = Figure_2_c_3b(clusterList, numTime);
     
     subplot(1, totPlots, 5)
-    stats{5} = Figure_2_c_4(activeTime, neuronXLoc(:, 1));
+%     stats{5} = Figure_2_c_4(activeTime, neuronXLoc(:, 1));
+    stats{5} = Figure_2_c_4(patternTime, neuronXLoc(:, 1));
     
     subplot(1, totPlots, 6)
     Figure_2_c_5(activeTime, mnx);
@@ -94,6 +94,7 @@ function pred = Figure_2_c_1(LONOM)
     box off
     pred.t = timePoints/60;
     pred.y = opt1Dim;
+    set(gca, 'TickDir', 'out');
 end
 
 %% 2. 
@@ -101,8 +102,8 @@ end
 % b. percentage of total active neurons
 function pred = Figure_2_c_2(activeNeuronMat, networkMat)    
     numActNeuron      = sum(activeNeuronMat, 1);
-%     fracActNeuron     = numActNeuron/sum(sum(activeNeuronMat, 2)>0);    %exclude never-active neurons
-    fracActNeuron     = sum(activeNeuronMat(sum(activeNeuronMat, 2)>20, :), 1)/sum(sum(activeNeuronMat, 2)>40);    %exclude short-lived neurons
+    fracActNeuron     = numActNeuron/sum(sum(activeNeuronMat, 2)>0);    %exclude never-active neurons
+%     fracActNeuron     = sum(activeNeuronMat(sum(activeNeuronMat, 2)>20, :), 1)/sum(sum(activeNeuronMat, 2)>40);    %exclude short-lived neurons
     numTime           = length(numActNeuron);
     numFactor         = zeros(numTime, 1);
     factorNeuronMat   = false(size(activeNeuronMat));
@@ -157,6 +158,7 @@ function pred = Figure_2_c_2(activeNeuronMat, networkMat)
     pred.t2 = timePoints;
     pred.y2 = 1- ypred;
     pred.fracAct50 = fitResult.param(1);
+    set(gca, 'TickDir', 'out');
 end
 
 %% 3a. radius of communities
@@ -185,6 +187,7 @@ function pred = Figure_2_c_3a(clusterList, numTime)
     box off
     pred.t = timePoints;
     pred.y = ypred;
+    set(gca, 'TickDir', 'out');
 end
 
 %% 3b. size of communities
@@ -214,27 +217,32 @@ function pred = Figure_2_c_3b(clusterList, numTime)
     box off
     pred.t = timePoints;
     pred.y = ypred;
+    set(gca, 'TickDir', 'out');
 end
 
-%% 4. actTime vs location
-function pred = Figure_2_c_4(activeTime, neuronXLoc)
+%% 4. patternTime vs location
+function pred = Figure_2_c_4(patternTime, neuronXLoc)
     hold on
-    plot(neuronXLoc, activeTime, 'ok')
-    fitActTime = linearFit(neuronXLoc, activeTime);
+    plot(neuronXLoc, patternTime, 'ok')
+    [rho, pval] = corr(neuronXLoc, patternTime, 'rows', 'pairwise', 'type', 'spearman');
+    fitActTime = linearFit(neuronXLoc, patternTime);
     plot(neuronXLoc, fitActTime, '-k', 'linewid', 1)
     box off
     xlabel('x location (segments)')
-    ylabel('Activation time (hour)')
+    ylabel('Pattern time (hour)')
     pred.t = neuronXLoc;
     pred.y = fitActTime;
+    set(gca, 'TickDir', 'out');
+    title(['rho=' num2str(rho) ', pval=' num2str(pval)]);
 end
 
-%% 5. actTime vs location
-function Figure_2_c_5(activeTime, mnx)
-    y1 = activeTime(mnx>0 & ~isnan(activeTime));
-    y2 = activeTime(mnx==0 & ~isnan(activeTime));
+%% 5. mnx+/mnx- vs. patternTime
+function Figure_2_c_5(patternTime, mnx)
+    y1 = patternTime(mnx>0 & ~isnan(patternTime));
+    y2 = patternTime(mnx==0 & ~isnan(patternTime));
     y2(numel(y2)+1:numel(y1)) = NaN;
 %     distributionPlot([y1, y2], 'color', [0.5, 0.5, 1], 'showMM', 0, 'globalNorm', 3);
+    [~, pval] = ttest(y1, y2);
     
     hold on
     scatter(ones(numel(y1), 1)+randn(numel(y1), 1)/10, y1,10, 'filled', 'MarkerFaceColor', [0.8, 0.8, 0.8]);
@@ -244,6 +252,9 @@ function Figure_2_c_5(activeTime, mnx)
     hold off
     set(gca, 'xTickLabel', {'mnx+', 'mnx-'})    
     ylabel('Activation time (hour)')
+    box off
+    set(gca, 'TickDir', 'out');
+    title(['pval=' num2str(pval)]);
 end
 
 
@@ -260,6 +271,7 @@ end
 
 
 function fitResult = fig_sigm(x, y, refDropPoint, lower_, upper_)
+%     y                = medfilt1(y);
     removeIndex      = find(y/max(y) < 0.6);
     factorTime       = refDropPoint;
     removeIndex(removeIndex<factorTime) = [];
@@ -268,7 +280,7 @@ function fitResult = fig_sigm(x, y, refDropPoint, lower_, upper_)
     else
         removeStart  = removeIndex(1);
     end
-    init_params      = [0, max(y), x(find(y/max(y)>0.5, 1, 'first')), 1];
+    init_params      = [0, max(y), x(find(y/max(y)<0.5, 1, 'last')), 1];
     [~, fitResult]   = sigm_fit(x(1:removeStart), y(1:removeStart), [lower_, upper_, nan, nan], init_params, false);
     fitResult.x      = x(1:removeStart)';
 end

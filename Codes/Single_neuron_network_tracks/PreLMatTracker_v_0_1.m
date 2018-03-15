@@ -59,7 +59,7 @@ function PreLMatTracker_v_0_1(nFile)
                 [~, indexLMat]  = sort(sizeLMat, 'descend');
                 LMat            = LMat(:, indexLMat);
                 similarityScore = double(preLMat') * double(LMat);
-                [similarityValue, ind] =  max(similarityScore);
+                [similarityValue, ind] =  max(similarityScore, [], 1);
                 
                 diffInd         = similarityValue < 2;
                 
