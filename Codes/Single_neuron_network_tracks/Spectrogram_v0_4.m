@@ -29,7 +29,7 @@ function Spectrogram_v0_4(nFile)
     
     for nNeuron   = 1:numNeuron
         spectrogramMat = mean(squeeze(spectrogramMatAll(nNeuron, :, :)));
-        new_activeNeuronMat(nNeuron, :) = smooth(new_activeNeuronMat(nNeuron, :), 15) > 0;
+        new_activeNeuronMat(nNeuron, :) = smooth(double(new_activeNeuronMat(nNeuron, :)), 15) > 0;
         for nTime = 1:numTime
             specNeuronMat(nNeuron, nTime) = mean(spectrogramMat(timePoints(nTime)+(1:timeWin)));
         end

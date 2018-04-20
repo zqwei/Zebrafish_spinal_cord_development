@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 4  evaluate change of patterned activity from FA result - double cut
+% 4  (double cut) evaluate change of patterned activity from FA result
 %
 %
 % -------------------------------------------------------------------------

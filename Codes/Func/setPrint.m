@@ -7,7 +7,7 @@ function setPrint(width, height, fname, printType)
         % printType = 'svg';
         printType = 'eps';
     end
-    set(gca, 'TickDir', 'out');
+%     set(gca, 'TickDir', 'out');
     set(gcf, 'renderer', 'painters', 'renderermode', 'manual');
     set(gcf,'PaperUnits','centimeters');
     set(gcf,'PaperSize',[width height]);

@@ -39,4 +39,5 @@ set(gca, 'XTick', 1:max(birthOrder), 'YTick', 1:max(actOrder), 'YDir', 'normal')
 colormap(hot);
 colorbar
 xlabel('birth order')
-ylabel('EV order')
+ylabel('activation order')
+setPrint(8, 6, [plotDir,  'SegmentalBirthActOrder_' fileName], 'pdf');

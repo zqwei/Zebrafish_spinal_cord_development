@@ -51,10 +51,10 @@ function NeuralActivityFactorTime_v0_5_1(nFile)
             neuronTime(nNeuron) = find(neuronTimeValue(nNeuron, :), 1, 'first');
             actCurrNeuron       = activeNeuronMat(nNeuron, :); %#ok<*NODEF>
             actCurrNeuron       = smooth(double(actCurrNeuron), timeBin);
-            % dataset 15 FA not accurate, correct for a single cell 
-            if nNeuron == 26 && nFile == 15
-                neuronTime(nNeuron) = 99;
-            end
+%             % dataset 15 FA not accurate, correct for a single cell 
+%             if nNeuron == 26 && nFile == 15
+%                 neuronTime(nNeuron) = 99;
+%             end
             if neuronTime(nNeuron)-(timeBin+1)/2 > 0
                 neuronActTime(nNeuron) = max(actCurrNeuron(1:neuronTime(nNeuron)-(timeBin+1)/2));
                 LMat                   = preLMat(:, preLMatTime==neuronTime(nNeuron));

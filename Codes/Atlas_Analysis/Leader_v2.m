@@ -9,7 +9,7 @@
 % Yinan Wan
 % wany@janelia.hhmi.org
 
-function Leader_v2()
+function Leader_v2(control_datasets)
 addpath('../Func');
 setDir;
 
@@ -17,8 +17,6 @@ setDir;
 nbins = 6;
 bins = [0 1.4 Inf];
 
-control_datasets = [3, 4, 7, 12, 10, 11, 13, 15, 16];
-MO_datasets = [17 18 19 20 21] ;
 
 % for control datasets
 Linear_Stats_Boot_Std(control_datasets, nbins, bins);

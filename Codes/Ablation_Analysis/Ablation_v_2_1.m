@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 2.1  evaluate change of number of active neurons and level of sync
+% 2.1  (single cut) evaluate change of number of active neurons and level of sync
 %
 % version using only all active neurons, independently drawn from before &
 % after
@@ -9,16 +9,14 @@
 % Yinan Wan
 % wany@janelia.hhmi.org
 % 
+function Ablation_v_2_1(fishListCutA, fishListCutM, fishListCutP)
 
 addpath('../Func');
 setDir;
 
 pThres = 0.05;
-nFileList = 25:2:58;
+nFileList = 25:2:100;
 
-fishListCutA = [1, 2, 3, 4, 7]; % anterior cut
-fishListCutM = [8, 9, 10, 12]; % middle cut
-fishListCutP = [13, 15, 16, 17]; % posterior cut
 
 fishList = [fishListCutA, fishListCutM, fishListCutP]; % anterior cut
 correlationAP = zeros(numel(fishList), 2, 2);

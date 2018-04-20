@@ -20,10 +20,10 @@
 addpath('../Func');
 setDir;  
 
-% LocalNeuronIndSet = [];
-% neuronActLevelSet = [];
+LocalNeuronIndSet = [];
+neuronActLevelSet = [];
 
-for nFile = [3 7 10 11 16]
+for nFile = [3,4,7,12,10,15,16]
     fileName   = fileNames{nFile};   %#ok<*USENS>
     load([tempDatDir, fileName, '.mat'], 'dff', 'timePoints', 'new_x', 'new_y', 'new_z')
     load([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_1.mat'], 'new_activeNeuronMat', 'oscNeuronMat', 'neuronTime', 'neuronActTime', 'neuronOscTime')
@@ -39,16 +39,19 @@ for nFile = [3 7 10 11 16]
     % 2. local community non-active neuron
     % 3. recruiting cells
     
-    mColor = [       0    0.4470    0.7410
-            0.9290    0.6940    0.1250
-            0.8500    0.3250    0.0980
-            0.4940    0.1840    0.5560
-            0.4660    0.6740    0.1880
-            0.3010    0.7450    0.9330
-            0.6350    0.0780    0.1840
-            0.4588    0.4392    0.7020
-            0.4000    0.4000    0.4000
-            0.9059    0.1608    0.5412]; % 2 and 5 are the finally two color
+%     mColor = [       0    0.4470    0.7410
+%             0.9290    0.6940    0.1250
+%             0.8500    0.3250    0.0980
+%             0.4940    0.1840    0.5560
+%             0.4660    0.6740    0.1880
+%             0.3010    0.7450    0.9330
+%             0.6350    0.0780    0.1840
+%             0.4588    0.4392    0.7020
+%             0.4000    0.4000    0.4000
+%             0.9059    0.1608    0.5412]; % 2 and 5 are the finally two color
+%     mColor = cbrewer('qual', 'Dark2',  8, 'cubic');
+%     mColor            = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
+    mColor = lines(256);
     
     new_activeNeuronMat = double(new_activeNeuronMat);
     
@@ -80,50 +83,50 @@ for nFile = [3 7 10 11 16]
     
     save([tempDatNetDir, 'LONOLoading_' fileName, '_v_0_3.mat'], 'LocalNeuronInd', 'neuronFactorInd', 'neuronFactorTime', 'LMats', 'neuronActLevel')
     
-%     LocalNeuronIndSet = [LocalNeuronIndSet; LocalNeuronInd];
-%     neuronActLevelSet = [neuronActLevelSet; neuronActLevel];
+    LocalNeuronIndSet = [LocalNeuronIndSet; LocalNeuronInd];
+    neuronActLevelSet = [neuronActLevelSet; neuronActLevel];
     
-%     figure;
-%     hold on
-%     for nNeuron = 1:numNeuron
-%         if ~isnan(neuronFactorTime(nNeuron))
-%             if LocalNeuronInd(nNeuron)
-%                 plot(neuronFactorTime(nNeuron)/60, neuronActLevel(nNeuron), 'ow', 'MarkerFaceColor', mColor(neuronFactorInd(nNeuron), :))
+    figure;
+    hold on
+    for nNeuron = 1:numNeuron
+        if ~isnan(neuronFactorTime(nNeuron))
+            if LocalNeuronInd(nNeuron)
+                plot(neuronFactorTime(nNeuron)/60, neuronActLevel(nNeuron), 'ow', 'MarkerFaceColor', mColor(neuronFactorInd(nNeuron), :))
 %             else
 %                 plot(neuronFactorTime(nNeuron)/60, neuronActLevel(nNeuron), 'sw', 'MarkerFaceColor', mColor(neuronFactorInd(nNeuron), :))
-%             end
-%         end
-%     end
-%     hold off
-%     xlabel('Time (hour)')
-%     ylabel('Active Level')
-%     set(gca, 'TickDir', 'out')
-%     setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellType_' fileName], 'pdf')
-%          
-%     figure;
-%     hold on
-%     for nType = 1:2
-%         [fout, xout] = ksdensity(neuronActLevel(LocalNeuronInd == nType-1), 0:0.02:1.02, 'Bandwidth', 0.01);
-%         stairs(xout, fout/sum(fout), 'linewid', 2)
-%         xlim([0 1.01])
-%     end
-%     box off
-%     xlabel('Active level')
-%     ylabel('Frac.')
-%     setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellType_' fileName])
+            end
+        end
+    end
+    hold off
+    xlabel('Time (hour)')
+    ylabel('Active Level')
+    set(gca, 'TickDir', 'out')
+    setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellTypeScatter_' fileName], 'pdf')
+         
+    figure;
+    hold on
+    for nType = 1:2
+        [fout, xout] = ksdensity(neuronActLevel(LocalNeuronInd == nType-1), 0:0.02:1.02, 'Bandwidth', 0.01);
+        stairs(xout, fout/sum(fout), 'linewid', 2)
+        xlim([0 1.01])
+    end
+    box off
+    xlabel('Active level')
+    ylabel('Frac.')
+    setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellType_' fileName], 'pdf')
 
 end
 
 
 % across animal summary
-% figure;
-% hold on
-% for nType = 1:2
-%     [fout, xout] = ksdensity(neuronActLevelSet(LocalNeuronIndSet == nType-1), 0:0.02:1.02, 'Bandwidth', 0.01);
-%     stairs(xout, fout/sum(fout), 'linewid', 2)
-%     xlim([0 1.01])
-% end
-% box off
-% xlabel('Active level')
-% ylabel('Frac.')
-% setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellType_' fileName])
+figure;
+hold on
+for nType = 1:2
+    [fout, xout] = ksdensity(neuronActLevelSet(LocalNeuronIndSet == nType-1), 0:0.02:1.02, 'Bandwidth', 0.01);
+    stairs(xout, fout/sum(fout), 'linewid', 2)
+    xlim([0 1.01])
+end
+box off
+xlabel('Active level')
+ylabel('Frac.')
+setPrint(8, 6, [plotNetDir 'SingleNeuronActLevelFactorTimeCellType_All', 'pdf'])

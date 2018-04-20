@@ -2,8 +2,8 @@
 % 0.  Prepare statistics for leader cell analysis
 %
 % mnx_level_func
-% factorSize: mean size of first active timeWindow=20 after firstActTime
-% birthtime, siblins (if available)
+% factorSize: mean size of first active timeWindow=windowSize after firstActTime
+% birthtime, siblings (if available)
 % islet (if available)
 %
 % prepare a list of variable names that can be used for plotting
@@ -13,7 +13,7 @@
 % wany@janelia.hhmi.org
 % 
 
-function Leader_v0(nFile) 
+function Leader_v0(nFile, windowSize) 
 addpath('../Func');
 setDir;
 fileName          = fileNames{nFile};
@@ -31,7 +31,6 @@ patternTime(RSquare<=0 | ~validFitIndex | activeTime - halfEVTimeCI(:, 2)>0.2)= 
 save([tempDatDir, 'Leader_', fileName, '.mat'], 'patternTime', 'activeTime');
 
 % calculate factor size
-windowSize = 20;
 nNeurons = numel(leafOrder);
 factorSizeTimeSeries = nan(nNeurons, numel(timePoints));
 

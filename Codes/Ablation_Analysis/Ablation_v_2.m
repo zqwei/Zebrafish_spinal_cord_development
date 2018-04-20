@@ -1,24 +1,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 2.  evaluate change of level of sync  using FA result
+% 2.  (single cut) evaluate change of level of sync  using FA result
 %
 % -------------------------------------------------------------------------
 % Yinan Wan
 % wany@janelia.hhmi.org
 % 
 
+function Ablation_v_2(fishListCutA, fishListCutM, fishListCutP)
 addpath('../Func');
 setDir;
 
 pThres = 0.05;
-nFileList = 25:2:58;
-
-fishListCutA = [1, 2, 3, 4, 7]; % anterior cut
-fishListCutM = [8, 9, 10, 12]; % middle cut
-fishListCutP = [13, 15, 16, 17]; % posterior cut
+nFileList = 25:2:100;
 
 fishList = [fishListCutA, fishListCutM, fishListCutP]; % anterior cut
-fracActNeuron = zeros(numel(fishList), 4, 2);
-avgCorr = zeros(numel(fishList), 4, 2);
 numCells = zeros(numel(fishList), 4, 2);
 numActCells = zeros(numel(fishList), 4, 2);
 fracFacNeuron = zeros(numel(fishList), 4, 2);
@@ -67,6 +62,8 @@ fishListType = {1:numel(fishListCutA), numel(fishListCutA)+1:numel(fishListCutA)
 figure('Position', [0, 0, 400*3, 300*2]);
 pFracFacNeuronAblaiton = nan(size(fishListType, 2), 1);
 pFactorSpanAblation    = nan(size(fishListType, 2), 1);
+ratioList              = []; % fracFacNeuronRatio-A,P, fracFactorSpanRatio-A,P, expType  
+ratioStats             = zeros(size(fishListType, 2), 4);% mean-A, mean-P, std-A, std-P
 for nExpType = 1:size(fishListType, 2)
     currfishList = fishListType{1, nExpType};
     fracFacNeuronCombined = [fracFacNeuron(currfishList, [1, 3], :); fracFacNeuron(currfishList, [2, 4], :)];
@@ -116,9 +113,29 @@ for nExpType = 1:size(fishListType, 2)
     title(fishListType{2, nExpType})
     factorSpanRatio = squeeze(factorSpanCombined(:, :, 2)./factorSpanCombined(:, :, 1));
     pFactorSpanAblation(nExpType) = signrank(factorSpanRatio(:, 1), factorSpanRatio(:, 2));
+    ratioList = [ratioList; [fracFacNeuronRatio, factorSpanRatio, ones(size(factorSpanRatio, 1), 1)*nExpType] ];
+    ratioStats(nExpType, :) = [mean(fracFacNeuronRatio), std(fracFacNeuronRatio)];
 end
 
 
 setPrint(8*3, 6*2, [plotDir '/AblationTypeSummary' tagExt], 'pdf');
 
+mColor = lines(2);
+figure, 
+errorbar(1:3, ratioStats(:, 1), ratioStats(:, 3), 'color', mColor(1, :), 'linew', 2);
+% plot(1:3, ratioStats(:, 1), 'color', mColor(1, :), 'linew', 2);
+hold on
+errorbar(1:3, ratioStats(:, 2), ratioStats(:, 4), 'color', mColor(2, :), 'linew', 2);
+% plot(1:3, ratioStats(:, 2), 'color', mColor(2, :), 'linew', 2);
+scatter(ratioList(:, 5)+rand(size(ratioList(:, 5)))*0.2-0.1, ratioList(:, 1), 'filled', 'MarkerFaceColor', mColor(1, :), 'MarkerFaceAlpha', .5);
+scatter(ratioList(:, 5)+rand(size(ratioList(:, 5)))*0.2-0.1, ratioList(:, 2), 'filled', 'MarkerFaceColor', mColor(2, :), 'MarkerFaceAlpha', .5);
+set(gca ,'XTick', 1:3, 'XTickLabel', {'Cut A', 'Cut M', 'Cut P'});
+set(gca, 'YTick', 0:0.4:0.8);
+ylabel('Ratio of synchronization level after vs. before cut')
+legend('Anterior to cut', 'Posterior to cut');
+box off
+setPrint(16, 12, [plotDir '/AblationTypeSyncRatio' tagExt], 'pdf');
+
 close all
+
+

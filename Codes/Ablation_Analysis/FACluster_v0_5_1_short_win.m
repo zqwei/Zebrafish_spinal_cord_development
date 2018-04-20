@@ -16,7 +16,7 @@ function FACluster_v0_5_1_short_win(nFile)
     setDir;
     fileName          = fileNames{nFile}; %#ok<USENS>
     load([tempDatDir, fileName, '.mat'], 'dff', 'sideSplitter', 'side', 'tracks', 'timePoints', 'activeNeuronMat', 'new_x', 'new_y', 'new_z', 'timeStep'); 
-    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat')
+    load([tempDatDir, 'LONOLoading_' fileName, '.mat'], 'CorrectedLMat', 'PsiMat');
 
     if ~exist('new_x', 'var'); return; end
 
@@ -33,7 +33,8 @@ function FACluster_v0_5_1_short_win(nFile)
     mColor            = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
     preLMat           = nan(numNeuron, 1);
     
-    factorThres       = 0.6;
+    factorThres       = 0.3;
+    thresPsi          = 0.5;
 
     if ispc
         video          = VideoWriter([plotDir '\movie_' fileName '.avi'], 'Uncompressed AVI');
@@ -59,40 +60,51 @@ function FACluster_v0_5_1_short_win(nFile)
         radius = 0.2;
 
         LMat          = CorrectedLMat{period};
+        currentPsiMat = PsiMat{period};
         LMat(isnan(LMat)) = 0;
         LMat(:, sum(LMat, 1)==0) = [];
         activeTag = activeNeuronMat(:, period);
+        
+        LMat(currentPsiMat>thresPsi, :) = 0;
         LMat(abs(LMat)<factorThres) = 0;
-
-        % code to drop overlapped factors
-        LMatNeuron    = LMat>0;
-        numFactor     = size(LMatNeuron, 2);
-        for nFactor   = 1:size(LMatNeuron, 2)
-            if sum(LMatNeuron(:,nFactor)) >0 % skip if nFactor is dropped
-                for mFactor = nFactor+1:size(LMatNeuron, 2)
-                    if sum(LMatNeuron(:,mFactor)) >0 % skip if mFactor is dropped
-                        if all(ismember(find(LMatNeuron(:,nFactor))', find(LMatNeuron(:,mFactor))')) % if nFactor inside any other factors, drop nFactor
-                            LMatNeuron(:,nFactor) = 0;
-                            continue;
-                        elseif all(ismember(find(LMatNeuron(:,mFactor))', find(LMatNeuron(:,nFactor))')) % if mFactor inside any other factors, drop nFactor
-                            LMatNeuron(:,mFactor) = 0;
-                            continue;
-                        end
-                    end
-                end
-            end
+        
+        % remove bilateral factors
+        sideCount = zeros(size(LMat, 2), 1);
+        for nFactor = 1:size(LMat, 2)
+            sideCount(nFactor) = numel(unique(side(LMat(:, nFactor)>0)));
         end
-        LMat(LMatNeuron == 0)    = 0;
-        LMat(:, sum(LMat, 1)==0) = []; % drop factors with zero weight
+        LMat(:, sideCount>1) = [];
+
+%         % code to drop overlapped factors
+%         LMatNeuron    = LMat>0;
+%         numFactor     = size(LMatNeuron, 2);
+%         for nFactor   = 1:size(LMatNeuron, 2)
+%             if sum(LMatNeuron(:,nFactor)) >0 % skip if nFactor is dropped
+%                 for mFactor = nFactor+1:size(LMatNeuron, 2)
+%                     if sum(LMatNeuron(:,mFactor)) >0 % skip if mFactor is dropped
+%                         if all(ismember(find(LMatNeuron(:,nFactor))', find(LMatNeuron(:,mFactor))')) % if nFactor inside any other factors, drop nFactor
+%                             LMatNeuron(:,nFactor) = 0;
+%                             continue;
+%                         elseif all(ismember(find(LMatNeuron(:,mFactor))', find(LMatNeuron(:,nFactor))')) % if mFactor inside any other factors, drop nFactor
+%                             LMatNeuron(:,mFactor) = 0;
+%                             continue;
+%                         end
+%                     end
+%                 end
+%             end
+%         end
+%         LMat(LMatNeuron == 0)    = 0;
+%         LMat(:, sum(LMat, 1)==0) = []; % drop factors with zero weight
         % end of drop overlapped factor code
 
-        % determine the factor index
-        % break double sided factors
-        LMatLeft                 = zeros(size(LMat));
-        LMatRight                = zeros(size(LMat));
-        LMatLeft(side == 1, :)   = LMat(side == 1, :);
-        LMatRight(side == 2, :)  = LMat(side == 2, :);
-        LMat                     = [LMatLeft, LMatRight];
+%         % determine the factor index
+%         % break double sided factors
+%         LMatLeft                 = zeros(size(LMat));
+%         LMatRight                = zeros(size(LMat));
+%         LMatLeft(side == 1, :)   = LMat(side == 1, :);
+%         LMatRight(side == 2, :)  = LMat(side == 2, :);
+%         LMat                     = [LMatLeft, LMatRight];
+
 
         % remove the single-unit factor in movie
         LMat(:, sum(LMat>0, 1)<=1) = []; % drop factors with zero weight

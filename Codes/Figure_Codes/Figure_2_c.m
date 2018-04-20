@@ -6,10 +6,10 @@
 % 3b. size of communities
 
 
-function stats = Figure_2_c(nFile)
+function stats = Figure_2_c(nFile, tag)
     addpath('../Func');
     setDir;    
-    fileName          = fileNames{nFile}; %#ok<USENS>  
+    fileName          = fileNames{nFile};   
     load([tempDatDir, 'FALONO_', fileName, '.mat'], 'dumpDuplicatedFactorLONOM');
     load([tempDatDir, fileName, '.mat'],'activeNeuronMat', 'side', 'mnx');
     if ~exist([tempDatDir, 'EvoLoading_' fileName, '_v2.mat'], 'file'); return; end
@@ -57,16 +57,25 @@ function stats = Figure_2_c(nFile)
     subplot(1, totPlots, 4)
     stats{4} = Figure_2_c_3b(clusterList, numTime);
     
-    subplot(1, totPlots, 5)
-%     stats{5} = Figure_2_c_4(activeTime, neuronXLoc(:, 1));
-    stats{5} = Figure_2_c_4(patternTime, neuronXLoc(:, 1));
     
-    subplot(1, totPlots, 6)
-    Figure_2_c_5(activeTime, mnx);
+    if strcmp(tag, 'actTime')
+        subplot(1, totPlots, 5)
+        stats{5} = Figure_2_c_4(activeTime, neuronXLoc(:, 1));
+        subplot(1, totPlots, 6)
+        stats{6} = Figure_2_c_5(activeTime, mnx);
+    elseif strcmp(tag, 'patternTime')
+        subplot(1, totPlots, 5)
+        stats{5} = Figure_2_c_4(patternTime, neuronXLoc(:, 1));
+        subplot(1, totPlots, 6)
+        stats{6} = Figure_2_c_5(patternTime, mnx);
+    end
     
-    setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName], 'pdf')
     
-    close(gcf)
+    
+    
+    setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName '_' tag '_hp'], 'pdf')
+    
+%     close(gcf)
 end
 
 %% 1. number of communities
@@ -75,20 +84,43 @@ function pred = Figure_2_c_1(LONOM)
     timePoints        = (1:numTime)';
     hold on    
     plot(timePoints/60, LONOM,'o', 'color', [0.7 0.7 0.7])    
+        
+%     % option1: double-gaussian on curve
+%     % trancate super-long movies, pad 2 to the end of super-short movies
+%     fitLONOM = LONOM;
+%     if numTime > 200
+%         fitLONOM = fitLONOM(1:200);
+%     end
+%     fitLONOM(end+1:end+200) = 2;
+%     fitTimePoints = (1:numel(fitLONOM))';
 %     % fit of numFactor curve
-%     fitResult    = fit(timePoints/60, LONOM-2, 'gauss1');
+%     fitResult    = fit(fitTimePoints/60, fitLONOM-2, 'gauss1');
 %     b            = fitResult.b1;
 %     a            = fitResult.a1;
 %     c            = fitResult.c1;
 %     cr           = c;
-%     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], timePoints/60, LONOM);    
-%     opt1Dim      = doubleSizedGauss(fitResult,timePoints/60);   
-%     opt1Dim        = smooth(LONOM, 101, 'loess');
-    tmpLONOM = [zeros(100, 1); LONOM];
-    opt1Dim  = smooth(tmpLONOM, 101, 'sgolay', 2);
+%     fitResult    = lsqcurvefit(@(p, x) doubleSizedGauss(p, x), [a, b, c, cr], fitTimePoints/60, fitLONOM);    
+%     opt1Dim      = doubleSizedGauss(fitResult,fitTimePoints/60);  
+    
+
+%   % option 2: pad 0 at beginning and do sgolay smoothing
+%     tmpLONOM = [zeros(100, 1); LONOM; ones(100, 1)*2];
+%     opt1Dim  = smooth(tmpLONOM, 201, 'sgolay', 5);
+%     opt1Dim  = opt1Dim(101:end);
+
+    % option 3: hpfilt
+    tmpLONOM = [zeros(100, 1); LONOM; ones(100, 1)*2];
+    lambda  = l1tf_lambdamax(tmpLONOM);
+    opt1Dim = hpfilter(tmpLONOM, lambda*2);
     opt1Dim  = opt1Dim(101:end);
+%     lambda  = l1tf_lambdamax(LONOM);
+%     opt1Dim  = hpfilter(LONOM, lambda*2);
+
+
+    opt1Dim      = opt1Dim(timePoints);
     plot(timePoints/60, opt1Dim,'k-', 'linewid', 2)
     xlim([0 max(timePoints)/60])  
+    ylim([-1, 6]);
     ylabel('Num factor')
     xlabel('Time (hour)')
     box off
@@ -121,8 +153,8 @@ function pred = Figure_2_c_2(activeNeuronMat, networkMat)
     fracNeuron        = numFactorNeuron./numActNeuron;
     
     hold on
-    plot((1:numTime)/60, fracActNeuron, 'ok')
-    plot((1:numTime)/60, 1 - fracNeuron, 'or')
+    plot((1:numTime)/60, fracActNeuron, 'or')
+    plot((1:numTime)/60, 1 - fracNeuron, 'ok')
     
     % fit for fracActNeuron    
     factorTime               = find(numFactor>= max(numFactor)-1, 1, 'last');             
@@ -131,9 +163,9 @@ function pred = Figure_2_c_2(activeNeuronMat, networkMat)
     ypred                    = fitResult.ypred;
     ypredlowerCI             = fitResult.ypredlowerCI;
     ypredupperCI             = fitResult.ypredupperCI;
-    plot(timePoints, ypred, '-', 'linewid', 2.0, 'Color', 'k');
-    plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
-    plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
+    plot(timePoints, ypred, '-', 'linewid', 2.0, 'Color', 'r');
+    plot(timePoints, ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'r');
+    plot(timePoints, ypredupperCI, '-', 'linewid', 0.5, 'Color', 'r');
     ylim([0 1])
     xlim([0 max(timePoints)])    
     pred.t1 = timePoints;
@@ -146,9 +178,9 @@ function pred = Figure_2_c_2(activeNeuronMat, networkMat)
     ypred                    = fitResult.ypred;
     ypredlowerCI             = fitResult.ypredlowerCI;
     ypredupperCI             = fitResult.ypredupperCI;
-    plot(timePoints, 1- ypred, '-', 'linewid', 2.0, 'Color', 'r');
-    plot(timePoints, 1- ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'r');
-    plot(timePoints, 1- ypredupperCI, '-', 'linewid', 0.5, 'Color', 'r');
+    plot(timePoints, 1- ypred, '-', 'linewid', 2.0, 'Color', 'k');
+    plot(timePoints, 1- ypredlowerCI, '-', 'linewid', 0.5, 'Color', 'k');
+    plot(timePoints, 1- ypredupperCI, '-', 'linewid', 0.5, 'Color', 'k');
     ylim([0 1])
     xlim([0 max(timePoints)])  
     ylabel('Frac neuron')
@@ -220,41 +252,85 @@ function pred = Figure_2_c_3b(clusterList, numTime)
     set(gca, 'TickDir', 'out');
 end
 
-%% 4. patternTime vs location
-function pred = Figure_2_c_4(patternTime, neuronXLoc)
+% %% 4. patternTime vs location
+% function pred = Figure_2_c_4(patternTime, neuronXLoc)
+%     hold on
+%     plot(neuronXLoc, patternTime, 'ok')
+%     [rho, pval] = corr(neuronXLoc, patternTime, 'rows', 'pairwise', 'type', 'spearman');
+%     fitActTime = linearFit(neuronXLoc, patternTime);
+%     plot(neuronXLoc, fitActTime, '-k', 'linewid', 1)
+%     box off
+%     xlabel('x location (segments)')
+%     ylabel('Pattern time (hour)')
+%     pred.t = neuronXLoc;
+%     pred.y = fitActTime;
+%     set(gca, 'TickDir', 'out');
+%     title(['rho=' num2str(rho) ', pval=' num2str(pval)]);
+% end
+
+%% 4. actTime/patternTime vs location, boxplot
+function pred = Figure_2_c_4(time, neuronXLoc)
+    neuronXLoc = neuronXLoc(time>0.1 & ~isnan(time));
+    time       = time(time>0.1 & ~isnan( time));
+    segXLoc    = round(neuronXLoc);
+    segNum     = unique(segXLoc);
+    boxplot(time, segXLoc, 'Positions', segNum);
     hold on
-    plot(neuronXLoc, patternTime, 'ok')
-    [rho, pval] = corr(neuronXLoc, patternTime, 'rows', 'pairwise', 'type', 'spearman');
-    fitActTime = linearFit(neuronXLoc, patternTime);
-    plot(neuronXLoc, fitActTime, '-k', 'linewid', 1)
+    
+%     % use group stats
+%     [segTime, segCount]    = grpstats(time, segXLoc, {'mean', 'numel'});
+%     segNum(segCount<=1) = [];
+%     segTime(segCount<=1) = [];
+
+    
+    % use raw stats
+    segNum  = neuronXLoc;
+    segTime = time;
+    
+    [rho, pval] = corr(segNum, segTime, 'rows', 'pairwise', 'type', 'spearman');
+    fitActTime = linearFit(segNum, segTime);
+    plot(segNum, fitActTime, '-k', 'linewid', 1)
     box off
     xlabel('x location (segments)')
     ylabel('Pattern time (hour)')
-    pred.t = neuronXLoc;
-    pred.y = fitActTime;
+    pred.t = [min(segNum), max(segNum)];
+    pred.y = [min(fitActTime), max(fitActTime)];
+    pred.pval = pval;
     set(gca, 'TickDir', 'out');
+    ylim([0, ceil(nanmax(time))])
     title(['rho=' num2str(rho) ', pval=' num2str(pval)]);
 end
 
-%% 5. mnx+/mnx- vs. patternTime
-function Figure_2_c_5(patternTime, mnx)
-    y1 = patternTime(mnx>0 & ~isnan(patternTime));
-    y2 = patternTime(mnx==0 & ~isnan(patternTime));
-    y2(numel(y2)+1:numel(y1)) = NaN;
+%% 5. mnx+/mnx- vs. actTime/patternTime
+function pred = Figure_2_c_5(time, mnx)
+    mnx = mnx(~isnan(time));
+    time = time(~isnan(time));
+    if sum(mnx==0) == 0
+        pred.t = [];
+        pred.y = [];
+        pred.pval = [];
+        return;
+    end
 %     distributionPlot([y1, y2], 'color', [0.5, 0.5, 1], 'showMM', 0, 'globalNorm', 3);
-    [~, pval] = ttest(y1, y2);
+    y1 = time(mnx>0 & ~isnan(time));
+    y2 = time(mnx==0 & ~isnan(time));
+    
+    pval = ranksum(y1, y2);
     
     hold on
     scatter(ones(numel(y1), 1)+randn(numel(y1), 1)/10, y1,10, 'filled', 'MarkerFaceColor', [0.8, 0.8, 0.8]);
     scatter(ones(numel(y2), 1)+randn(numel(y2), 1)/10+1, y2, 10, 'filled', 'MarkerFaceColor', [0.8, 0.8, 0.8]);
-    h = boxplot([y1, y2]);
+    h = boxplot(time, 1-mnx, 'labels', {'mnx+', 'mnx-'});
     set(h, 'linew', 1);
     hold off
-    set(gca, 'xTickLabel', {'mnx+', 'mnx-'})    
+
     ylabel('Activation time (hour)')
     box off
     set(gca, 'TickDir', 'out');
     title(['pval=' num2str(pval)]);
+    pred.t = [1, 2];
+    pred.y = [median(y1), median(y2)];
+    pred.pval = pval;
 end
 
 

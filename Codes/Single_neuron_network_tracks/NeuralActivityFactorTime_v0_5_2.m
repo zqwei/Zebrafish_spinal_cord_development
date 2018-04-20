@@ -1,7 +1,7 @@
 addpath('../Func');
 setDir;    
 
-fileToAnalysis = 16; %[3, 4, 7, 12, 10, 11, 13, 15, 16];
+fileToAnalysis = [3, 4, 7, 12, 10, 15, 16];
 
 neuronActTimeAll = [];
 neuronFASizeAll  = [];
