@@ -1,6 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Track factor identity and analyze the composition of initial factors
+% Track factor identity and analyze the composition of initial factors 
 %
+% old leader definition using factorSize<2
 % -------------------------------------------------------------------------
 % Yinan Wan
 % wany@janelia.hhmi.org
@@ -21,7 +22,7 @@ ylabel('Factor index');
 setPrint(8, 6, [plotDir,  'factorSizeIdentityEvol_' fileName], 'pdf');
 close
 
-leaderThres = 1.5;
+leaderThres = 2;
 nNeuron = numel(factorSize);
 pairsCombination = zeros(nNeuron, nNeuron);
 actLevelBeforePattern = zeros(0, 2); % activity level (percentage of active window before patterning, 1st&2nd active in the pair)

@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 1.  evaluate the acitavion consistency (after), plot with regard to
+% 1.  (Single cut) evaluate the acitavion consistency (after), plot with regard to
 %
 % 1) anatomical location
 % 2) whether it is an active cell before

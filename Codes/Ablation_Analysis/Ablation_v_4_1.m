@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 4.1  evaluate change of patterned activity based on pairwise correlation
+% 4.1  (double cut) evaluate change of patterned activity based on pairwise correlation
 %
 %
 % -------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 3.  evaluate change of patterned activity from FA result
+% 3.  (Single cut) evaluate change of patterned activity from FA result
 %
 %
 % -------------------------------------------------------------------------
@@ -7,15 +7,13 @@
 % wany@janelia.hhmi.org
 %
 
+function Ablation_v_3(fishListCutA, fishListCutM, fishListCutP)
+
 addpath('../Func');
 setDir;
 
 pThres = 0.05;
-nFileList = 25:2:58;
-
-fishListCutA = [4, 3, 7, 2, 1]; % anterior cut
-fishListCutM = [12, 9, 10, 8]; % middle cut
-fishListCutP = [16, 17, 13, 15]; % posterior cut
+nFileList = 25:2:100;
 % sectorNames = {'AL', 'AR', 'PL', 'PR'};
 sectorNames = {'Anterior', 'Posterior'};
 tagExt = [];

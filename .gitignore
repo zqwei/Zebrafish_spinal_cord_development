@@ -44,3 +44,9 @@ Text/*.synctex.tz
 *.m~
 
 *.pdf
+
+# Yinan's directory
+Archive/
+Codes/Atlas_Analysis/Archive/
+Codes/Ablation_Analysis/Archive/
+

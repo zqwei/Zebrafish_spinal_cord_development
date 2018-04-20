@@ -17,40 +17,33 @@ fileName          = fileNames{nFile};
 % load and calculate all metrics
 load([tempDatDir, fileName, '.mat'], 'new_x', 'new_y', 'new_z', 'mnx');
 load([tempDatDir, 'Leader_' fileName, '.mat']);
-diffTime = patternTime - activeTime;
+
 
 if ~exist('birthtime', 'var')
     return;
 end
 
-% variable name and category (0: dev, 1: func, 2: anatomy, 3: cell type)
-metricList = {'birthtime', 0; ...
-              'activeTime', 1; ...
-              'patternTime', 1; ...
-              'diffTime', 1; ...
-              'factorSize', 1; ...
-              'new_x', 2; ...
-              'new_y', 2; ...
-              'new_z', 2; ...
-              'mnx', 3; ...
-              'mnxFunc', 3};
+
+% variable name, category (0: dev, 1: func, 2: anatomy, 3: cell type) and
+% axis label
+metricList = {'birthtime', 0,  'birth time';...
+              'activeTime', 1, 'activation time'; ...
+              'patternTime', 1, 'patterned time'; ...
+              'factorSize', 1, 'initial factor size'; ...
+              'new_x', 2, 'AP location'; ...
+              'abs(new_y)', 2, 'ML location'; ...
+              'new_z', 2, 'DV location'; ...
+              'mnx', 3 , 'mnx'; ...
+              };
 metrics = nan(numel(birthtime), size(metricList, 1));
-
-C = metricList(:, 1);
-category = cell2mat(metricList(:, 2));
-
-for i = 1:numel(C)
-    metrics(:, i) = eval(C{i});
-    C{i} = strrep(C{i}, '_', ' ');
+for i = 1:size(metricList, 1)
+    metrics(:, i) = eval(metricList{i, 1});
 end
+C = metricList(:, 3);
 
-leaf = 1; % leaf order: sorted in 0, 1, 2, 3, within each group grouped in the order of hierachical clustering
-for c = 1:3
-    dist = pdist(metrics(:, category==c)', @(x, y)1-corr(x', y', 'row','pairwise'));
-    link = linkage(dist);
-    order = find(category==c);
-    leaf = [leaf; order(optimalleaforder(link, dist))];
-end
+
+leaf = 1:8; % leaf order: sorted in 0, 1, 2, 3, within each group grouped in the order of hierachical clustering
+
 
 gamma = 0.6;
 
@@ -63,22 +56,23 @@ for r = 1:3
     colorMap(:, r) = [linspace(startColor(r), midColor(r), nColors/2)'.^gamma; linspace(midColor(r), endColor(r), nColors/2)'.^gamma];
 end
 
-[h, p] = corr(metrics(:, leaf), 'rows', 'pairwise', 'type', 'pearson');
+[h, p] = corr(metrics(:, leaf), 'rows', 'pairwise', 'type', 'spearman');
 figure
 set(0, 'defaultaxeslayer', 'top')
 whitebg('white');
-imagesc(tril(h, -1), [-.5, .5]);
+% h = h(1:end, 2:end);
+% p = p(1:end, 2:end);
+imagesc(triu(h, 1), [-.5, .5]);
 % im.AlphaData = tril(ones(size(p))) - tril(p);
-set(gca, 'XTick', 1:12,'XTickLabel', C(leaf));
+set(gca, 'XTick', 1:numel(leaf),'XTickLabel', C(leaf));
 set(gca, 'XTickLabelRotation', 45);
-set(gca, 'YTick', 1:12,'YTickLabel', C(leaf));
+set(gca, 'YTick', 1:numel(leaf),'YTickLabel', C(leaf));
+set(gca, 'XAxisLocation', 'top');
 hold on,
 [sig_x, sig_y] = find(p<0.05);
-text(sig_x(sig_x<sig_y),sig_y(sig_x<sig_y), '*');
+text(sig_x(sig_x>=sig_y),sig_y(sig_x>=sig_y), '*');
 ax1 = imgca;
 colormap(ax1, colorMap);
 colorbar(ax1);
-% whitebg('black');
-% set(gcf, 'Color', 'black');
-% set(gcf, 'InvertHardCopy', 'off', 'PaperPositionMode', 'Auto');
+box off
 print( [plotDir, 'LineageCorrMat_', fileName], '-dpdf', '-r0');
