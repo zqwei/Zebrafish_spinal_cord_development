@@ -23,9 +23,11 @@ firstActiveTime = leaderPairMetrics(pairID).firstActiveTime;
 mColor = lines(numel(leaderPair));
 
 figure, 
-tStart_dff = max(timePoints(firstActiveTime)-2400, 1);
 tStart = timePoints(firstActiveTime)+1;
-tEnd   = timePoints(appearTime+10)+timeStep;
+tStart_dff = tStart-1200;
+tMerge = timePoints(appearTime);
+% tEnd   = timePoints(appearTime+10)+timeStep;
+tEnd   = tMerge + tMerge-tStart + 1;
 
 subplot(2, 1, 1)
 hold on
@@ -34,23 +36,24 @@ for i = 1:2
     activeTag = activeNeuronMat(leaderPair(i), :);
     activeTag(1:activeTime(leaderPair(i))*60) = 0;
     plot((tStart_dff:tEnd)/240, dff(leaderPair(i), tStart_dff:tEnd)+ (i-1)*offsetPlot, 'Color', mColor(i, :));
-    plot([tStart_dff, tEnd]/240, [(i-1)*offsetPlot - 2, (i-1)*offsetPlot - 2], '--', 'Color', [.8, .8, .8]);
-    plot((tStart_dff:timeStep/5:tEnd+1)/240, activeTag(max(1, firstActiveTime-10):appearTime+15)+ (i-1)*offsetPlot - 2, 'k');
+    plot([tStart, tEnd]/240, [(i-1)*offsetPlot - 2, (i-1)*offsetPlot - 2], '--', 'Color', [.8, .8, .8]);
+    
+    plot(firstActiveTime-5:appearTime+appearTime-firstActiveTime, activeTag(firstActiveTime-5:appearTime+appearTime-firstActiveTime)+ (i-1)*offsetPlot - 2, 'k');
 end
 
 box off
 % axis off
 plot([timePoints(firstActiveTime), timePoints(firstActiveTime)]/240, [-5,10], '--k');
-plot([timePoints(appearTime), timePoints(appearTime)]/240, [-5,10], '--k');
+plot([tMerge, tMerge]/240, [-5,10], '--k');
 
 subplot(2, 1, 2)
 hold on
-tStart_dff   = timePoints(appearTime+7);
+tStart_dff   = timePoints(appearTime+40);
 offsetPlot = 1;
 for i = 1:2
     plot((tStart_dff:tStart_dff+timeStep)/240, dff(leaderPair(i), tStart_dff:tStart_dff+timeStep)+ (i-1)*offsetPlot,'Color', mColor(i, :));
 end
 
 set(gcf, 'InvertHardCopy', 'off', 'PaperPositionMode', 'Auto');   
-print( [plotDir,  'Figure3C_InitialPair_Example_' fileName '_Pair' num2str(pairID) '_ZoomedView.pdf'], '-dpdf', '-r0');
+print( [plotDir,  'Figure3C_InitialPair_Example_' fileName '_Pair' num2str(pairID) '_ZoomedView_symwindow.pdf'], '-dpdf', '-r0');
 

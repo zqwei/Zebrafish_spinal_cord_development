@@ -4,10 +4,10 @@
 % 2b. percentage of total active neurons
 % 3a. radius of communities
 % 3b. size of communities
-% 4. actTime/patternTime vs location, boxplot
+% 4.  (alternative) time vs. ClusterCenterMaxLoc
 % 5. mnx+/mnx- vs. actTime/patternTime
 
-function stats = Figure_2_c(nFile, tag)
+function stats = Figure_2_c_v2(nFile, tag)
     addpath('../Func');
     setDir;    
     fileName          = fileNames{nFile};   
@@ -19,9 +19,11 @@ function stats = Figure_2_c(nFile, tag)
 
     
     numTime           = length(networkMat); %#ok<*USENS>
-    clusterList       = []; % time, size, radius    
+    clusterList       = []; % time, size, radius, mean xloc  
+    maxClusterXLoc    = nan(numTime, 1);
     for nTime         = 1:numTime
         factorSet     = networkMat{nTime, 1}; 
+        maxFacSize    = -1;
         for nFactor   = 2:length(factorSet)-1
             neuronIndex = factorSet(nFactor).neuronIndex;
             if length(neuronIndex)>1
@@ -34,6 +36,10 @@ function stats = Figure_2_c(nFile, tag)
 %                           (zLoc - factorSet(nFactor).z).^2;
 %                 radius  = (xLoc - factorSet(nFactor).x).^2;
 %                 radius  = sqrt(mean(radius));
+                if length(neuronIndex)>maxFacSize
+                    maxClusterXLoc(nTime) = mean(xLoc);
+                    maxFacSize            = length(neuronIndex);
+                end
                 radius = max(xLoc) - min(xLoc);
                 cluster = [cluster, radius];
                 clusterList = [clusterList; cluster];
@@ -58,31 +64,21 @@ function stats = Figure_2_c(nFile, tag)
     subplot(1, totPlots, 4)
     stats{4} = Figure_2_c_3b(clusterList, numTime);
     
+    subplot(1, totPlots, 5)
+    stats{5} = Figure_2_c_4(maxClusterXLoc);
     
-    if strfind(tag, 'actTime')
-        subplot(1, totPlots, 5)
-        stats{5} = Figure_2_c_4(activeTime, neuronXLoc(:, 1));
-        view([90, -90]);
-        set(gca, 'XDir', 'reverse');
+    if strcmp(tag, 'actTime')
         subplot(1, totPlots, 6)
         stats{6} = Figure_2_c_5(activeTime, mnx);
-        view([90, -90]);
-        set(gca, 'XDir', 'reverse');
-    elseif strfind(tag, 'patternTime')
-        subplot(1, totPlots, 5)
-        stats{5} = Figure_2_c_4(patternTime, neuronXLoc(:, 1));
-        view([90, -90]);
-        set(gca, 'XDir', 'reverse');
+    elseif strcmp(tag, 'patternTime')
         subplot(1, totPlots, 6)
         stats{6} = Figure_2_c_5(patternTime, mnx);
-        view([90, -90]);
-        set(gca, 'XDir', 'reverse');
     end
     
     
     
     
-    setPrint(8*totPlots, 6, [plotDir 'Figure_2b_' fileName '_' tag '_hp'], 'pdf')
+    setPrint(8*totPlots, 6, [plotDir 'Figure_2b_v1_' fileName '_' tag '_hp'], 'pdf')
     
 %     close(gcf)
 end
@@ -261,59 +257,59 @@ function pred = Figure_2_c_3b(clusterList, numTime)
     set(gca, 'TickDir', 'out');
 end
 
-% %% 4. patternTime vs location
-% function pred = Figure_2_c_4(patternTime, neuronXLoc)
+
+% %% 4. actTime/patternTime vs location, boxplot
+% function pred = Figure_2_c_4(time, neuronXLoc)
+%     neuronXLoc = neuronXLoc(time>0.1 & ~isnan(time));
+%     time       = time(time>0.1 & ~isnan( time));
+%     segXLoc    = round(neuronXLoc);
+%     segNum     = unique(segXLoc);
+%     boxplot(time, segXLoc, 'Positions', segNum);
 %     hold on
-%     plot(neuronXLoc, patternTime, 'ok')
-%     [rho, pval] = corr(neuronXLoc, patternTime, 'rows', 'pairwise', 'type', 'spearman');
-%     fitActTime = linearFit(neuronXLoc, patternTime);
-%     plot(neuronXLoc, fitActTime, '-k', 'linewid', 1)
-%     box off
-%     xlabel('x location (segments)')
-%     ylabel('Pattern time (hour)')
-%     pred.t = neuronXLoc;
-%     pred.y = fitActTime;
-%     set(gca, 'TickDir', 'out');
-%     title(['rho=' num2str(rho) ', pval=' num2str(pval)]);
-% end
-
-%% 4. actTime/patternTime vs location, boxplot
-function pred = Figure_2_c_4(time, neuronXLoc)
-    firstSeg = floor(min(neuronXLoc));
-    lastSeg = ceil(max(neuronXLoc));
-    neuronXLoc = neuronXLoc(time>0.1 & ~isnan(time));
-    time       = time(time>0.1 & ~isnan( time));
-    segXLoc    = round(neuronXLoc);
-    segNum     = unique(segXLoc);
-    boxplot(time, segXLoc, 'Positions', segNum);
-    hold on
-    
-    % use group stats
-    [segTime, segCount]    = grpstats(time, segXLoc, {'median', 'numel'});
-    segTime(segNum==firstSeg | segNum==lastSeg) = [];
-    segNum(segNum==firstSeg | segNum==lastSeg) = [];
-
-        [rho, pval] = corr(segNum, segTime, 'rows', 'pairwise', 'type', 'pearson');
-
-
-    
+%     
+% %     % use group stats
+% %     [segTime, segCount]    = grpstats(time, segXLoc, {'mean', 'numel'});
+% %     segNum(segCount<=1) = [];
+% %     segTime(segCount<=1) = [];
+% 
+%     
 %     % use raw stats
 %     segNum  = neuronXLoc;
 %     segTime = time;
-
+%     
 %     [rho, pval] = corr(segNum, segTime, 'rows', 'pairwise', 'type', 'spearman');
-    fitActTime = linearFit(segNum, segTime);
-    plot(segNum, fitActTime, '-k', 'linewid', 1)
-    box off
-    xlabel('x location (segments)')
-    ylabel('Pattern time (hour)')
+%     fitActTime = linearFit(segNum, segTime);
+%     plot(segNum, fitActTime, '-k', 'linewid', 1)
+%     box off
+%     xlabel('x location (segments)')
+%     ylabel('Pattern time (hour)')
 %     pred.t = [min(segNum), max(segNum)];
 %     pred.y = [min(fitActTime), max(fitActTime)];
-    pred.t = segNum;
-    pred.y = fitActTime;
+%     pred.pval = pval;
+%     set(gca, 'TickDir', 'out');
+%     ylim([0, ceil(nanmax(time))])
+%     title(['rho=' num2str(rho) ', pval=' num2str(pval)]);
+% end
+
+%% alternative c_4. time vs. ClusterCenterMaxLoc
+function pred = Figure_2_c_4(maxClusterXLoc)
+    timePoints = (1:numel(maxClusterXLoc))'/60;
+    timePoints(isnan(maxClusterXLoc)) = [];
+    maxClusterXLoc(isnan(maxClusterXLoc)) = [];
+    
+    [rho, pval] = corr(timePoints, maxClusterXLoc, 'type', 'pearson');
+    fitClusterXLoc = linearFit(timePoints, maxClusterXLoc);
+    hold on
+    plot(timePoints, maxClusterXLoc, 'ok')
+    plot(timePoints, fitClusterXLoc, '-k', 'linewid', 1)
+    box off
+    xlabel('time (hour)')
+    ylabel('Main factor AP (seg)')
+    pred.t = [min(timePoints), max(timePoints)];
+    pred.y = [min(fitClusterXLoc), max(fitClusterXLoc)];
     pred.pval = pval;
     set(gca, 'TickDir', 'out');
-    ylim([0, ceil(nanmax(time))])
+    xlim([0 max(timePoints)])  
     title(['rho=' num2str(rho) ', pval=' num2str(pval)]);
 end
 
@@ -321,7 +317,7 @@ end
 function pred = Figure_2_c_5(time, mnx)
     mnx = mnx(~isnan(time));
     time = time(~isnan(time));
-    if sum(mnx==0) <=5
+    if sum(mnx==0) == 0
         pred.t = [];
         pred.y = [];
         pred.pval = [];

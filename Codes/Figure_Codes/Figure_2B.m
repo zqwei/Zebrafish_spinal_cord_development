@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Figure 1B plot snapshots of FA result on atlas
+% Figure 2B plot snapshots of FA result on atlas
 %
 %
 % -------------------------------------------------------------------------

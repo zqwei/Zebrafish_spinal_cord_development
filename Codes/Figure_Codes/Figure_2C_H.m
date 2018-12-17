@@ -17,7 +17,7 @@
 
 control_datasets = [3, 4, 7, 10, 12, 15, 16];
 
-tag = 'actTime'; % 'patternTime'
+tag =  'patternTime_grpstats'; %'actTime'; %
 h = figure('Position', [0, 0, 1500, 200]);
 hold on;
 
@@ -28,4 +28,4 @@ mColor = lines(numel(control_datasets));
 for i = 1:numel(control_datasets)
     Figure_2(h, control_datasets(i), tag, mColor(i, :));
 end
-setPrint(8*6, 6, [plotDir 'Figure_2G-I_' tag '_hp'], 'pdf')
+setPrint(8*6, 6, [plotDir 'Figure_2G-I' tag '_hp'], 'pdf')
