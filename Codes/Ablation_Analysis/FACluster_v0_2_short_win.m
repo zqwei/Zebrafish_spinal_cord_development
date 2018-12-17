@@ -68,55 +68,55 @@ function FACluster_v0_2_short_win(nFile)
 
     timePoints        = (1:numTime)';
 
-    figure;
-    subplot(3, 2, 1)
-    plot(timePoints/60, LONOM,'ko')
-    ylabel('# factors')
-    xlabel('Time (hour)')
-    set(gca, 'xtick', 1:6)
-    xlim([0 numTime/60])
-    ylim([0 8])
-    title('Leave one neuron out')
-    box off
-
-    subplot(3, 2, 3)
-    plot(timePoints/60, kgM,'s','color',[0         0.4470    0.7410])
-    ylabel('# factors')
-    xlabel('Time (hour)')
-    set(gca, 'xtick', 1:6)
-    xlim([0 numTime/60])
-    title('K-G')
-    box off
-
-    subplot(3, 2, 4)
-    plot(timePoints/60, paM,'o','color',[0.8500    0.3250    0.0980])
-    ylabel('# factors')
-    xlabel('Time (hour)')
-    set(gca, 'xtick', 1:6)
-    xlim([0 numTime/60])
-    title('Parallel analysis')
-    box off
-
-    subplot(3, 2, 5)
-    plot(timePoints/60, SRMRM,'x','color',[0.9290    0.6940    0.1250])
-    ylabel('# factors')
-    xlabel('Time (hour)')
-    set(gca, 'xtick', 1:6)
-    xlim([0 numTime/60])
-    title('SRMR')
-    box off
-
-    subplot(3, 2, 6)
-    plot(timePoints/60, CFIM,'+','color',[0.4940    0.1840    0.5560])
-    ylabel('# factors')
-    xlabel('Time (hour)')
-    set(gca, 'xtick', 1:6)
-    xlim([0 numTime/60])
-    title('CFI')
-    box off
-
-    setPrint(8*2, 6*3, [plotDir, 'numFactorLONOActiveNeurons_', fileName], 'pdf');
-    close all
+%     figure;
+%     subplot(3, 2, 1)
+%     plot(timePoints/60, LONOM,'ko')
+%     ylabel('# factors')
+%     xlabel('Time (hour)')
+%     set(gca, 'xtick', 1:6)
+%     xlim([0 numTime/60])
+%     ylim([0 8])
+%     title('Leave one neuron out')
+%     box off
+% 
+%     subplot(3, 2, 3)
+%     plot(timePoints/60, kgM,'s','color',[0         0.4470    0.7410])
+%     ylabel('# factors')
+%     xlabel('Time (hour)')
+%     set(gca, 'xtick', 1:6)
+%     xlim([0 numTime/60])
+%     title('K-G')
+%     box off
+% 
+%     subplot(3, 2, 4)
+%     plot(timePoints/60, paM,'o','color',[0.8500    0.3250    0.0980])
+%     ylabel('# factors')
+%     xlabel('Time (hour)')
+%     set(gca, 'xtick', 1:6)
+%     xlim([0 numTime/60])
+%     title('Parallel analysis')
+%     box off
+% 
+%     subplot(3, 2, 5)
+%     plot(timePoints/60, SRMRM,'x','color',[0.9290    0.6940    0.1250])
+%     ylabel('# factors')
+%     xlabel('Time (hour)')
+%     set(gca, 'xtick', 1:6)
+%     xlim([0 numTime/60])
+%     title('SRMR')
+%     box off
+% 
+%     subplot(3, 2, 6)
+%     plot(timePoints/60, CFIM,'+','color',[0.4940    0.1840    0.5560])
+%     ylabel('# factors')
+%     xlabel('Time (hour)')
+%     set(gca, 'xtick', 1:6)
+%     xlim([0 numTime/60])
+%     title('CFI')
+%     box off
+% 
+%     setPrint(8*2, 6*3, [plotDir, 'numFactorLONOActiveNeurons_', fileName], 'pdf');
+%     close all
 
     save([tempDatDir, 'FALONO_', fileName, '.mat'], 'uncorrectedLONOM', 'numFactors', '-append');
 

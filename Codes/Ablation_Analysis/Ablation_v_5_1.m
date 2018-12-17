@@ -7,13 +7,12 @@
 % wany@janelia.hhmi.org
 %
 
-function Ablation_v_5_1(fishList)
+function Ablation_v_5_1(fishList, tagExt)
 addpath('../Func');
 setDir;
 
-
 fsSpanThresFull = 0.5; % factor span exceeds this size, call global
-fsSpanThresPart = 0;% factor span under this size, call non-existing
+fsSpanThresPart = 0.05;% factor span under this size, call non-existing
 
 factorSpanAll = nan(numel(fishList)*2, 3);
 lifeTimeGlobal = nan(numel(fishList)*2, 3);
@@ -28,7 +27,7 @@ for i = 1:numel(fishList);
     load([tempDatDir, 'LONOLoading_' fileName, '_v2.mat'], 'factorComp', 'factorSizes');
     
 
-    invalidIndex = (new_x>segAblation_A(1) & new_x<=segAblation_A(2)) | (new_x>segAblation_P(1) & new_x<=segAblation_P(2));
+    invalidIndex = (new_x<=0 & new_x>segAblation_A(1) & new_x<=segAblation_A(2)) | (new_x>segAblation_P(1) & new_x<=segAblation_P(2));
     
     factorSpan    = nan(size(factorSizes, 1), 6);
     fracActNeuron = nan(size(factorSizes, 1), 6);
@@ -72,7 +71,7 @@ m(m>fsSpanThresFull) = 2;
 m(m<fsSpanThresFull & m>fsSpanThresPart) = 1;
 m(m<fsSpanThresPart) = 0;
 im = plotMatrixType(m', 1);
-imwrite(im, [plotDir, 'DoubleAblationMatrix_HalfFish.tif']);
+imwrite(im, [plotDir, 'DoubleAblationMatrix_HalfFish' tagExt '.tif']);
 
 m = max(factorSpanAll(1:2:end, :), factorSpanAll(2:2:end, :));
 % m = (factorSpanAll(1:2:end, :)+ factorSpanAll(2:2:end, :))/2;
@@ -80,7 +79,7 @@ m(m>fsSpanThresFull) = 2;
 m(m<fsSpanThresFull & m>fsSpanThresPart) = 1;
 m(m<fsSpanThresPart) = 0;
 im = plotMatrixType(m', 0);
-imwrite(im, [plotDir, 'DoubleAblationMatrix_WholeFish.tif']);
+imwrite(im, [plotDir, 'DoubleAblationMatrix_WholeFish' tagExt '.tif']);
 
 
 lifeTimeGlobal = max(lifeTimeGlobal(1:2:end, :), lifeTimeGlobal(2:2:end, :));
@@ -103,4 +102,4 @@ ylim([0, 1]);
 set(gca, 'XTick', [0 1], 'XTickLabel', {'M Factor', 'A/P Factor'});
 ylabel('Global factor life time');
 title(['AP vs. M, p=' num2str(pM_AP, '%.4f')]);
-setPrint(8, 6, [plotDir '/DoubleCutFactorLife'], 'pdf');
+setPrint(8, 6, [plotDir '/DoubleCutFactorLife' tagExt], 'pdf');

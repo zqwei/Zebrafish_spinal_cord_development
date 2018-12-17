@@ -6,12 +6,12 @@
 % Yinan Wan
 % wany@janelia.hhmi.org
 %
-function Ablation_v_4_2(fishList)
+function Ablation_v_4_2(fishList, tagExt)
 addpath('../Func');
 setDir;
 
 pThres = 0.05;
-nFileList = 25:2:76;
+nFileList = 25:2:96;
 
 
 numCells = zeros(numel(fishList), 6, 2);
@@ -19,7 +19,6 @@ numActCells = zeros(numel(fishList), 6, 2);
 fracFacNeuron = zeros(numel(fishList), 6, 2);
 factorSpan = zeros(numel(fishList), 6, 2);
 
-tagExt = '_Double_FA_JointWin';
 
 
 for i = 1:numel(fishList)
@@ -37,8 +36,8 @@ for i = 1:numel(fishList)
         nCells = numel(new_x);
         nTimes = size(factorSizes, 1);
         ind = false(nCells, 6);
-        ind(:, 1) = new_x<segAblation_A(1) & new_y<0;
-        ind(:, 2) = new_x<segAblation_A(1) & new_y>0;
+        ind(:, 1) = new_x>0 & new_x<segAblation_A(1) & new_y<0;
+        ind(:, 2) = new_x>0 & new_x<segAblation_A(1) & new_y>0;
         ind(:, 3) = new_x>segAblation_A(2) & new_x<segAblation_P(1) & new_y<0;
         ind(:, 4) = new_x>segAblation_A(2) & new_x<segAblation_P(1) & new_y>0;
         ind(:, 5) = new_x>segAblation_P(2) & new_y<0;
@@ -92,9 +91,13 @@ for i = 1:numel(fishList)
         factorSpan(i, :, nExp) = nanmedian(factorSpants, 1);
     end
 end
-
+[inv1, inv2] = ind2sub([numel(fishList), 6], find(isnan(fracFacNeuron(:, :, 1)) & isnan(fracFacNeuron(:, :, 2))));
 fracFacNeuron(isnan(fracFacNeuron)) = 0;
+fracFacNeuron(inv1, inv2, :) = NaN;
+
+[inv1, inv2] = ind2sub([numel(fishList), 6], find(isnan(factorSpan(:, :, 1)) & isnan(factorSpan(:, :, 2))));
 factorSpan(isnan(factorSpan)) = 0;
+factorSpan(inv1, inv2, :) = NaN;
 
 % figure 1 fracFacNeuron and factorSpan before & after ablation
 figure('Position', [0, 0, 400*2, 300]);
@@ -111,6 +114,7 @@ for nSec = 1:3
     p = signrank(ySeq(1, :), ySeq(2, :));
     if p<pThres
         text(2*nSec-0.5, max(ySeq(:))*1.2, '*');
+        disp(['nSec=' num2str(nSec) ' ,p=' num2str(p)]);
     end
     scatter([2*nSec-1, 2*nSec], nanmean(squeeze(fracFacNeuronCombined(:, nSec, :)))', 'or', 'linew', 3);
     plot([2*nSec-1, 2*nSec], nanmean(squeeze(fracFacNeuronCombined(:, nSec, :)))', 'r', 'linew', 3);
@@ -181,16 +185,16 @@ subplot(1, 2, 1)
 hold on
 plot(1:3, fracFacNeuronRatio, 'ko-');
 plot(1:3, nanmean(fracFacNeuronRatio), 'ro-', 'linew', 2);
-title(['p-value M vs. AP = ', num2str(pFracFacNeuronRatio.M_AP)]);
+title({['pAM = ', num2str(pFracFacNeuronRatio.AM)], ['pAP = ', num2str(pFracFacNeuronRatio.AP)], ['pMP = ', num2str(pFracFacNeuronRatio.MP)]});
 set(gca, 'XTick', 1:3, 'XTickLabel', {'A', 'M', 'P'});
-ylabel('change of factored neuron ratio after vs. before');
+ylabel({'ratio of #factored/#active', 'after vs. before'});
 subplot(1, 2, 2)
 hold on
 plot(1:3, factorSpanRatio, 'ko-');
 plot(1:3, nanmean(factorSpanRatio), 'ro-', 'linew', 2);
-title(['p-value M vs. AP = ', num2str(pFactorSpanAblation.M_AP)]);
+title({['pAM = ', num2str(pFactorSpanAblation.AM)], ['pAP = ', num2str(pFactorSpanAblation.AP)], ['pMP = ', num2str(pFactorSpanAblation.MP)]});
 set(gca, 'XTick', 1:3, 'XTickLabel', {'A', 'M', 'P'});
-ylabel('change of factor span after vs. before');
+ylabel({'ratio of factor span', 'after vs. before'});
 setPrint(16, 6, [plotDir '/AblationTypeSyncRatio' tagExt], 'pdf');
 
 
