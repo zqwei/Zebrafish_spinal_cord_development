@@ -22,7 +22,7 @@ factorSizeAll = nan(numel(fishList)*2, 2);
 factorSpanAll = nan(numel(fishList)*2, 2);
 
 fsSpanThresFull = 0.5;
-fsSpanThresFullPart = 0;
+fsSpanThresFullPart = 0.05;
 
 for i = 1:numel(fishList)
     nFish = fishList(i);
@@ -74,6 +74,7 @@ end
 m = factorSpanAll;
 m(m>fsSpanThresFull) = 2;
 m(m<fsSpanThresFull & m>fsSpanThresFullPart) = 1;
+m(m<fsSpanThresFullPart) = 0;
 im = plotMatrixType(m', 1);
 imwrite(im, [plotDir, 'SingleAblationMatrix_HalfFish.tif']);
 
@@ -81,6 +82,7 @@ imwrite(im, [plotDir, 'SingleAblationMatrix_HalfFish.tif']);
 m = max(factorSpanAll(1:2:end, :), factorSpanAll(2:2:end, :));
 m(m>fsSpanThresFull) = 2;
 m(m<fsSpanThresFull & m>fsSpanThresFullPart) = 1;
+m(m<fsSpanThresFullPart) = 0;
 im = plotMatrixType(m', 0);
 imwrite(im, [plotDir, 'SingleAblationMatrix_WholeFish.tif']);
 

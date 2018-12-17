@@ -11,7 +11,7 @@
 % Integrated by Ziqiang Wei
 
 
-function FACluster_v0_5_1_short_win(nFile)
+function FACluster_v0_5_1_short_win(nFile, factorThres, thresPsi)
     addpath('../Func');
     setDir;
     fileName          = fileNames{nFile}; %#ok<USENS>
@@ -32,9 +32,6 @@ function FACluster_v0_5_1_short_win(nFile)
     mColor = cbrewer('qual', 'Dark2',  8, 'cubic');
     mColor            = [mColor; cbrewer('qual', 'Set2',  128, 'cubic')];
     preLMat           = nan(numNeuron, 1);
-    
-    factorThres       = 0.3;
-    thresPsi          = 0.5;
 
     if ispc
         video          = VideoWriter([plotDir '\movie_' fileName '.avi'], 'Uncompressed AVI');

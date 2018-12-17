@@ -1,10 +1,16 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure 2
+%
 % Fit for multi-fish statistics
 % 1. number of communities
 % 2a. Fraction of non-factored neurons
 % 2b. percentage of total active neurons
 % 3a. radius of communities
 % 3b. size of communities
-
+% -------------------------------------------------------------------------
+% Yinan Wan
+% wany@janelia.hhmi.org
+% 
 
 function Figure_2(h, nFile, tag, c)
 stats = Figure_2_c(nFile, tag);
@@ -33,9 +39,14 @@ Figure_2_d_3b(stats{4}.t-xOffset, stats{4}.y, c)
 
 subplot(1, totPlots, 5)
 Figure_2_d_4(stats{5}.t-mean(stats{5}.t)+5, stats{5}.y-xOffset, c, stats{5}.pval<0.05);
-
+view([90, -90]);
+set(gca, 'XDir', 'reverse');
 subplot(1, totPlots, 6)
+
 Figure_2_d_5(stats{6}.t, stats{6}.y-xOffset, c, stats{6}.pval<0.05);
+view([90, -90]);
+set(gca, 'XDir', 'reverse');
+
 %     % shift this plot in x so that all points intersect at x=5, y=0
 %     x0 = ;
 %     t0 = stats{5}.y-xOffset;
@@ -43,6 +54,11 @@ Figure_2_d_5(stats{6}.t, stats{6}.y-xOffset, c, stats{6}.pval<0.05);
 %     sOffset = -t0(1)/k+x0(1);
 %     Figure_2_d_4(x0+5-sOffset, t0);
 
+addpath('../Func');
+setDir;
+fileName = fileNames{nFile};
+timeOffset = xOffset;
+save([tempDatDir, 'Leader_', fileName, '.mat'], 'timeOffset', '-append');
 
 end
 

@@ -2,7 +2,7 @@
 % Lineage analysis 1.3
 %
 % plot the conserved correlation among all 3 datasets
-%
+% Use Holm–Bonferroni method of p<0.05
 % -------------------------------------------------------------------------
 % Yinan Wan
 % wany@janelia.hhmi.org
@@ -11,6 +11,8 @@
 function Lineage_v1_3(datasets)
 addpath('../Func');
 setDir;
+
+pThres = 0.05;
 
 % variable name, category (0: dev, 1: func, 2: anatomy, 3: cell type) and
 % axis label
@@ -37,8 +39,8 @@ leaf = 1:size(metricList, 1); % leaf order: sorted in 0, 1, 2, 3, within each gr
 p_all_positive = zeros(numel(leaf), numel(leaf));
 p_all_negative = zeros(numel(leaf), numel(leaf));
 
-
-
+pAll = zeros(numel(leaf), numel(leaf), numel(datasets));
+hAll = zeros(numel(leaf), numel(leaf), numel(datasets));
 
 for nFish = 1:numel(datasets)
     nFile = datasets(nFish);
@@ -56,20 +58,30 @@ for nFish = 1:numel(datasets)
     for i = 1:size(metricList, 1)
         metrics(:, i) = eval(metricList{i, 1});
     end
-    
     [h, p] = corr(metrics(:, leaf), 'rows', 'pairwise', 'type', 'spearman');
-    p_all_positive = p_all_positive + (h>0 & p<0.05);
-    p_all_negative = p_all_negative + (h<0 & p<0.05);
+    pAll(:, :, nFish) = p;
+    hAll(:, :, nFish) = h;
+    p_all_positive = p_all_positive + (h>0 & p<pThres);
+    p_all_negative = p_all_negative + (h<0 & p<pThres);
 end
+
+pAll = sort(pAll, 3, 'descend');
+p_corrected = true;
+h_count = (sum(hAll>0, 3)==numel(datasets)) - (sum(hAll<0, 3)==numel(datasets));
+for i = 1:numel(datasets)
+    p_corrected = p_corrected & pAll(:, :, i)<pThres/i;
+end
+figure, imagesc(triu(p_corrected).*h_count);
+set(gca, 'XTick', 1:numel(leaf),'XTickLabel', C(leaf));
+set(gca, 'XTickLabelRotation', 45);
+set(gca, 'YTick', 1:numel(leaf),'YTickLabel', C(leaf));
+set(gca, 'XAxisLocation', 'top');
+print( [plotDir, 'LineageCorrMat_conserved_pThres' num2str(pThres) '_HB'], '-dpdf', '-r0');
 
 figure
 
 p_all = p_all_positive - p_all_negative;
 p_all(abs(p_all)==1) = 0;
-% p_all = zeros(numel(leaf), numel(leaf));
-% p_all(p_all_positive==numel(datasets)) = 1;
-% p_all(p_all_negative==numel(datasets)) = -1;
-
 
 
 imagesc(triu(p_all, 1));
@@ -78,6 +90,5 @@ set(gca, 'XTickLabelRotation', 45);
 set(gca, 'YTick', 1:numel(leaf),'YTickLabel', C(leaf));
 set(gca, 'XAxisLocation', 'top');
 ax1 = imgca;
-% colormap(ax1, colorMap);
 colorbar(ax1);
-print( [plotDir, 'LineageCorrMat_conserved'], '-dpdf', '-r0');
+print( [plotDir, 'LineageCorrMat_conserved_pThres' num2str(pThres)], '-dpdf', '-r0');

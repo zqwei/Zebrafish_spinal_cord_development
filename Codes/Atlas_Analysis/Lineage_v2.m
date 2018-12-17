@@ -8,7 +8,7 @@
 % wany@janelia.hhmi.org
 %
 
-function Lineage_v2(nFile)
+function [actOrder, birthOrder, nSeg] = Lineage_v2(nFile)
 addpath('../Func');
 setDir;
 
@@ -17,6 +17,7 @@ load([tempDatDir, 'Leader_', fileName, '.mat'], 'activeTime', 'birthtime');
 load([tempDatDir, fileName, '.mat'], 'timePoints', 'new_x', 'new_y', 'mnx');
 actOrder = nan(numel(new_x), 1);
 birthOrder = nan(numel(new_x), 1);
+nSeg = 0;
 
 x = new_x;
 y = new_y;
@@ -31,6 +32,12 @@ for seg = floor(min(x-0.5)):ceil(max(x-0.5))
     actOrder(currentSegRight) = ic;
     [~, ~, ic] = unique(birthtime(currentSegRight));
     birthOrder(currentSegRight) = ic;
+    if ~isempty(currentSegRight)
+        nSeg = nSeg+1;
+    end
+    if ~isempty(currentSegLeft)
+        nSeg = nSeg+1;
+    end
 end
 
 count = hist3([actOrder, birthOrder], [max(actOrder), max(birthOrder)]);

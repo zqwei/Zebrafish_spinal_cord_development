@@ -13,7 +13,7 @@ setDir;
 fileName       = fileNames{nFile};
 fileDirName    = fileDirNames{nFile};
 load([fileDirName '/', 'dev_data.mat'], 'trackingM', 'leafID');
-load([tempDatDir, fileName, '.mat'], 'slicedIndex', 'leafOrder', 'new_x', 'new_y', 'side', 'mnx');
+load([tempDatDir, fileName, '.mat'], 'slicedIndex', 'leafOrder', 'new_x', 'new_y', 'side', 'mnx', 'activeNeuronMat');
 load([tempDatDir, 'DevelopmentStat_' fileName, '.mat'], 'AP', 'LR', 'ori');
 
 leafID = leafID(slicedIndex);
@@ -30,7 +30,8 @@ for i = 1:numel(lineage)
     initialPos = trackingM(trackingM(:, 1)==rootNodeID, 3:5);
     rootLocation(i, :) = (initialPos - ori) * [AP', LR'];
 end
-[~, newOrder] = sort(rootLocation(:, 2)); % sort by L->R
+% [~, newOrder] = sort(rootLocation(:, 2)); % sort by L->R
+[~, newOrder] = sort(abs(rootLocation(:, 2))); % sort by M->L
 lineage_sorted = lineage(newOrder);
 annotation_sorted = annotation;
 for i = 1:size(annotation, 1)
@@ -38,7 +39,10 @@ for i = 1:size(annotation, 1)
         annotation_sorted(i, 1) = find(newOrder==annotation(i, 1));
     end
 end
-plotLineageTree(lineage_sorted, annotation_sorted, side, mnx);
-setPrint(100, 20, [plotDir 'LineagTreePlot_' fileName '_4_3'], 'pdf');
+% plotLineageTree(lineage_sorted, annotation_sorted, side, mnx);
+% setPrint(100, 20, [plotDir 'LineagTreePlot_' fileName '_4_3'], 'pdf');
+
+plotLineageTreeActivity(lineage_sorted, annotation_sorted, side, mnx, activeNeuronMat);
+setPrint(100, 20, [plotDir 'LineagTreePlotActivity_' fileName '_4_3'], 'pdf');
 end
 

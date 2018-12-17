@@ -53,11 +53,15 @@ function activeNeuronMat = Neuron_selection_v0_short_win(nFile)
             ksTestAllTime(nNeuron) = true;
         end
     end
-    
+
     timeStart     = 360;
     timeStep      = 720;
     numT          = size(dff, 2);
     timeEnd       = numT;
+    
+    if numT - timeStart <= 1200
+        timeStart = 0;
+    end
     
     slicedIndex   = ksTestAllTime;
     baseline      = baseline(slicedIndex, timeStart+1:timeEnd);

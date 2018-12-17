@@ -36,7 +36,7 @@ for nCell = 1:numel(activeTime)
         ownActTime              = max(activeTime(nCell)*60, firstActTime);
         if firstPatternTime >= 10 % exclude factors where initial pattern time is very early
             preActLevel(nCell)    = sum(activeNeuronMat(nCell, ownActTime:firstPatternTime-1))/(firstPatternTime-firstActTime);
-            prePowerLevel(nCell)  = mean(spec(nCell, timePoints(firstActTime)+1:timePoints(firstPatternTime-1)+1), 2);
+            prePowerLevel (nCell)  = mean(spec(nCell, timePoints(firstActTime)+1:timePoints(firstPatternTime-1)+1), 2);
         end
     end
 end

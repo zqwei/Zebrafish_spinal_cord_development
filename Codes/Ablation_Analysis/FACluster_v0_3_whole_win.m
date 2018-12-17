@@ -10,7 +10,7 @@
 %
 
 
-function FACluster_v0_3_whole_win(nFile)
+function FACluster_v0_3_whole_win(nFile, thresL, thresPsi)
 addpath('../Func');
 setDir;
 fileName          = fileNames{nFile}; %#ok<USENS>
@@ -42,8 +42,6 @@ uncorrectedLMat = LMat;
 % based on SNR and LMat
 LMat(LMat<0) = 0;
 LMat(isnan(LMat)) = 0;
-thresL         = 0.3;
-thresPsi       = 0.5; % SNR=1
 
 LMat(PsiMat>thresPsi, :) = 0;
 LMat(LMat < thresL)   = 0;

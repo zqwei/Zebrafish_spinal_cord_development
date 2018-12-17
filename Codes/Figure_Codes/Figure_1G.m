@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Figure 1E plot 3 example time windows
+% Figure 1G plot 3 example time windows
 %
 % All traces in grey, example traces highlighted in color
 % window length: 1 min
