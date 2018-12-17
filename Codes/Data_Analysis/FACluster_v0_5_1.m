@@ -201,7 +201,7 @@ function FACluster_v0_5_1(nFile)
         end
         xlim([0 ceil(max(x))+1]);
         ylim([-1 1]);
-        text(ceil(max(x))+0.5, 0.4, num2str(period), 'FontSize', 24)
+%         text(ceil(max(x))+0.5, 0.4, num2str(period), 'FontSize', 24)
         hold off
 
         % side view - left
