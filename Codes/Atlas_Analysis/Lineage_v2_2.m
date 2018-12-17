@@ -84,7 +84,7 @@ xlim([0 3]);
 subplot(1, 4, 2);
 gscatter(metricsAll(:, 1), metricsAll(:, 4), metricsAll(:, end));
 for i = 1:numel(datasets)
-[c(i), p(i)] = corr(metricsAll(metricsAll(:, end)==i, 1), metricsAll(metricsAll(:, end)==i, 8), 'rows', 'pairwise', 'type','spearman');
+[c(i), p(i)] = corr(metricsAll(metricsAll(:, end)==i, 1), metricsAll(metricsAll(:, end)==i,4), 'rows', 'pairwise', 'type','spearman');
 disp(['birthtime - div angle AP, dataset ' num2str(i) ', c=' num2str(c(i)) ', p=' num2str(p(i))]);
 end
 xlabel('normalized birthtime (hour)');
@@ -97,7 +97,7 @@ xlim([0 3]);
 subplot(1, 4, 3);
 gscatter(metricsAll(:, 1), metricsAll(:, 9), metricsAll(:, end));
 for i = 1:numel(datasets)
-[c(i), p(i)] = corr(metricsAll(metricsAll(:, end)==i, 1), metricsAll(metricsAll(:, end)==i, 8), 'rows', 'pairwise', 'type','spearman');
+[c(i), p(i)] = corr(metricsAll(metricsAll(:, end)==i, 1), metricsAll(metricsAll(:, end)==i, 9), 'rows', 'pairwise', 'type','spearman');
 disp(['birthtime - patternTime ' num2str(i) ', c=' num2str(c(i)) ', p=' num2str(p(i))]);
 end
 xlabel('normalized birthtime (hour)');
@@ -109,7 +109,7 @@ xlim([0 3]);
 subplot(1, 4, 4);
 gscatter(metricsAll(:, 2), metricsAll(:, 9), metricsAll(:, end));
 for i = 1:numel(datasets)
-[c(i), p(i)] = corr(metricsAll(metricsAll(:, end)==i, 1), metricsAll(metricsAll(:, end)==i, 8), 'rows', 'pairwise', 'type','spearman');
+[c(i), p(i)] = corr(metricsAll(metricsAll(:, end)==i, 2), metricsAll(metricsAll(:, end)==i, 9), 'rows', 'pairwise', 'type','spearman');
 disp(['neural plate ML - activation time ' num2str(i) ', c=' num2str(c(i)) ', p=' num2str(p(i))]);
 end
 xlabel('neural plate ML');

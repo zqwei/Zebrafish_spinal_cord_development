@@ -20,6 +20,7 @@ set(gcf, 'InvertHardCopy', 'off', 'PaperPositionMode', 'Auto');
 print([plotDir 'WT_segRatio_leader_preActLevel.pdf'], '-dpdf', '-r0');
 
 
+
 end
 
 function Linear_Stats_Boot_Std(datasets, nbins, bins)
@@ -30,6 +31,7 @@ leg = linspace(0, 360 - 360/nbins, nbins);
 count = zeros(numel(datasets), nbins, numel(bins)-1); %nFile x nSector x nType
 x_all = [];
 me_all = [];
+fishNumber = [];
 for i = 1:numel(datasets)
     fileName       = fileNames{datasets(i)};
     load([tempDatDir, 'Leader_' fileName, '.mat'], 'preActLevel');
@@ -43,6 +45,7 @@ for i = 1:numel(datasets)
     count(i, :, :) = polar_histogram(me, x-floor(x), bins, a_bins);
     x_all = [x_all; x-floor(x)];
     me_all = [me_all; me];
+    fishNumber = [fishNumber; ones(numel(me), 1)*i];
 end
 
 % bootstraping std
@@ -53,9 +56,27 @@ for nType = 1:numel(bins)-1
     bootStd(:, nType) = std(bootSum, [], 1);
     bootMean(:, nType) = mean(bootSum);
 end
+pd = makedist('uniform');
 
 [h, p] = kstest2(x_all(me_all<=bins(2)), x_all(me_all>bins(2)));
+[hN, pN] = kstest(x_all(me_all<=bins(2)), 'cdf', pd);
+[hL, pL] = kstest(x_all(me_all>bins(2)), 'cdf', pd);
 
+disp(['p=', num2str(p) ', pL=', num2str(pL) ', pN=', num2str(pN)]);
+
+hFish = zeros(numel(datasets), 3); % L vs. N, N vs. uniform, L vs. uniform
+pFish = zeros(numel(datasets), 3);
+for i = 1:numel(datasets)
+    [hFish(i, 1), pFish(i, 1)] = kstest2(x_all(me_all <= bins(2) & fishNumber==i), x_all(me_all>bins(2) & fishNumber==i));
+    [hFish(i, 2), pFish(i, 2)] = kstest( x_all(me_all <= bins(2) & fishNumber==i), 'cdf', pd);
+    [hFish(i, 3), pFish(i, 3)] = kstest( x_all(me_all >  bins(2) & fishNumber==i), 'cdf', pd);
+end
+pFishSorted = [sort(pFish(:, 1), 'descend'), sort(pFish(:, 2), 'descend'), sort(pFish(:, 3), 'descend')];
+pMax = zeros(1, 3);
+for i =1:numel(datasets)
+    pMax = max(pMax, pFishSorted(i, :)*i);
+end
+disp(['Corrected p=' num2str(pMax)]);
 count_all = squeeze(sum(count, 1));
 bootStd = bootStd./repmat(sum(count_all, 1), nbins, 1);
 count_all = count_all./repmat(sum(count_all, 1), nbins, 1);

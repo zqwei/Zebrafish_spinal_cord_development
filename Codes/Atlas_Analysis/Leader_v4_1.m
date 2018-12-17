@@ -51,6 +51,7 @@ for nFactor = 1:size(factorSizes, 2)
     leaderPair = factorComp{appearTime, nFactor};
     % initial pair: plot traces from first activation to 30 min after appear time
     firstActiveTime = min(activeTime(leaderPair)*60);
+    lastActiveTime  = max(activeTime(leaderPair)*60);
     tStart = timePoints(firstActiveTime)+1;
     tEnd   = timePoints(min(appearTime+30, numel(timePoints)))+timeStep;
     activeLength = leaderPair;
@@ -90,6 +91,7 @@ for nFactor = 1:size(factorSizes, 2)
     leaderPairInfo.activeLength    = activeLength;
     leaderPairInfo.appearTime      = appearTime;
     leaderPairInfo.firstActiveTime = firstActiveTime;
+    leaderPairInfo.lastActiveTime  = lastActiveTime;
     leaderPairInfo.leaderTag       = leaderTag;
     leaderPairInfo.xRange          = range(new_x(leaderPair));
     leaderPairInfo.preActLevel     = activeLength/(appearTime-firstActiveTime);

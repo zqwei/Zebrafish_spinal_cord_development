@@ -56,7 +56,7 @@ figure, hold on
 h = bar(numLeaders, numLeaderStats, 'stacked', 'EdgeColor', 'none');
 h(1).Parent.Parent.Colormap = lines(7);
 % legend('fish 1', 'fish 2', 'fish 3', 'fish 4', 'fish 5', 'fish 6', 'fish 7')
-set(gca, 'XTick', numLeaders, 'XTickLabel', {'N-N', 'L-N', 'L-L'}, 'YTick', 0:10:40);
+set(gca, 'XTick', numLeaders, 'XTickLabel', {'S-S', 'L-S', 'L-L'}, 'YTick', 0:10:40);
 ylabel('Number of initial communities');
 
 % fill([numLeaders, fliplr(numLeaders)], [count_lo, fliplr(count_hi)], [.5, .5, .5], 'FaceAlpha', 0.5, 'EdgeColor', 'None');
@@ -64,10 +64,29 @@ ylabel('Number of initial communities');
 errorbar(numLeaders, count_est, count_est-count_lo, count_hi-count_est, 'k');
 setPrint(16, 12, [plotDir,  'InitialLeaderPairs_Type_Summary'], 'pdf');
 close
-
 % test independence of dataset
 p = testIndep(numLeaderStats');
 disp(['chi2 test fish independence p=' num2str(p)]);
+
+% try plotting 2 categories
+count = [count(:, 2), count(:, 1)+count(:, 3)];
+count_lo = prctile(count, 5);
+count_hi = prctile(count, 95);
+count_est = mean(count);
+numLeaderStats = [numLeaderStats(2, :); numLeaderStats(1, :)+numLeaderStats(3, :)];
+figure, hold on
+h = bar([0 1], numLeaderStats, 'stacked', 'EdgeColor', 'none');
+h(1).Parent.Parent.Colormap = lines(7);
+% legend('fish 1', 'fish 2', 'fish 3', 'fish 4', 'fish 5', 'fish 6', 'fish 7')
+ylabel('Number of initial communities');
+bar([2, 3], count_est, 'k');
+errorbar([2, 3], count_est, count_est-count_lo, count_hi-count_est, 'k.');
+plot([1.5, 1.5], [0 50], 'k--');
+set(gca, 'XTick', 0:3, 'XTickLabel', {'L-S', 'L-L or S-S', 'L-S', 'L-L or S-S'}, 'YTick', 0:10:50);
+setPrint(16, 12, [plotDir,  'InitialLeaderPairs_Type_2Categories'], 'pdf');
+
+
+
 % binRatios = 0:0.2:1;
 % ratioStats = zeros(numel(binRatios), numel(control_datasets));
 %  for i = 1:numel(control_datasets)
