@@ -5,6 +5,7 @@ This repository is for computational analysis of single-cell reconstruction of e
 
 ### How is this repository organized? ###
 We partitioned the code into two modules – Image Processing Module and Signal Processing Module, each with their own sub-modules corresponding to the analyses we performed in the spinal cord study. The rationale behind such partition is data management: Image Processing Module contains semi-automatic computational pipelines designed for processing big image data on remote servers/workstations equipped with parallel processing capabilities and visualization/annotation tools for manual data curation; while Signal Processing Module is designed for local processing of extracted calcium traces, completely automated and focus on mathematical modeling and statistical analysis. The output of Image Processing Module serves as the input of the Signal Processing Module.
+
 Here we present a guide to readers who are interested in using our code to run their own analyses, with a focus on 1) how to setup the processing environment and 2) how to practically perform each module as needed. For details on the algorithm for each step of the processing modules, please refer to the Methods section of the manuscript.
 
 ## List of Analyses ##
