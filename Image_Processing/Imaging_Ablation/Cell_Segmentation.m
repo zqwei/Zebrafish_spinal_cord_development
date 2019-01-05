@@ -1,5 +1,12 @@
-function segmentCells(nFile)
-addpath('Func');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cell_Segmentation - segment cell structures
+% based on reference time point before ablation, generate Atlas file
+%
+% -------------------------------------------------------------------------
+% Yinan Wan
+% wany@janelia.hhmi.org
+function Cell_Segmentation(nFile)
+addpath('../Func');
 setDir;
 
 backgroundThres = 130;

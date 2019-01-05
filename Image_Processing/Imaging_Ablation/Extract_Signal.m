@@ -1,5 +1,12 @@
-function pdList = getSignal(nFile)
-addpath('Func');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Signal Extraction
+% get average ROI from data, with parallel processing
+%
+% -------------------------------------------------------------------------
+% Yinan Wan
+% wany@janelia.hhmi.org
+function Extract_Signal(nFile)
+addpath('../Func');
 setDir;
 
 fList = [1, 3];
@@ -74,6 +81,6 @@ for nFolder = 1:numel(fList)
         [status, systemOutput] = system(cmd);
         disp(['System response: ' systemOutput]);
     end
-    
+    collectResult(parameterDatabase);
 end
 

@@ -1,5 +1,12 @@
-function estimateDrift(nFile)
-addpath('Func');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Drift Estimation Step 1 - collect drift trsf from python result
+% Drift series estimated within imaging session 
+%
+% -------------------------------------------------------------------------
+% Yinan Wan
+% wany@janelia.hhmi.org
+function Drift_Estimation_s1(nFile)
+addpath('../Func');
 setDir;
 timeStep = 120;
 smoothWindow = 60;

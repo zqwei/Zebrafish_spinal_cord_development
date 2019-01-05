@@ -1,5 +1,12 @@
-function generateCoordinates(nFile)
-addpath('Func');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Drift Estimation Step 2 - Generate cell cooredinates
+% Apply drift estimation onto before and after ablation series
+%
+% -------------------------------------------------------------------------
+% Yinan Wan
+% wany@janelia.hhmi.org
+function Drift_Estimation_s2(nFile)
+addpath('../Func');
 setDir;
 
 %4D matrix: nLineage x nTimepoints x 3
