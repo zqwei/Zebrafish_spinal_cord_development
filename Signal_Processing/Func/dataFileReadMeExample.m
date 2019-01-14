@@ -13,18 +13,18 @@
 
 %% Name List of longitudinal functional imaging data
 % functional imaging data
-fileDirNames{1} = '../../Data/func_20150410';
-fileDirNames{2} = '../../Data/func_20150417';
-fileDirNames{3} = '../../Data/func_20161004';
+fileDirNames{1} = '../../FunctionalData/func_20150410';
+fileDirNames{2} = '../../FunctionalData/func_20150413';
+fileDirNames{3} = '../../FunctionalData/func_20161004';
 
 % functional imaging data with IHC information
-fileDirNames{4} = '../../Data/islet_20170202';
-fileDirNames{5} = '../../Data/islet_20170216';
+fileDirNames{4} = '../../FunctionalData/islet_20170202';
+fileDirNames{5} = '../../FunctionalData/islet_20170216';
 
 % functional imaging data with lineage information
-fileDirNames{6} = '../../Data/lineage_20160328';
-fileDirNames{7} = '../../Data/lineage_20170111';
-fileDirNames{8} = '../../Data/lineage_20170925';
+fileDirNames{6} = '../../FunctionalData/lineage_20160328';
+fileDirNames{7} = '../../FunctionalData/lineage_20170111';
+fileDirNames{8} = '../../FunctionalData/lineage_20170925';
 
 
 %% Name List of ablation data
