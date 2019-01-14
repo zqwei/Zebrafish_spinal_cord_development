@@ -33,7 +33,7 @@ Here is a list of the key computational modules, for detailed documentation on t
 Raw data can be downloaded from https://www.dropbox.com/sh/g7wahoj4o3f0j04/AAAqjndWq2mjHgcEmqpvoumBa?dl=0
 
 ## External software ##
-Links to external software used in the computational pipeline. See [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-1.0) for details to set up the softwares
+Links to external software used in the computational pipeline. See [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Image-Processing-Module) for details to set up the softwares
 * [Fiji](https://fiji.sc/#download)
   * [MTrackJ](https://imagescience.org/meijering/software/mtrackj/)
   * [MaMuT](https://imagej.net/MaMuT)
