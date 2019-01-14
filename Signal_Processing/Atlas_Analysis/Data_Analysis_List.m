@@ -1,6 +1,6 @@
 addpath('../Data_Analysis/')
 lineage_datasets = [6, 11, 24];
-control_datasets = [3, 4, 7, 12, 10, 15, 16]; % not sure to include 13 or not
+control_datasets = [3, 4, 7, 12, 10, 15, 16];
 islet_datasets = [10 13 15 16];
 
 %lineage datasets

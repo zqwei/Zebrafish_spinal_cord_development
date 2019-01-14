@@ -21,8 +21,10 @@ TempDat*
 Plots
 
 # original data
-Data/*.*
-Data/
+FunctionalData/*.*
+FunctionalData/
+AblationData/*.*
+AblationData/
 
 *.mat
 
