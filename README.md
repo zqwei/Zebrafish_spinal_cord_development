@@ -23,7 +23,7 @@ Here is a list of the key computational modules, for detailed documentation on t
 ## Directory Structure ##
 * Image_Processing -- analysis code for Image Processing Module
 * Signal_Processing – analysis code for Signal Processing Module
-* Data [ignored] – data sets of signal from longitudinal functional imaging
+* FunctionalData [ignored] – data sets of signal from longitudinal functional imaging
 * AblationData [ignored] – data sets of signal from ablation experiments
 * TempDat [ignored] -- a temporary storage place for intermediate processing result
 * Plots [ignored] – figures generated from all analyses
