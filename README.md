@@ -30,7 +30,13 @@ Here is a list of the key computational modules, for detailed documentation on t
 * .gitignore  -- file to be ignored in git update
 
 ## Data Availability ##
-Raw data can be downloaded from https://www.dropbox.com/sh/g7wahoj4o3f0j04/AAAqjndWq2mjHgcEmqpvoumBa?dl=0
+Cellular calcium traces are available as .mat files on FigShare. 
+* Longitudinal functional calcium-imaging data in developing circuit is abvailable for download at [DOI: 10.25378/janelia.7605824](https://janelia.figshare.com/s/10833cd5447dbc9aa840)
+* Functional calcium-imaging data for ablation experiments is available for download at [DOI: 10.25378/janelia.7607411](https://janelia.figshare.com/s/859c06f5e24fd111f8ef)
+
+Please refer to the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Signal-Processing-Module) about how to set up the processing environment
+
+Raw data of longitudinal totals about 1.2 TB per dataset and is too big to be shared online, but can be made available upon request. Please contact kellerp@janelia.hhmi.org or wany@janelia.hhmi.org for data inquiry
 
 ## External software ##
 Links to external software used in the computational pipeline. See [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Image-Processing-Module) for details to set up the softwares
