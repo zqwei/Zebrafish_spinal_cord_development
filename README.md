@@ -28,6 +28,9 @@ Here is a list of the key computational modules, for detailed documentation on t
 * TempDat [ignored] -- a temporary storage place for intermediate processing result
 * Plots [ignored] – figures generated from all analyses
 * .gitignore  -- file to be ignored in git update
+------
+* Note #1: `setDir` code in folders `Signal_Processing\Func` and `Imaging_Processing\Imaging_Ablation` set the location of _FunctionData_ and _AblationData_ respectively. An user should change them accordingly after downloading the data.
+* Note #2: `setDir` codes set up the locations for `TempDat` and `TempDat`. An user should change them accordingly at his or her own preferences.
 
 ## Data Availability ##
 Cellular calcium traces are available as .mat files on FigShare. 
@@ -46,3 +49,10 @@ Links to external software used in the computational pipeline. See [Wiki Page](h
 * [TGMM cell tracking](https://sourceforge.net/projects/tgmm/)
 * [Block-based image registration](https://github.com/leoguignard/Time-registration)
 * [Vaa3D](https://github.com/Vaa3D/release/releases/)
+* Matlab and its toolboxes (list as its priority)
+  * Matlab (>=2017a)
+  * Statistics and Machine Learning Toolbox
+  * Curve Fitting Toolbox
+  * Econometrics Toolbox
+  * Signal Processing Toolbox
+  * Wavelet Toolbox
