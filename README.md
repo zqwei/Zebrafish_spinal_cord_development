@@ -10,7 +10,7 @@ Here, we provide a guide to readers who are interested in using our code for run
 
 ## List of Analyses ##
 
-Below, we provide a list of the key computational modules. For detailed documentation on the code, please click on the links or visit the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki)
+Below, we provide a list of the key computational modules. For detailed documentation on the code, please click on the links or visit the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki).
 ### Image Processing Module ###
 * [Module 1.1: Semi-automated cell tracking and signal extraction in longitudinal functional imaging data](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-1.1)
 * [Module 1.2: Image registration and signal extraction in laser ablation experiments](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-1.2)
@@ -30,19 +30,19 @@ Below, we provide a list of the key computational modules. For detailed document
 * .gitignore  -- file to be ignored in git update
 ------
 * Note #1: `setDir` code in folders `Signal_Processing\Func` and `Imaging_Processing\Imaging_Ablation` set the location of _FunctionData_ and _AblationData_, respectively. Please adjust the code accordingly after downloading the data.
-* Note #2: `setDir` code defines locations of `TempDat` and `Plot`. Please change the code according to your preferences.
+* Note #2: `setDir` code also defines locations of `TempDat` and `Plot`. Please change the code according to your preferences.
 
 ## Data Availability ##
 Single-cell calcium traces for neurons across the circuit are available as .mat files on FigShare. 
 * Longitudinal functional calcium-imaging data in developing circuit is abvailable for download at [DOI: 10.25378/janelia.7605824](https://janelia.figshare.com/s/10833cd5447dbc9aa840)
 * Functional calcium-imaging data for laser ablation experiments is available for download at [DOI: 10.25378/janelia.7607411](https://janelia.figshare.com/s/859c06f5e24fd111f8ef)
 
-Please refer to the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Signal-Processing-Module) to learn how to set up the processing environment
+Please refer to the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Signal-Processing-Module) to learn how to set up the processing environment.
 
 Each longitudinal functional imaging data set comprises 1.2 TB of raw data. These data are available upon request. Please contact kellerp@janelia.hhmi.org or wany@janelia.hhmi.org for inquiries related to these data sets.
 
 ## External software ##
-Links to external software used in the computational pipeline. See [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Image-Processing-Module) for details on setting up the software
+Links to external software used in the computational pipeline. See [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Image-Processing-Module) for details regarding how to set up the software.
 * [Fiji](https://fiji.sc/#download)
   * [MTrackJ](https://imagescience.org/meijering/software/mtrackj/)
   * [MaMuT](https://imagej.net/MaMuT)
