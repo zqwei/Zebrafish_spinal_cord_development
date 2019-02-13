@@ -17,7 +17,7 @@ Below, we provide a list of the key computational modules. For detailed document
 
 ### Signal Processing Module ###
 * [Module 2.1: Factor analysis of longitudinal population activity](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.1)
-* [Module 2.2: Mapping features of neuronal activity and cell-type information to the anatomical atlas of the neuronal circuit](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.2)
+* [Module 2.2: Mapping features of neuronal activity to cell-type information and the anatomical atlas of the neuronal circuit](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.2)
 * [Module 2.3: Analysis of results obtained for laser ablation experiments](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.3)
 
 ## Directory Structure ##
