@@ -1,55 +1,55 @@
 # README #
 
 ### What is this repository for? ###
-This repository is for computational analysis of single-cell reconstruction of emerging population activity from imaging data of developing zebrafish spinal cord.
+This repository contains a software framework for the computational analysis of emerging population activity at the single-cell level from calcium-imaging data of the developing zebrafish spinal cord.
 
 ### How is this repository organized? ###
-We partitioned the code into two modules – Image Processing Module and Signal Processing Module, each with their own sub-modules corresponding to the analyses we performed in the spinal cord study. The rationale behind such partition is data management: Image Processing Module contains semi-automatic computational pipelines designed for processing big image data on remote servers/workstations equipped with parallel processing capabilities and visualization/annotation tools for manual data curation; while Signal Processing Module is designed for local processing of extracted calcium traces, completely automated and focus on mathematical modeling and statistical analysis. The output of Image Processing Module serves as the input of the Signal Processing Module.
+We partitioned the code into two modules, the Image Processing Module and the Signal Processing Module, each of which include  their own sub-modules corresponding to the respective analyses we performed in our study of the  spinal cord. The rationale behind this organization is related to data management: the Image Processing Module contains a semi-automated computational pipeline designed for processing large-scale calcium-imaging data on remote servers/workstations equipped with parallel processing capabilities and visualization/annotation tools for manual data curation (with the goal of extracting accurate clacium traces for all neurons tracked in the image data), whereas the Signal Processing Module is a fully automated pipeline designed for local processing of the extracted calcium traces, with a focus on mathematical modeling and statistical data analysis. The output of the Image Processing Module serves as the input of the Signal Processing Module.
 
-Here we present a guide to readers who are interested in using our code to run their own analyses, with a focus on 1) how to setup the processing environment and 2) how to practically perform each module as needed. For details on the algorithm for each step of the processing modules, please refer to the Methods section of the manuscript.
+Here, we provide a guide to readers who are interested in using our code for running their own analyses. This guide explains 1) how to setup the processing environment and 2) how to use each processing module. For details on the algorithms employed in each step of the processing workflow, please refer to the Methods section of the manuscript.
 
 ## List of Analyses ##
 
-Here is a list of the key computational modules, for detailed documentation on the code, please click on the links or visit the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki)
+Below, we provide a list of the key computational modules. For detailed documentation on the code, please click on the links or visit the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki)
 ### Image Processing Module ###
-* [Module 1.1: Semi-automatic cell tracking and signal extraction of longitudinal functional imaging](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-1.1)
-* [Module 1.2: Image registration and signal extraction of ablation experiment](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-1.2)
+* [Module 1.1: Semi-automated cell tracking and signal extraction in longitudinal functional imaging data](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-1.1)
+* [Module 1.2: Image registration and signal extraction in laser ablation experiments](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-1.2)
 
 ### Signal Processing Module ###
 * [Module 2.1: Factor analysis of longitudinal population activity](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.1)
-* [Module 2.2: Mapping activity features to anatomical atlas and cell-type information](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.2)
-* [Module 2.3: Analysis of ablation experiment result](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.3)
+* [Module 2.2: Mapping features of neuronal activity and cell-type information to the anatomical atlas of the neuronal circuit](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.2)
+* [Module 2.3: Analysis of results obtained for laser ablation experiments](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/Module-2.3)
 
 ## Directory Structure ##
 * Image_Processing -- analysis code for Image Processing Module
 * Signal_Processing – analysis code for Signal Processing Module
 * FunctionalData [ignored] – data sets of signal from longitudinal functional imaging
 * AblationData [ignored] – data sets of signal from ablation experiments
-* TempDat [ignored] -- a temporary storage place for intermediate processing result
-* Plots [ignored] – figures generated from all analyses
+* TempDat [ignored] -- a temporary storage location for intermediate processing results
+* Plots [ignored] – figures generated by the data analysis modules
 * .gitignore  -- file to be ignored in git update
 ------
-* Note #1: `setDir` code in folders `Signal_Processing\Func` and `Imaging_Processing\Imaging_Ablation` set the location of _FunctionData_ and _AblationData_ respectively. A user should change them accordingly after downloading the data.
-* Note #2: `setDir` codes set up the locations for `TempDat` and `Plot`. A user should change them accordingly at his or her own preference.
+* Note #1: `setDir` code in folders `Signal_Processing\Func` and `Imaging_Processing\Imaging_Ablation` set the location of _FunctionData_ and _AblationData_, respectively. Please adjust the code accordingly after downloading the data.
+* Note #2: `setDir` code defines locations of `TempDat` and `Plot`. Please change the code according to your preferences.
 
 ## Data Availability ##
-Cellular calcium traces are available as .mat files on FigShare. 
+Single-cell calcium traces for neurons across the circuit are available as .mat files on FigShare. 
 * Longitudinal functional calcium-imaging data in developing circuit is abvailable for download at [DOI: 10.25378/janelia.7605824](https://janelia.figshare.com/s/10833cd5447dbc9aa840)
-* Functional calcium-imaging data for ablation experiments is available for download at [DOI: 10.25378/janelia.7607411](https://janelia.figshare.com/s/859c06f5e24fd111f8ef)
+* Functional calcium-imaging data for laser ablation experiments is available for download at [DOI: 10.25378/janelia.7607411](https://janelia.figshare.com/s/859c06f5e24fd111f8ef)
 
-Please refer to the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Signal-Processing-Module) about how to set up the processing environment
+Please refer to the [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Signal-Processing-Module) to learn how to set up the processing environment
 
-Raw data of longitudinal totals about 1.2 TB per dataset and is too big to be shared online, but can be made available upon request. Please contact kellerp@janelia.hhmi.org or wany@janelia.hhmi.org for data inquiry
+Each longitudinal functional imaging data set comprises 1.2 TB of raw data. These data are available upon request. Please contact kellerp@janelia.hhmi.org or wany@janelia.hhmi.org for inquiries related to these data sets.
 
 ## External software ##
-Links to external software used in the computational pipeline. See [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Image-Processing-Module) for details to set up the softwares
+Links to external software used in the computational pipeline. See [Wiki Page](https://github.com/zqwei/Zebrafish_spinal_cord_development/wiki/A-Guide-to-Image-Processing-Module) for details on setting up the software
 * [Fiji](https://fiji.sc/#download)
   * [MTrackJ](https://imagescience.org/meijering/software/mtrackj/)
   * [MaMuT](https://imagej.net/MaMuT)
 * [TGMM cell tracking](https://sourceforge.net/projects/tgmm/)
 * [Block-based image registration](https://github.com/leoguignard/Time-registration)
 * [Vaa3D](https://github.com/Vaa3D/release/releases/)
-* Matlab and its toolboxes (list as its priority)
+* Matlab and its toolboxes
   * Matlab (>=2017a)
   * Statistics and Machine Learning Toolbox
   * Curve Fitting Toolbox
